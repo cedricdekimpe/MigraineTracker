@@ -1,0 +1,74 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4" 
+     data-controller="modal"
+     data-action="click->modal#closeBackground"
+     data-modal-target="overlay"
+     style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;">
+  <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl border border-slate-200 bg-white p-8 shadow-xl"
+       data-modal-target="dialog"
+       data-action="click->modal#stopPropagation"
+       style="position: relative; z-index: 51;">
+    <header class="mb-6 flex items-center justify-between">
+      <div>
+        <h2 class="text-2xl font-semibold text-slate-900">Edit migraine</h2>
+        <p class="mt-1 text-sm text-slate-500"><%= migraine.occurred_on.strftime("%B %d, %Y") %></p>
+      </div>
+      <button type="button" 
+              data-action="modal#close"
+              class="rounded-md p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </header>
+
+    <% if migraine.errors.any? %>
+      <div class="rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-left text-sm text-rose-700" role="alert">
+        <p class="font-semibold">We could not save your changes:</p>
+        <ul class="mt-2 list-disc space-y-1 pl-5">
+          <% migraine.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= form_with model: migraine, class: "space-y-6", data: { turbo_frame: "_top" } do |form| %>
+      <div class="space-y-2">
+        <%= form.label :nature, class: "block text-sm font-medium text-slate-700" %>
+        <%= form.select :nature, Migraine::NATURE_OPTIONS.map { |value| [Migraine::NATURE_LABELS[value], value] }, {}, class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+      </div>
+
+      <div class="space-y-2">
+        <%= form.label :intensity, "Intensity (0-10)", class: "block text-sm font-medium text-slate-700" %>
+        <%= form.number_field :intensity, in: 0..10, class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <%= form.check_box :on_period, class: "h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" %>
+        <%= form.label :on_period, "On menstrual cycle", class: "text-sm font-medium text-slate-700" %>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <%= form.label :medication_id, "Medication", class: "block text-sm font-medium text-slate-700" %>
+          <%= link_to "Manage list", edit_user_registration_path, class: "text-xs font-medium text-emerald-700 hover:text-emerald-800", target: "_top" %>
+        </div>
+        <%= form.collection_select :medication_id, medications, :id, :name, { include_blank: "None" }, class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+      </div>
+
+      <div class="flex items-center justify-between border-t border-slate-200 pt-6">
+        <%= button_to "Delete", migraine_path(migraine), 
+              method: :delete, 
+              form: { data: { turbo_confirm: "Are you sure you want to delete this migraine entry?", turbo_frame: "_top" }, class: "inline" },
+              style: "background-color: #dc2626; color: white;",
+              class: "rounded-md px-4 py-2 text-sm font-semibold transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" %>
+        <div class="flex gap-3">
+          <%= link_to "Cancel", migraines_path(month: migraine.occurred_on.strftime("%Y-%m")), 
+                data: { turbo_frame: "_top" },
+                class: "rounded-md border border-transparent px-3 py-2 text-sm font-medium text-slate-600 transition hover:text-slate-800" %>
+          <%= form.submit "Save changes", class: "rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
