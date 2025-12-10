@@ -2,13 +2,10 @@ module MigrainesHelper
   def migraine_cell_classes(day, current_month)
     classes = ["px-3 py-2 text-center text-sm border border-slate-200"]
 
-    if day.odd?
-      classes << "bg-slate-900"
-      text_class = "text-white"
-    else
-      classes << pastel_class_for(current_month)
-      text_class = "text-slate-900"
-    end
+    pastel_class, darker_class = palette_for(current_month)
+    classes << (day.odd? ? pastel_class : darker_class)
+
+    text_class = "text-slate-900"
 
     max_day = current_month.end_of_month.day
     if day > max_day
@@ -20,14 +17,14 @@ module MigrainesHelper
     classes.join(" ")
   end
 
-  def pastel_class_for(month)
-    case ((month.month - 1) / 3) % 3
+  def palette_for(month)
+    case ((month.month - 1) % 3)
     when 0
-      "bg-amber-100"
+      ["bg-amber-100", "bg-amber-200"]
     when 1
-      "bg-rose-100"
+      ["bg-rose-100", "bg-rose-200"]
     else
-      "bg-sky-100"
+      ["bg-sky-100", "bg-sky-200"]
     end
   end
 end
