@@ -31,6 +31,7 @@
           <% if user_signed_in? %>
             <%= link_to "Migraine log", migraines_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
             <%= link_to "Yearly overview", yearly_migraines_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
+            <%= link_to "Statistics", stats_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
             <%= link_to "Account", edit_user_registration_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
             <span class="text-slate-500">Signed in as <%= current_user.email %></span>
             <%= button_to "Sign out", destroy_user_session_path,

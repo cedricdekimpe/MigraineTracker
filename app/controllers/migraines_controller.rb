@@ -3,8 +3,7 @@ require_dependency "migraines/yearly_report_pdf"
 class MigrainesController < ApplicationController
   before_action :set_current_month, only: :index
   before_action :set_days, only: %i[index yearly]
-  before_action :load_medications, only: %i[new create edit update]
-  before_action :set_migraine, only: %i[edit update destroy]
+  before_action :load_medications, only: %i[new create]
 
   def index
     migraines = current_user.migraines.for_month(@current_month)
@@ -51,28 +50,7 @@ class MigrainesController < ApplicationController
     end
   end
 
-  def edit
-  end
-
-  def update
-    if @migraine.update(migraine_params.except(:occurred_on))
-      redirect_to migraines_path(month: @migraine.occurred_on.strftime("%Y-%m")), notice: "Migraine entry updated."
-    else
-      render :edit, status: :unprocessable_entity
-    end
-  end
-
-  def destroy
-    occurred_on = @migraine.occurred_on
-    @migraine.destroy
-    redirect_to migraines_path(month: occurred_on.strftime("%Y-%m")), notice: "Migraine entry deleted."
-  end
-
   private
-
-  def set_migraine
-    @migraine = current_user.migraines.find(params[:id])
-  end
 
   def set_current_month
     @current_month = if params[:month].present?

@@ -4,17 +4,7 @@
       <tr>
         <th class="sticky left-0 bg-white px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Attribute</th>
         <% days.each do |day| %>
-          <% migraine = migraines_by_day[day] %>
-          <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-500">
-            <% if migraine %>
-              <%= button_to day, edit_migraine_path(migraine, format: :turbo_stream), 
-                  method: :get,
-                  data: { turbo_frame: "migraine-modal" },
-                  class: "inline-block cursor-pointer rounded border-0 bg-transparent px-2 py-1 font-semibold uppercase tracking-wide text-slate-500 transition hover:bg-emerald-100 hover:text-emerald-700" %>
-            <% else %>
-              <%= day %>
-            <% end %>
-          </th>
+          <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-500"><%= day %></th>
         <% end %>
       </tr>
     </thead>

@@ -1,0 +1,173 @@
+<% content_for :title, "Statistics" %>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<div data-controller="charts"
+     data-charts-monthly-data-value="<%= @monthly_data.to_json %>"
+     data-charts-day-of-week-data-value="<%= @day_of_week_data.to_json %>"
+     data-charts-medication-data-value="<%= @medication_data.to_json %>"
+     data-monthly="<%= @monthly_data.to_json %>"
+     data-day-of-week="<%= @day_of_week_data.to_json %>"
+     data-medication="<%= @medication_data.to_json %>">
+
+  <section class="flex flex-col gap-6">
+  <header class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <h1 class="text-2xl font-semibold text-slate-900">Migraine Statistics</h1>
+    <p class="mt-2 text-sm text-slate-500">Visual insights into your migraine patterns and medication usage</p>
+  </header>
+
+  <!-- Summary Cards -->
+  <div class="grid gap-6 sm:grid-cols-3">
+    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <p class="text-sm font-medium text-slate-500">Total Migraines</p>
+      <p class="mt-2 text-3xl font-semibold text-slate-900"><%= @total_migraines %></p>
+    </div>
+    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <p class="text-sm font-medium text-slate-500">With Medication</p>
+      <p class="mt-2 text-3xl font-semibold text-emerald-600"><%= @migraines_with_medication %></p>
+    </div>
+    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <p class="text-sm font-medium text-slate-500">Without Medication</p>
+      <p class="mt-2 text-3xl font-semibold text-slate-600"><%= @migraines_without_medication %></p>
+    </div>
+  </div>
+
+  <!-- Migraines Over Time Chart -->
+  <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <h2 class="mb-4 text-lg font-semibold text-slate-900">Migraines Over Time (Last 12 Months)</h2>
+    <div class="h-80">
+      <canvas data-charts-target="timeChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Day of Week Chart -->
+  <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <h2 class="mb-4 text-lg font-semibold text-slate-900">Migraines by Day of Week</h2>
+    <div class="h-80">
+      <canvas data-charts-target="dayChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Medication Usage Chart -->
+  <% if @medication_data.any? %>
+    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 class="mb-4 text-lg font-semibold text-slate-900">Medication Usage</h2>
+      <div class="h-80">
+        <canvas data-charts-target="medicationChart"></canvas>
+      </div>
+    </div>
+  <% else %>
+    <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+      <p class="text-center text-sm text-slate-500">No medication data available yet</p>
+    </div>
+  <% end %>
+  </section>
+</div>
+
+<script>
+  // Fallback initialization in case Stimulus doesn't connect
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Chart === 'undefined') return
+    
+    const container = document.querySelector('[data-controller="charts"]')
+    if (!container) return
+    
+    const monthlyData = JSON.parse(container.dataset.monthly || '[]')
+    const dayOfWeekData = JSON.parse(container.dataset.dayOfWeek || '[]')
+    const medicationData = JSON.parse(container.dataset.medication || '[]')
+    
+    // Time Chart
+    const timeCanvas = container.querySelector('[data-charts-target="timeChart"]')
+    if (timeCanvas && monthlyData.length > 0) {
+      new Chart(timeCanvas, {
+        type: 'line',
+        data: {
+          labels: monthlyData.map(d => d[0]),
+          datasets: [{
+            label: 'Number of Migraines',
+            data: monthlyData.map(d => d[1]),
+            borderColor: 'rgb(16, 185, 129)',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { stepSize: 1 }
+            }
+          }
+        }
+      })
+    }
+    
+    // Day of Week Chart
+    const dayCanvas = container.querySelector('[data-charts-target="dayChart"]')
+    if (dayCanvas && dayOfWeekData.length > 0) {
+      new Chart(dayCanvas, {
+        type: 'bar',
+        data: {
+          labels: dayOfWeekData.map(d => d[0]),
+          datasets: [{
+            label: 'Number of Migraines',
+            data: dayOfWeekData.map(d => d[1]),
+            backgroundColor: [
+              'rgba(239, 68, 68, 0.8)',
+              'rgba(249, 115, 22, 0.8)',
+              'rgba(234, 179, 8, 0.8)',
+              'rgba(16, 185, 129, 0.8)',
+              'rgba(59, 130, 246, 0.8)',
+              'rgba(139, 92, 246, 0.8)',
+              'rgba(236, 72, 153, 0.8)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { stepSize: 1 }
+            }
+          }
+        }
+      })
+    }
+    
+    // Medication Chart
+    const medCanvas = container.querySelector('[data-charts-target="medicationChart"]')
+    if (medCanvas && medicationData.length > 0) {
+      new Chart(medCanvas, {
+        type: 'doughnut',
+        data: {
+          labels: medicationData.map(d => d[0]),
+          datasets: [{
+            data: medicationData.map(d => d[1]),
+            backgroundColor: [
+              'rgba(16, 185, 129, 0.8)',
+              'rgba(59, 130, 246, 0.8)',
+              'rgba(249, 115, 22, 0.8)',
+              'rgba(139, 92, 246, 0.8)',
+              'rgba(236, 72, 153, 0.8)',
+              'rgba(234, 179, 8, 0.8)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom' }
+          }
+        }
+      })
+    }
+  })
+</script>

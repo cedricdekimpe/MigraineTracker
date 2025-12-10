@@ -9,6 +9,8 @@ applyTo: "**/*.rb"
 - Use ActiveModel attributes API for defining model attributes
 - Use Rails built-in testing tools (Minitest) for all test cases
 - Use SQLite for development and production environments
+- Always write tests
+- Make sure the tests are passing before committing code
 
 ## Rails Controllers
 - Keep controllers thin, focused on HTTP concerns
