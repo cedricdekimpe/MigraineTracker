@@ -20,6 +20,11 @@ Rails.application.routes.draw do
 
   resources :stats, only: [:index]
 
+  # Data export/import
+  post "exports", to: "exports#create", as: :exports
+  get "imports/new", to: "imports#new", as: :new_import
+  post "imports", to: "imports#create", as: :imports
+
   # Defines the root path route ("/")
   root "home#index"
 end
