@@ -208,10 +208,6 @@ GEM
       prawn (>= 1.3.0, < 3.0.0)
     prettyprint (0.2.0)
     prism (1.6.0)
-    propshaft (1.3.1)
-      actionpack (>= 7.0.0)
-      activesupport (>= 7.0.0)
-      rack
     psych (5.2.6)
       date
       stringio
@@ -319,6 +315,14 @@ GEM
       fugit (~> 1.11)
       railties (>= 7.1)
       thor (>= 1.3.1)
+    sprockets (4.2.2)
+      concurrent-ruby (~> 1.0)
+      logger
+      rack (>= 2.2.4, < 4)
+    sprockets-rails (3.5.2)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
+      sprockets (>= 3.0.0)
     sqlite3 (2.8.1-x86_64-linux-gnu)
     sshkit (1.25.0)
       base64
@@ -382,13 +386,13 @@ DEPENDENCIES
   kamal
   prawn (~> 2.4)
   prawn-table (~> 0.2.2)
-  propshaft
   puma (>= 5.0)
   rails (~> 8.1.1)
   rubocop-rails-omakase
   solid_cable
   solid_cache
   solid_queue
+  sprockets-rails
   sqlite3 (>= 2.1)
   stimulus-rails
   tailwindcss-rails
