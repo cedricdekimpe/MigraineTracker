@@ -70,4 +70,4 @@ end
 
 gem "devise", "~> 4.9"
 gem "rails_admin", "~> 3.3"
-gem "dartsass-rails"
+gem "sassc-rails"

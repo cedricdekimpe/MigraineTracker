@@ -13,9 +13,15 @@ if defined?(RailsAdmin)
   Rails.application.config.assets.paths << RailsAdmin::Engine.root.join("src")
 end
 
+# Prevent sassc from processing .css files (Tailwind is pre-built)
+Rails.application.config.assets.configure do |env|
+  env.unregister_postprocessor('text/css', Sprockets::SassCompressor) if defined?(Sprockets::SassCompressor)
+end
+
 # Precompile additional assets.
 Rails.application.config.assets.precompile += %w[
 	application.css
 	tailwind.css
+	rails_admin.css
 	rails_admin.js
 ]
