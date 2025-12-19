@@ -22,7 +22,7 @@ en:
     feature_secure_title: "Secure and private"
     feature_secure_desc: "Your data stays protected behind authenticated access. Export yearly summaries as PDFs to share with providers when you choose."
     cta_title: "Ready to start tracking?"
-    cta_description: "Build a complete picture of your migraine history and treatment plan. Whether you are preparing for a specialist visit or staying on top of daily wellbeing, My Migraine Manager gives you the structure you need."
+    cta_description: "Build a complete picture of your migraine history and treatment plan. Whether you are preparing for a specialist visit or staying on top of daily wellbeing, Migraine Tracker gives you the structure you need."
     view_calendar: "View my calendar"
     manage_medications: "Manage medications"
     
@@ -128,7 +128,7 @@ en:
     back: "Back to Account"
     warning_title: "Important:"
     warning_duplicates: "Duplicate entries (based on date) will be skipped automatically"
-    warning_format: "Only JSON files exported from My Migraine Manager are supported"
+    warning_format: "Only JSON files exported from Migraine Tracker are supported"
     
   # Flash messages
   flash:

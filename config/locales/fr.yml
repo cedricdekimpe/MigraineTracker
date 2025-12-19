@@ -22,7 +22,7 @@ fr:
     feature_secure_title: "Sécurisé et privé"
     feature_secure_desc: "Vos données restent protégées derrière un accès authentifié. Exportez les résumés annuels en PDF pour les partager avec les professionnels de santé quand vous le souhaitez."
     cta_title: "Prêt à commencer le suivi ?"
-    cta_description: "Construisez une image complète de votre historique de migraines et de votre plan de traitement. Que vous vous prépariez pour une visite chez un spécialiste ou que vous surveilliez votre bien-être quotidien, My Migraine Manager vous donne la structure dont vous avez besoin."
+    cta_description: "Construisez une image complète de votre historique de migraines et de votre plan de traitement. Que vous vous prépariez pour une visite chez un spécialiste ou que vous surveilliez votre bien-être quotidien, Migraine Tracker vous donne la structure dont vous avez besoin."
     view_calendar: "Voir mon calendrier"
     manage_medications: "Gérer les médicaments"
     
@@ -128,7 +128,7 @@ fr:
     back: "Retour au compte"
     warning_title: "Important :"
     warning_duplicates: "Les entrées en double (basées sur la date) seront automatiquement ignorées"
-    warning_format: "Seuls les fichiers JSON exportés depuis My Migraine Manager sont pris en charge"
+    warning_format: "Seuls les fichiers JSON exportés depuis Migraine Tracker sont pris en charge"
     
   # Flash messages
   flash:
