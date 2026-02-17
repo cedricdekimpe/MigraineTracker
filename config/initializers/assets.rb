@@ -17,7 +17,6 @@ end
 Rails.application.config.assets.precompile += %w[
 	application.css
 	tailwind.css
-
-ails_admin.css
+	rails_admin.css
 	rails_admin.js
 ]
