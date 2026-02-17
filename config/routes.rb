@@ -1,5 +1,45 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+
+  # API routes (no locale scope)
+  namespace :api do
+    namespace :v1 do
+      # Authentication
+      post 'auth/register', to: 'auth#register'
+      post 'auth/login', to: 'auth#login'
+      delete 'auth/logout', to: 'auth#logout'
+      post 'auth/refresh', to: 'auth#refresh'
+      get 'auth/me', to: 'auth#me'
+
+      # User profile
+      get 'user/profile', to: 'users#show'
+      patch 'user/profile', to: 'users#update'
+      delete 'user', to: 'users#destroy'
+
+      # Data management
+      get 'data/export', to: 'data#export'
+      post 'data/import', to: 'data#import'
+
+      # Resources
+      resources :migraines, only: %i[index show create update destroy] do
+        collection do
+          get :calendar
+          get :yearly
+        end
+      end
+
+      resources :medications, only: %i[index show create update destroy]
+
+      # Statistics
+      get 'stats', to: 'stats#index'
+      get 'stats/monthly', to: 'stats#monthly'
+      get 'stats/by_day_of_week', to: 'stats#by_day_of_week'
+      get 'stats/by_medication', to: 'stats#by_medication'
+      get 'stats/by_nature', to: 'stats#by_nature'
+      get 'stats/by_intensity', to: 'stats#by_intensity'
+    end
+  end
+
   # Locale scope for internationalization
   scope "(:locale)", locale: /en|fr/ do
     devise_for :users, controllers: { registrations: 'users/registrations' }

@@ -72,5 +72,15 @@ group :test do
 end
 
 gem "devise", "~> 4.9"
+gem "devise-jwt", "~> 0.12"
 gem "rails_admin", "~> 3.3"
 gem "sassc-rails"
+
+# API
+gem "jsonapi-serializer", "~> 2.2"
+gem "rack-cors", "~> 2.0"
+gem "rack-attack", "~> 6.7"
+
+# API Documentation
+gem "rswag-api", "~> 2.16"
+gem "rswag-ui", "~> 2.16"
