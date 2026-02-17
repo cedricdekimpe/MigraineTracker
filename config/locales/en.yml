@@ -100,7 +100,20 @@ en:
     
   # User account
   account:
+    settings: "Settings"
     edit_title: "Account Settings"
+    nav:
+      profile: "Profile"
+      medications: "Medications"
+      data: "Data Management"
+    profile_title: "Profile Settings"
+    profile_description: "Update your email address or change your password"
+    medications_page_title: "My Medications"
+    medications_page_description: "Manage the medications you use for migraine relief"
+    data_page_title: "Data Management"
+    data_page_description: "Export, import, or delete your data"
+    no_medications_hint: "Add medications to track which treatments work best for your migraines"
+    add_new_medication: "Add new medication"
     account_info: "Account Information"
     update_email_password: "Update your email address or password"
     email: "Email"
@@ -223,6 +236,7 @@ en:
     statistics_answer: "The Statistics page shows visual insights including: total migraine count, migraines with/without medication, a 12-month trend chart, distribution by day of the week, and medication usage breakdown. These help you identify patterns and discuss trends with your healthcare provider."
     contact_title: "Still have questions?"
     contact_text: "If you couldn't find the answer you're looking for, feel free to reach out to us. We're here to help!"
+    go_to_data_settings: "Go to Data Settings"
 
   # Devise custom messages
   devise:

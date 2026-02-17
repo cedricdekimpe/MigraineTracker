@@ -33,7 +33,7 @@
             <%= link_to t('navigation.migraine_log'), migraines_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
             <%= link_to t('navigation.yearly_overview'), yearly_migraines_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
             <%= link_to t('navigation.statistics'), stats_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
-            <%= link_to t('navigation.account'), edit_user_registration_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
+            <%= link_to t('navigation.account'), account_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
             <% if current_user.admin? %>
               <%= link_to t('navigation.admin'), rails_admin_path, class: "rounded-md border border-amber-300 bg-amber-50 px-3 py-1.5 font-medium text-amber-700 transition hover:bg-amber-100" %>
             <% end %>

@@ -7,6 +7,12 @@ Rails.application.routes.draw do
     # Static pages
     get 'faq', to: 'pages#faq', as: :faq
     
+    # Account settings pages
+    get 'account', to: 'account#show', as: :account
+    get 'account/profile', to: 'account#profile', as: :account_profile
+    get 'account/medications', to: 'account#medications', as: :account_medications
+    get 'account/data', to: 'account#data', as: :account_data
+    
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
     # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

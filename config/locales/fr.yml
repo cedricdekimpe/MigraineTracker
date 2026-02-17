@@ -100,7 +100,20 @@ fr:
     
   # User account
   account:
+    settings: "Paramètres"
     edit_title: "Paramètres du compte"
+    nav:
+      profile: "Profil"
+      medications: "Médicaments"
+      data: "Gestion des données"
+    profile_title: "Paramètres du profil"
+    profile_description: "Mettez à jour votre adresse e-mail ou changez votre mot de passe"
+    medications_page_title: "Mes médicaments"
+    medications_page_description: "Gérez les médicaments que vous utilisez pour soulager les migraines"
+    data_page_title: "Gestion des données"
+    data_page_description: "Exportez, importez ou supprimez vos données"
+    no_medications_hint: "Ajoutez des médicaments pour suivre quels traitements fonctionnent le mieux pour vos migraines"
+    add_new_medication: "Ajouter un nouveau médicament"
     account_info: "Informations du compte"
     update_email_password: "Mettez à jour votre adresse e-mail ou votre mot de passe"
     email: "E-mail"
@@ -271,6 +284,7 @@ fr:
     statistics_answer: "La page Statistiques montre des aperçus visuels incluant : le nombre total de migraines, les migraines avec/sans médicament, un graphique de tendance sur 12 mois, la distribution par jour de la semaine, et la répartition de l'utilisation des médicaments. Ceux-ci vous aident à identifier les tendances et à discuter des patterns avec votre professionnel de santé."
     contact_title: "Encore des questions ?"
     contact_text: "Si vous n'avez pas trouvé la réponse que vous cherchez, n'hésitez pas à nous contacter. Nous sommes là pour vous aider !"
+    go_to_data_settings: "Aller aux paramètres de données"
 
   # Messages Devise personnalisés
   devise:
