@@ -28,6 +28,19 @@ module MigrainesHelper
     end
   end
 
+  def intensity_color_class(intensity)
+    case intensity
+    when 0..3
+      "bg-emerald-100 text-emerald-800"
+    when 4..6
+      "bg-amber-100 text-amber-800"
+    when 7..8
+      "bg-orange-100 text-orange-800"
+    else
+      "bg-rose-100 text-rose-800"
+    end
+  end
+
   def medication_display(migraine)
     return "–" unless migraine&.medication
 

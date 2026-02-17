@@ -4,6 +4,7 @@ en:
     migraine_log: "Migraine log"
     yearly_overview: "Yearly overview"
     statistics: "Statistics"
+    history: "History"
     account: "Account"
     admin: "Admin"
     signed_in_as: "Signed in as %{email}"
@@ -66,6 +67,18 @@ en:
     export_pdf: "Export as PDF"
     intensity_label: "Intensity: %{value}/10"
     medication_label: "Medication: %{name}"
+    # History page
+    history_title: "Migraine History"
+    history_description: "View, edit, and manage all your recorded migraines"
+    filter_by_year: "Filter by year"
+    all_years: "All years"
+    no_history: "No migraines recorded"
+    no_history_hint: "Start tracking your migraines to see them listed here"
+    actions: "Actions"
+    # Edit page
+    edit_migraine: "Edit Migraine"
+    edit_description: "Update the details of this migraine entry"
+    update: "Update migraine"
     
   # Migraine nature options
   migraine_nature:

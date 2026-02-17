@@ -3,13 +3,25 @@ require_dependency "migraines/yearly_report_pdf"
 class MigrainesController < ApplicationController
   before_action :set_current_month, only: :index
   before_action :set_days, only: %i[index yearly]
-  before_action :load_medications, only: %i[new create]
+  before_action :load_medications, only: %i[new create edit update]
+  before_action :set_migraine, only: %i[edit update destroy]
 
   def index
     migraines = current_user.migraines.for_month(@current_month)
     @migraines_by_day = migraines.index_by { |migraine| migraine.occurred_on.day }
     @previous_month = @current_month.prev_month
     @next_month = @current_month.next_month
+  end
+
+  def history
+    @years = current_user.migraines.select("DISTINCT strftime('%Y', occurred_on) as year")
+                         .map { |m| m.year.to_i }.sort.reverse
+    @selected_year = params[:year].present? ? params[:year].to_i : nil
+
+    migraines = current_user.migraines.includes(:medication).order(occurred_on: :desc)
+    migraines = migraines.where("strftime('%Y', occurred_on) = ?", @selected_year.to_s) if @selected_year
+
+    @pagy, @migraines = pagy(migraines)
   end
 
   def yearly
@@ -50,6 +62,23 @@ class MigrainesController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @migraine.update(migraine_params)
+      redirect_to history_migraines_path(year: params[:year]), notice: t('flash.migraine_updated')
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    year = @migraine.occurred_on.year
+    @migraine.destroy
+    redirect_to history_migraines_path(year: year), notice: t('flash.migraine_deleted')
+  end
+
   private
 
   def set_current_month
@@ -84,6 +113,10 @@ class MigrainesController < ApplicationController
 
   def migraine_params
     params.require(:migraine).permit(:occurred_on, :nature, :intensity, :on_period, :medication_id)
+  end
+
+  def set_migraine
+    @migraine = current_user.migraines.find(params[:id])
   end
 
   def send_yearly_pdf
