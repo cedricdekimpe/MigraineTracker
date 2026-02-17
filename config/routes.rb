@@ -2,7 +2,10 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   # Locale scope for internationalization
   scope "(:locale)", locale: /en|fr/ do
-    devise_for :users
+    devise_for :users, controllers: { registrations: 'users/registrations' }
+    
+    # Static pages
+    get 'faq', to: 'pages#faq', as: :faq
     
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

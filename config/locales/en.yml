@@ -11,6 +11,7 @@ en:
     sign_in: "Sign in"
     create_account: "Create account"
     language: "Language"
+    faq: "FAQ"
     
   # Admin
   admin:
@@ -127,6 +128,27 @@ en:
     import_button: "Import from File"
     backup_warning: "Backup recommendation:"
     backup_text: "Export your data regularly to prevent data loss. Store backups in a secure location."
+    # Danger Zone - Account Deletion
+    danger_zone_title: "Danger Zone"
+    danger_zone_description: "Irreversible and destructive actions"
+    delete_account_title: "Delete Account"
+    delete_account_warning: "Once you delete your account, there is no going back. Please be certain."
+    delete_my_account: "Delete My Account"
+    data_to_delete: "This will permanently delete:"
+    migraines_count:
+      one: "%{count} migraine entry"
+      other: "%{count} migraine entries"
+    medications_count:
+      one: "%{count} medication"
+      other: "%{count} medications"
+    delete_confirmation_phrase: "DELETE MY ACCOUNT"
+    delete_modal_title: "Delete Your Account"
+    delete_modal_description: "This action cannot be undone. All your data will be permanently removed from our servers."
+    delete_modal_warning: "The following data will be permanently deleted:"
+    delete_modal_account_info: "Your account and all personal information"
+    delete_modal_type_phrase: "Type the following phrase to confirm:"
+    delete_modal_password: "Enter your password to confirm"
+    delete_account_permanently: "Delete Account Permanently"
     
   # Import/Export
   import:
@@ -173,3 +195,36 @@ en:
       long: "%B %d, %Y"
       short: "%b %d"
       month_year: "%B %Y"
+
+  # FAQ
+  faq:
+    title: "Frequently Asked Questions"
+    subtitle: "Find answers to common questions about Migraine Tracker"
+    privacy_section: "Privacy & Data"
+    data_storage_question: "How is my data stored?"
+    data_storage_answer: "Your data is stored securely in our database. We use industry-standard encryption and security practices to protect your information. Your migraine logs, medications, and personal details are only accessible to you."
+    gdpr_question: "Is Migraine Tracker GDPR compliant?"
+    gdpr_answer_html: "Yes! We are fully GDPR compliant. You have complete control over your data:<br><br>• <strong>Right to access:</strong> Export all your data anytime from Account Settings<br>• <strong>Right to erasure:</strong> Delete your account and all associated data permanently<br>• <strong>Right to portability:</strong> Download your data in JSON format<br>• <strong>Data minimization:</strong> We only collect data necessary for the app to function"
+    data_sharing_question: "Do you share my data with third parties?"
+    data_sharing_answer: "No, we never sell or share your personal health data with third parties. Your migraine information is yours alone. We do not use your data for advertising or marketing purposes."
+    account_section: "Account Management"
+    delete_account_question: "How do I delete my account?"
+    delete_account_answer_html: "You can delete your account from the Account Settings page. Scroll to the \"Danger Zone\" section and click \"Delete My Account\". You will need to:<br><br>1. Type the confirmation phrase exactly as shown<br>2. Enter your password<br><br>This action is permanent and will delete all your migraines, medications, and account information. We recommend exporting your data first if you want to keep a copy."
+    export_data_question: "How do I export my data?"
+    export_data_answer: "Go to Account Settings and find the \"Data Management\" section. Click \"Export All Data\" to download a JSON file containing all your migraines and medications. This file can be used for backups or to import your data later."
+    import_data_question: "Can I import data from a backup?"
+    import_data_answer: "Yes! In Account Settings under \"Data Management\", click \"Import from File\" and select a previously exported JSON file. Duplicate entries (based on date) will be skipped automatically to prevent data duplication."
+    usage_section: "Using the App"
+    track_migraine_question: "How do I track a migraine?"
+    track_migraine_answer: "Click \"New entry\" from the Migraine Log page or use the calendar view to select a date. Fill in the details including the nature of the headache, intensity (0-10), whether you were on your menstrual cycle, and any medication taken. Click \"Save migraine\" to log the entry."
+    medications_question: "How do I manage my medications?"
+    medications_answer: "Go to Account Settings to find the \"My Medications\" section. Here you can add new medications by typing the name and clicking \"Add\". To remove a medication, click the \"Delete\" button next to it. Your medication list appears as options when logging migraines."
+    statistics_question: "What do the statistics show?"
+    statistics_answer: "The Statistics page shows visual insights including: total migraine count, migraines with/without medication, a 12-month trend chart, distribution by day of the week, and medication usage breakdown. These help you identify patterns and discuss trends with your healthcare provider."
+    contact_title: "Still have questions?"
+    contact_text: "If you couldn't find the answer you're looking for, feel free to reach out to us. We're here to help!"
+
+  # Devise custom messages
+  devise:
+    registrations:
+      password_invalid: "Incorrect password. Please try again."

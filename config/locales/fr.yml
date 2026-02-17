@@ -11,6 +11,7 @@ fr:
     sign_in: "Connexion"
     create_account: "Créer un compte"
     language: "Langue"
+    faq: "FAQ"
     
   # Admin
   admin:
@@ -127,6 +128,27 @@ fr:
     import_button: "Importer depuis un fichier"
     backup_warning: "Recommandation de sauvegarde :"
     backup_text: "Exportez vos données régulièrement pour éviter la perte de données. Stockez les sauvegardes dans un endroit sécurisé."
+    # Danger Zone - Suppression de compte
+    danger_zone_title: "Zone de danger"
+    danger_zone_description: "Actions irréversibles et destructives"
+    delete_account_title: "Supprimer le compte"
+    delete_account_warning: "Une fois votre compte supprimé, il n'y a pas de retour en arrière. Veuillez être certain."
+    delete_my_account: "Supprimer mon compte"
+    data_to_delete: "Ceci supprimera définitivement :"
+    migraines_count:
+      one: "%{count} entrée de migraine"
+      other: "%{count} entrées de migraines"
+    medications_count:
+      one: "%{count} médicament"
+      other: "%{count} médicaments"
+    delete_confirmation_phrase: "SUPPRIMER MON COMPTE"
+    delete_modal_title: "Supprimer votre compte"
+    delete_modal_description: "Cette action est irréversible. Toutes vos données seront définitivement supprimées de nos serveurs."
+    delete_modal_warning: "Les données suivantes seront définitivement supprimées :"
+    delete_modal_account_info: "Votre compte et toutes vos informations personnelles"
+    delete_modal_type_phrase: "Tapez la phrase suivante pour confirmer :"
+    delete_modal_password: "Entrez votre mot de passe pour confirmer"
+    delete_account_permanently: "Supprimer définitivement"
     
   # Import/Export
   import:
@@ -221,3 +243,36 @@ fr:
       - :day
       - :month
       - :year
+
+  # FAQ
+  faq:
+    title: "Questions fréquentes"
+    subtitle: "Trouvez des réponses aux questions courantes sur Migraine Tracker"
+    privacy_section: "Confidentialité et données"
+    data_storage_question: "Comment mes données sont-elles stockées ?"
+    data_storage_answer: "Vos données sont stockées de manière sécurisée dans notre base de données. Nous utilisons des pratiques de chiffrement et de sécurité conformes aux normes de l'industrie pour protéger vos informations. Vos journaux de migraines, médicaments et détails personnels ne sont accessibles qu'à vous."
+    gdpr_question: "Migraine Tracker est-il conforme au RGPD ?"
+    gdpr_answer_html: "Oui ! Nous sommes entièrement conformes au RGPD. Vous avez un contrôle total sur vos données :<br><br>• <strong>Droit d'accès :</strong> Exportez toutes vos données à tout moment depuis les paramètres du compte<br>• <strong>Droit à l'effacement :</strong> Supprimez votre compte et toutes les données associées de façon permanente<br>• <strong>Droit à la portabilité :</strong> Téléchargez vos données au format JSON<br>• <strong>Minimisation des données :</strong> Nous ne collectons que les données nécessaires au fonctionnement de l'application"
+    data_sharing_question: "Partagez-vous mes données avec des tiers ?"
+    data_sharing_answer: "Non, nous ne vendons ni ne partageons jamais vos données de santé personnelles avec des tiers. Vos informations sur les migraines vous appartiennent. Nous n'utilisons pas vos données à des fins publicitaires ou marketing."
+    account_section: "Gestion du compte"
+    delete_account_question: "Comment supprimer mon compte ?"
+    delete_account_answer_html: "Vous pouvez supprimer votre compte depuis la page Paramètres du compte. Faites défiler jusqu'à la section \"Zone de danger\" et cliquez sur \"Supprimer mon compte\". Vous devrez :<br><br>1. Taper la phrase de confirmation exactement comme indiqué<br>2. Entrer votre mot de passe<br><br>Cette action est permanente et supprimera toutes vos migraines, médicaments et informations de compte. Nous vous recommandons d'exporter vos données d'abord si vous souhaitez en conserver une copie."
+    export_data_question: "Comment exporter mes données ?"
+    export_data_answer: "Allez dans les Paramètres du compte et trouvez la section \"Gestion des données\". Cliquez sur \"Exporter toutes les données\" pour télécharger un fichier JSON contenant toutes vos migraines et médicaments. Ce fichier peut être utilisé pour des sauvegardes ou pour importer vos données plus tard."
+    import_data_question: "Puis-je importer des données depuis une sauvegarde ?"
+    import_data_answer: "Oui ! Dans les Paramètres du compte sous \"Gestion des données\", cliquez sur \"Importer depuis un fichier\" et sélectionnez un fichier JSON précédemment exporté. Les entrées en double (basées sur la date) seront automatiquement ignorées pour éviter la duplication des données."
+    usage_section: "Utilisation de l'application"
+    track_migraine_question: "Comment suivre une migraine ?"
+    track_migraine_answer: "Cliquez sur \"Nouvelle entrée\" depuis la page Journal des migraines ou utilisez la vue calendrier pour sélectionner une date. Remplissez les détails incluant la nature du mal de tête, l'intensité (0-10), si vous étiez pendant votre cycle menstruel, et tout médicament pris. Cliquez sur \"Enregistrer la migraine\" pour enregistrer l'entrée."
+    medications_question: "Comment gérer mes médicaments ?"
+    medications_answer: "Allez dans les Paramètres du compte pour trouver la section \"Mes médicaments\". Ici vous pouvez ajouter de nouveaux médicaments en tapant le nom et en cliquant sur \"Ajouter\". Pour supprimer un médicament, cliquez sur le bouton \"Supprimer\" à côté de celui-ci. Votre liste de médicaments apparaît comme options lors de l'enregistrement des migraines."
+    statistics_question: "Que montrent les statistiques ?"
+    statistics_answer: "La page Statistiques montre des aperçus visuels incluant : le nombre total de migraines, les migraines avec/sans médicament, un graphique de tendance sur 12 mois, la distribution par jour de la semaine, et la répartition de l'utilisation des médicaments. Ceux-ci vous aident à identifier les tendances et à discuter des patterns avec votre professionnel de santé."
+    contact_title: "Encore des questions ?"
+    contact_text: "Si vous n'avez pas trouvé la réponse que vous cherchez, n'hésitez pas à nous contacter. Nous sommes là pour vous aider !"
+
+  # Messages Devise personnalisés
+  devise:
+    registrations:
+      password_invalid: "Mot de passe incorrect. Veuillez réessayer."
