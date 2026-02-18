@@ -74,7 +74,6 @@ end
 gem "devise", "~> 4.9"
 gem "devise-jwt", "~> 0.12"
 gem "rails_admin", "~> 3.3"
-gem "sassc-rails"
 
 # API
 gem "jsonapi-serializer", "~> 2.2"
