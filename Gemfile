@@ -74,7 +74,7 @@ end
 gem "devise", "~> 4.9"
 gem "devise-jwt", "~> 0.12"
 gem "rails_admin", "~> 3.3"
-gem "sassc-rails", "~> 2.1"  # Required by RailsAdmin for SCSS compilation
+gem "dartsass-sprockets", "~> 3.1"  # Modern Sass compiler for RailsAdmin SCSS
 
 # API
 gem "jsonapi-serializer", "~> 2.2"
