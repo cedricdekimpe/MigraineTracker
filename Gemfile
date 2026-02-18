@@ -74,6 +74,7 @@ end
 gem "devise", "~> 4.9"
 gem "devise-jwt", "~> 0.12"
 gem "rails_admin", "~> 3.3"
+gem "dartsass-rails", "~> 0.5"  # RailsAdmin requires Sass for its stylesheets
 
 # API
 gem "jsonapi-serializer", "~> 2.2"
