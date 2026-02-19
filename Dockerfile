@@ -58,7 +58,6 @@ RUN bundle exec bootsnap precompile -j 1 app/ lib/
 RUN echo "----------------------------------------------------"
 
 ARG SECRET_KEY_BASE_DUMMY=1
-ENV SECRET_KEY_BASE=dummy_dummy_dummy_dummy_dummy_dummy_dummy_dummy
 RUN ./bin/rails assets:precompile
 
 RUN echo "----------------------------------------------------"
