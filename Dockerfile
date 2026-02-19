@@ -57,7 +57,7 @@ RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
 RUN echo "----------------------------------------------------"
 
-
+RUN cat /run/secrets/devise_jwt_secret_key
 # Precompiling assets for production
 # RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 RUN --mount=type=secret,id=devise_jwt_secret_key \
