@@ -60,7 +60,9 @@ RUN echo "----------------------------------------------------"
 
 # Precompiling assets for production
 # RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
-RUN ./bin/rails assets:precompile
+RUN --mount=type=secret,id=devise_jwt_secret_key \
+  export DEVISE_JWT_SECRET_KEY="$(cat /run/secrets/devise_jwt_secret_key)" && \
+  ./bin/rails assets:precompile
 RUN echo "----------------------------------------------------"
 
 
