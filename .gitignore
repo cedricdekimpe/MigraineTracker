@@ -43,3 +43,13 @@
 
 # Ignore vendored gems installed locally by Bundler
 /vendor/bundle/
+.kamal/secrets*
+.kamal/secrets*
+
+# Ignore key files for decrypting credentials and more.
+/config/*.key
+
+
+# Ignore key files for decrypting credentials and more.
+/config/credentials/*.key
+
