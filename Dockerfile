@@ -15,7 +15,7 @@ ARG BUNDLE_WITHOUT
 
 # Rails app lives here
 WORKDIR /rails
-
+RUN echo "USING THIS DOCKERFILE" && sleep 2
 # Install base packages
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 && \
@@ -56,8 +56,14 @@ RUN test "${RUBY_VERSION}" = "$(sed 's/ruby-//' .ruby-version)" || (echo "RUBY_V
 # -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+RUN echo "----------------------------------------------------"
+
+
+# Precompiling assets for production
+RUN --mount=type=secret,id=RAILS_MASTER_KEY \
+    export RAILS_MASTER_KEY="$(cat config/master.key)" && \
+    SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+RUN echo "----------------------------------------------------"
 
 
 
