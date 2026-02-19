@@ -15,7 +15,6 @@ ARG BUNDLE_WITHOUT
 
 # Rails app lives here
 WORKDIR /rails
-RUN echo "USING THIS DOCKERFILE" && sleep 2
 # Install base packages
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 && \
@@ -61,7 +60,7 @@ RUN echo "----------------------------------------------------"
 
 # Precompiling assets for production
 RUN --mount=type=secret,id=RAILS_MASTER_KEY \
-    export RAILS_MASTER_KEY="$(cat config/master.key)" && \
+    export RAILS_MASTER_KEY="$(cat /run/secrets/RAILS_MASTER_KEY)" && \
     SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 RUN echo "----------------------------------------------------"
 
