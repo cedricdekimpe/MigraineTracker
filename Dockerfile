@@ -57,8 +57,6 @@ RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
 RUN echo "----------------------------------------------------"
 
-ARG DEVISE_JWT_SECRET_KEY
-ENV DEVISE_JWT_SECRET_KEY=$DEVISE_JWT_SECRET_KEY
 RUN ./bin/rails assets:precompile
 
 RUN echo "----------------------------------------------------"

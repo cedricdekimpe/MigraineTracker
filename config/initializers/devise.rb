@@ -313,15 +313,18 @@ Devise.setup do |config|
 
   # ==> Configuration for :jwt_authenticatable
   # JWT configuration for API authentication
-  config.jwt do |jwt|
-    jwt.secret = Rails.application.credentials.devise_jwt_secret_key!
+  jwt_secret = ENV["DEVISE_JWT_SECRET_KEY"].presence
+  if jwt_secret
+    config.jwt do |jwt|
+      jwt.secret = jwt_secret
 
-    jwt.dispatch_requests = [
-      ["POST", %r{^/api/v1/auth/login$}]
-    ]
-    jwt.revocation_requests = [
-      ["DELETE", %r{^/api/v1/auth/logout$}]
-    ]
-    jwt.expiration_time = 1.hour.to_i
+      jwt.dispatch_requests = [
+        ["POST", %r{^/api/v1/auth/login$}]
+      ]
+      jwt.revocation_requests = [
+        ["DELETE", %r{^/api/v1/auth/logout$}]
+      ]
+      jwt.expiration_time = 1.hour.to_i
+    end
   end
 end
