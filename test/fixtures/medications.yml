@@ -1,0 +1,17 @@
+one:
+  name: Ibuprofen
+  user: one
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+two:
+  name: Paracetamol
+  user: one
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+three:
+  name: Aspirin
+  user: two
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

@@ -1,0 +1,47 @@
+<% content_for :title, t('migraines.edit_migraine') %>
+
+<section class="mx-auto w-full max-w-2xl rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
+  <header class="mb-6">
+    <h1 class="text-2xl font-semibold text-slate-900"><%= t('migraines.edit_migraine') %></h1>
+    <p class="mt-2 text-sm text-slate-500"><%= t('migraines.edit_description') %></p>
+  </header>
+
+  <%= render "shared/form_errors", object: @migraine %>
+
+  <%= form_with model: @migraine, class: "mt-6 space-y-6" do |form| %>
+    <%= hidden_field_tag :year, params[:year] if params[:year].present? %>
+
+    <div class="space-y-2">
+      <%= form.label :occurred_on, t('migraines.date'), class: "block text-sm font-medium text-slate-700" %>
+      <%= form.date_field :occurred_on, class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+    </div>
+
+    <div class="space-y-2">
+      <%= form.label :nature, t('migraines.nature'), class: "block text-sm font-medium text-slate-700" %>
+      <%= form.select :nature, Migraine::NATURE_OPTIONS.map { |value| [t("migraine_nature.#{value}"), value] }, {}, class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+    </div>
+
+    <div class="space-y-2">
+      <%= form.label :intensity, t('migraines.intensity'), class: "block text-sm font-medium text-slate-700" %>
+      <%= form.number_field :intensity, in: 0..10, class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <%= form.check_box :on_period, class: "h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" %>
+      <%= form.label :on_period, t('migraines.on_period'), class: "text-sm font-medium text-slate-700" %>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-center justify-between">
+        <%= form.label :medication_id, t('migraines.medication'), class: "block text-sm font-medium text-slate-700" %>
+        <%= link_to t('migraines.manage_list'), account_medications_path, class: "text-xs font-medium text-emerald-700 hover:text-emerald-800" %>
+      </div>
+      <%= form.collection_select :medication_id, @medications, :id, :name, { include_blank: t('migraines.none') }, class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+    </div>
+
+    <div class="flex items-center justify-between border-t border-slate-200 pt-6">
+      <%= link_to t('common.cancel'), history_migraines_path(year: params[:year]), class: "rounded-md border border-transparent px-3 py-2 text-sm font-medium text-slate-600 transition hover:text-slate-800" %>
+      <%= form.submit t('migraines.update'), class: "rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 cursor-pointer" %>
+    </div>
+  <% end %>
+</section>

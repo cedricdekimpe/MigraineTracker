@@ -1,0 +1,39 @@
+one:
+  user: one
+  occurred_on: <%= Date.current - 5.days %>
+  nature: "M"
+  intensity: 3
+  on_period: false
+  medication: one
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+two:
+  user: one
+  occurred_on: <%= Date.current - 10.days %>
+  nature: "H"
+  intensity: 5
+  on_period: true
+  medication: two
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+three:
+  user: one
+  occurred_on: <%= Date.current - 30.days %>
+  nature: "M"
+  intensity: 2
+  on_period: false
+  medication: null
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+four:
+  user: two
+  occurred_on: <%= Date.current - 3.days %>
+  nature: "A"
+  intensity: 4
+  on_period: false
+  medication: three
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

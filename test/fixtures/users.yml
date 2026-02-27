@@ -1,0 +1,21 @@
+# Encrypted password is 'password123' using BCrypt
+one:
+  email: user@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  admin: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+two:
+  email: another@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password456') %>
+  admin: false
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+admin:
+  email: admin@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'adminpass') %>
+  admin: true
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

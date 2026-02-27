@@ -19,32 +19,73 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes compiled stylesheets served through Sprockets %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body class="bg-slate-50 min-h-screen flex flex-col">
-    <header class="border-b border-slate-200 bg-white">
-      <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-        <%= link_to "Migraine Tracker", root_path, class: "text-lg font-semibold text-slate-900" %>
-        <nav class="flex items-center gap-3 text-sm">
-          <% if user_signed_in? %>
-            <%= link_to t('navigation.migraine_log'), migraines_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
-            <%= link_to t('navigation.yearly_overview'), yearly_migraines_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
-            <%= link_to t('navigation.statistics'), stats_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
-            <%= link_to t('navigation.account'), edit_user_registration_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
-            <% if current_user.admin? %>
-              <%= link_to t('navigation.admin'), rails_admin_path, class: "rounded-md border border-amber-300 bg-amber-50 px-3 py-1.5 font-medium text-amber-700 transition hover:bg-amber-100" %>
+    <header class="border-b border-slate-200 bg-white" data-controller="menu">
+      <div class="mx-auto max-w-6xl px-5 py-4">
+        <div class="flex items-center justify-between">
+          <%= link_to "Migraine Tracker", root_path, class: "text-lg font-semibold text-slate-900" %>
+          
+          <%# Mobile menu button %>
+          <button type="button" 
+                  data-action="click->menu#toggle"
+                  class="rounded-md p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 md:hidden">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+
+          <%# Desktop navigation %>
+          <nav class="hidden items-center gap-3 text-sm md:flex">
+            <% if user_signed_in? %>
+              <%= link_to t('navigation.migraine_log'), migraines_path, class: "rounded-md px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
+              <%= link_to t('navigation.yearly_overview'), yearly_migraines_path, class: "rounded-md px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
+              <%= link_to t('navigation.statistics'), stats_path, class: "rounded-md px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
+              <%= link_to t('navigation.history'), history_migraines_path, class: "rounded-md px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
+              <%= link_to t('navigation.account'), account_path, class: "rounded-md px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
+              <% if current_user.admin? %>
+                <%= link_to t('navigation.admin'), rails_admin_path, class: "rounded-md border border-amber-300 bg-amber-50 px-3 py-1.5 font-medium text-amber-700 transition hover:bg-amber-100" %>
+              <% end %>
+              <%= button_to t('navigation.sign_out'), destroy_user_session_path,
+                  method: :delete,
+                  class: "rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900",
+                  form: { class: "inline-block" } %>
+            <% else %>
+              <%= link_to t('navigation.sign_in'), new_user_session_path, class: "rounded-md px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
+              <%= link_to t('navigation.create_account'), new_user_registration_path, class: "rounded-md bg-emerald-600 px-3 py-1.5 font-semibold text-white transition hover:bg-emerald-700" %>
             <% end %>
-            <span class="text-slate-500"><%= t('navigation.signed_in_as', email: current_user.email) %></span>
-            <%= button_to t('navigation.sign_out'), destroy_user_session_path,
-                method: :delete,
-                class: "rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900",
-                form: { class: "inline-block" } %>
+          </nav>
+        </div>
+
+        <%# Mobile navigation menu %>
+        <nav data-menu-target="menu" 
+             data-action="keydown.esc@window->menu#close"
+             class="mt-4 hidden space-y-2 border-t border-slate-200 pt-4 md:hidden">
+          <% if user_signed_in? %>
+            <div class="mb-3 rounded-md bg-slate-50 px-3 py-2">
+              <p class="text-xs text-slate-500"><%= t('navigation.signed_in_as', email: current_user.email) %></p>
+            </div>
+            <%= link_to t('navigation.migraine_log'), migraines_path, class: "block rounded-md px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-50", data: { action: "click->menu#close" } %>
+            <%= link_to t('navigation.yearly_overview'), yearly_migraines_path, class: "block rounded-md px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-50", data: { action: "click->menu#close" } %>
+            <%= link_to t('navigation.statistics'), stats_path, class: "block rounded-md px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-50", data: { action: "click->menu#close" } %>
+            <%= link_to t('navigation.history'), history_migraines_path, class: "block rounded-md px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-50", data: { action: "click->menu#close" } %>
+            <%= link_to t('navigation.account'), account_path, class: "block rounded-md px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-50", data: { action: "click->menu#close" } %>
+            <% if current_user.admin? %>
+              <%= link_to t('navigation.admin'), rails_admin_path, class: "block rounded-md border border-amber-300 bg-amber-50 px-3 py-2 font-medium text-amber-700 transition hover:bg-amber-100", data: { action: "click->menu#close" } %>
+            <% end %>
+            <div class="pt-2">
+              <%= button_to t('navigation.sign_out'), destroy_user_session_path,
+                  method: :delete,
+                  class: "w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900" %>
+            </div>
           <% else %>
-            <%= link_to t('navigation.sign_in'), new_user_session_path, class: "rounded-md border border-transparent px-3 py-1.5 font-medium text-slate-700 transition hover:text-slate-900" %>
-            <%= link_to t('navigation.create_account'), new_user_registration_path, class: "rounded-md bg-emerald-600 px-3 py-1.5 font-semibold text-white transition hover:bg-emerald-700" %>
+            <%= link_to t('navigation.sign_in'), new_user_session_path, class: "block rounded-md px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-50", data: { action: "click->menu#close" } %>
+            <%= link_to t('navigation.create_account'), new_user_registration_path, class: "block rounded-md bg-emerald-600 px-3 py-2 text-center font-semibold text-white transition hover:bg-emerald-700", data: { action: "click->menu#close" } %>
           <% end %>
         </nav>
       </div>
@@ -64,7 +105,10 @@
 
     <footer class="mt-auto border-t border-slate-200 bg-white">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-        <p class="text-xs text-slate-500">© <%= Time.current.year %> Migraine Tracker</p>
+        <div class="flex items-center gap-4">
+          <p class="text-xs text-slate-500">© <%= Time.current.year %> Migraine Tracker</p>
+          <%= link_to t('navigation.faq'), faq_path, class: "text-xs text-slate-500 hover:text-slate-700" %>
+        </div>
         <div class="flex items-center gap-2">
           <span class="text-xs text-slate-500"><%= t('navigation.language') || 'Language' %>:</span>
           <%= link_to "EN", url_for(locale: :en), class: "rounded px-2 py-1 text-xs font-medium #{I18n.locale == :en ? 'bg-emerald-600 text-white' : 'text-slate-600 hover:bg-slate-100'}" %>

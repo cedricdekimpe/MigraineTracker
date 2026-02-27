@@ -15,7 +15,7 @@ gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
-gem "tailwindcss-rails"
+gem "tailwindcss-rails", "~> 3.3"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
@@ -45,6 +45,9 @@ gem "image_processing", "~> 1.2"
 gem "prawn", "~> 2.4"
 gem "prawn-table", "~> 0.2.2"
 
+# Pagination
+gem "pagy", "~> 9.0"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -69,5 +72,15 @@ group :test do
 end
 
 gem "devise", "~> 4.9"
+gem "devise-jwt", "~> 0.12"
 gem "rails_admin", "~> 3.3"
-gem "sassc-rails"
+gem "dartsass-sprockets", "~> 3.1"  # Modern Sass compiler for RailsAdmin SCSS
+
+# API
+gem "jsonapi-serializer", "~> 2.2"
+gem "rack-cors", "~> 2.0"
+gem "rack-attack", "~> 6.7"
+
+# API Documentation
+gem "rswag-api", "~> 2.16"
+gem "rswag-ui", "~> 2.16"

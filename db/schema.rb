@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_10_043844) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_17_141223) do
+  create_table "jwt_denylist", force: :cascade do |t|
+    t.datetime "exp", null: false
+    t.string "jti", null: false
+    t.index ["jti"], name: "index_jwt_denylist_on_jti"
+  end
+
   create_table "medications", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -35,6 +41,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_10_043844) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.boolean "admin", default: false, null: false
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -42,6 +49,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_10_043844) do
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.datetime "updated_at", null: false
+    t.index ["admin"], name: "index_users_on_admin"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
