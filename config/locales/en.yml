@@ -13,6 +13,12 @@ en:
     create_account: "Create account"
     language: "Language"
     faq: "FAQ"
+  
+  # SEO
+  seo:
+    site_name: "Migraine Tracker"
+    default_description: "Track your migraines, medications, and patterns with visual calendars designed for people living with migraines. Log episodes, identify triggers, and share insights with healthcare providers."
+    keywords: "migraine tracker, headache tracker, migraine diary, health tracking, migraine management, headache log, migraine calendar, health app, medical tracking"
     
   # Admin
   admin:

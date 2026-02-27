@@ -40,6 +40,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # Sitemap (no locale scope, but accessible from any locale)
+  get 'sitemap.xml', to: 'sitemap#index', format: :xml, as: :sitemap
+
   # Locale scope for internationalization
   scope "(:locale)", locale: /en|fr/ do
     devise_for :users, controllers: { registrations: 'users/registrations' }

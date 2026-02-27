@@ -13,6 +13,12 @@ fr:
     create_account: "Créer un compte"
     language: "Langue"
     faq: "FAQ"
+  
+  # SEO
+  seo:
+    site_name: "Migraine Tracker"
+    default_description: "Suivez vos migraines, médicaments et tendances avec des calendriers visuels conçus pour les personnes souffrant de migraines. Enregistrez les épisodes, identifiez les déclencheurs et partagez des informations avec les professionnels de santé."
+    keywords: "suivi migraines, journal migraines, calendrier migraines, suivi santé, gestion migraines, application santé, tracking médical, suivi médical"
     
   # Admin
   admin:

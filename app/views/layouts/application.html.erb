@@ -1,11 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale %>">
   <head>
-    <title><%= content_for(:title) || "Migraine Tracker" %></title>
+    <meta charset="utf-8">
+    <title><%= seo_title(content_for(:title)) %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+    <%# SEO Meta Tags %>
+    <meta name="description" content="<%= seo_description %>">
+    <meta name="keywords" content="<%= t('seo.keywords', default: 'migraine tracker, headache tracker, migraine diary, health tracking, migraine management') %>">
+    <meta name="author" content="<%= t('seo.site_name', default: 'Migraine Tracker') %>">
+    <meta name="robots" content="<%= content_for(:robots) || 'index, follow' %>">
+    
+    <%# Canonical URL %>
+    <link rel="canonical" href="<%= canonical_url %>">
+    
+    <%# Alternate language versions (hreflang) %>
+    <% alternate_locales.each do |alt| %>
+      <link rel="alternate" hreflang="<%= alt[:locale] %>" href="<%= alt[:url] %>">
+    <% end %>
+    <link rel="alternate" hreflang="x-default" href="<%= root_url(locale: I18n.default_locale, only_path: false) %>">
+    
+    <%# Open Graph / Facebook %>
+    <meta property="og:type" content="<%= seo_type %>">
+    <meta property="og:title" content="<%= seo_title(content_for(:title)) %>">
+    <meta property="og:description" content="<%= seo_description %>">
+    <meta property="og:url" content="<%= seo_url %>">
+    <meta property="og:image" content="<%= seo_image %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="<%= t('seo.site_name', default: 'Migraine Tracker') %>">
+    <meta property="og:locale" content="<%= I18n.locale == :fr ? 'fr_FR' : 'en_US' %>">
+    <% alternate_locales.each do |alt| %>
+      <meta property="og:locale:alternate" content="<%= alt[:locale] == :fr ? 'fr_FR' : 'en_US' %>">
+    <% end %>
+    
+    <%# Twitter Card %>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= seo_title(content_for(:title)) %>">
+    <meta name="twitter:description" content="<%= seo_description %>">
+    <meta name="twitter:image" content="<%= seo_image %>">
+    
+    <%# Mobile App Meta Tags %>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Migraine Tracker">
+    <meta name="application-name" content="<%= t('seo.site_name', default: 'Migraine Tracker') %>">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#059669">
+    
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -17,6 +57,14 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Structured Data (JSON-LD) %>
+    <script type="application/ld+json">
+      <%= raw structured_data_organization.to_json %>
+    </script>
+    <script type="application/ld+json">
+      <%= raw structured_data_webapp.to_json %>
+    </script>
 
     <%# Includes compiled stylesheets served through Sprockets %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
