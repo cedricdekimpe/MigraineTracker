@@ -55,11 +55,13 @@ RUN test "${RUBY_VERSION}" = "$(sed 's/ruby-//' .ruby-version)" || (echo "RUBY_V
 # -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
-# Build Tailwind CSS before asset precompilation to ensure all classes are included
-RUN ./bin/rails tailwindcss:build
+RUN --mount=type=secret,id=RAILS_MASTER_KEY \
+  export RAILS_MASTER_KEY="$(cat /run/secrets/RAILS_MASTER_KEY)" && \
+  ./bin/rails tailwindcss:build
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN ./bin/rails assets:precompile
+RUN --mount=type=secret,id=RAILS_MASTER_KEY \
+  export RAILS_MASTER_KEY="$(cat /run/secrets/RAILS_MASTER_KEY)" && \
+  ./bin/rails assets:precompile
 
 # Final stage for app image
 FROM base
