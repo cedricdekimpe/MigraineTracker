@@ -143,3 +143,183 @@ Si les assets ne se chargent pas en production :
 2. Vérifier que les assets sont précompilés dans le conteneur
 3. Vérifier la configuration `asset_path` dans `deploy.yml`
 4. Vérifier les logs du reverse proxy Kamal
+
+---
+
+## SEO (Search Engine Optimization) - Règles importantes
+
+### ⚠️ IMPORTANT : Toujours garder le SEO à l'esprit
+
+Le site est disponible en **français et anglais**, et toutes les modifications doivent respecter les bonnes pratiques SEO pour maintenir la visibilité dans les moteurs de recherche.
+
+### Infrastructure SEO en place
+
+L'application dispose d'une infrastructure SEO complète :
+
+1. **Helper SEO** (`app/helpers/seo_helper.rb`) : Gère centralement toutes les métadonnées SEO
+2. **Layout optimisé** (`app/views/layouts/application.html.erb`) : Inclut toutes les balises SEO nécessaires
+3. **Sitemap dynamique** (`/sitemap.xml`) : Généré automatiquement avec support multilingue
+4. **Robots.txt** : Configuré pour guider les robots d'indexation
+5. **Structured Data (JSON-LD)** : Données structurées pour les moteurs de recherche
+
+### Règles à suivre lors de modifications
+
+#### 1. Créer ou modifier une page publique
+
+**TOUJOURS** ajouter les métadonnées SEO suivantes :
+
+```erb
+<% content_for :title, t('page.title_key') %>
+<% content_for :description, t('page.description_key') %>
+```
+
+**Exemple :**
+```erb
+<% content_for :title, t('faq.title') %>
+<% content_for :description, t('faq.subtitle') %>
+```
+
+**Pourquoi** : Le helper SEO utilise ces `content_for` pour générer automatiquement :
+- Le titre de la page (avec le nom du site)
+- La meta description
+- Les balises Open Graph
+- Les Twitter Cards
+- Les balises hreflang pour le multilingue
+
+#### 2. Ajouter une nouvelle page publique au sitemap
+
+Si vous créez une nouvelle page publique accessible sans authentification :
+
+1. **Ajouter la route** dans `config/routes.rb` (dans le scope `(:locale)`)
+2. **Ajouter la page au sitemap** dans `app/controllers/sitemap_controller.rb` :
+
+```ruby
+# Dans la méthode index
+@pages << {
+  url: "#{base_url}/#{locale}/nouvelle-page",
+  locale: locale,
+  lastmod: Time.current,
+  changefreq: 'monthly',  # weekly, monthly, yearly
+  priority: '0.8'  # 0.1 à 1.0
+}
+```
+
+**Priorités recommandées** :
+- Page d'accueil : `1.0`
+- Pages importantes (FAQ, etc.) : `0.8`
+- Pages secondaires : `0.6`
+- Pages moins importantes : `0.4`
+
+#### 3. Traductions SEO
+
+**TOUJOURS** ajouter les traductions SEO dans les deux langues :
+
+**Dans `config/locales/en.yml` et `config/locales/fr.yml` :**
+
+```yaml
+seo:
+  site_name: "Migraine Tracker"
+  default_description: "Description par défaut..."
+  keywords: "mots-clés, pertinents, séparés, par, virgules"
+```
+
+**Pour les nouvelles pages**, ajouter les clés de traduction :
+
+```yaml
+# Exemple pour une nouvelle page "About"
+about:
+  title: "About Us"
+  description: "Learn more about Migraine Tracker..."
+```
+
+#### 4. Pages privées (nécessitent authentification)
+
+**NE PAS** ajouter au sitemap les pages qui nécessitent une authentification :
+- `/account/*`
+- `/migraines/*`
+- `/stats/*`
+- `/admin/*`
+- `/api/*`
+
+Ces pages sont déjà exclues dans `public/robots.txt` avec `Disallow:`.
+
+#### 5. Balises hreflang (multilingue)
+
+Les balises hreflang sont **automatiquement générées** par le layout. **NE PAS** les ajouter manuellement.
+
+Le helper `alternate_locales` génère automatiquement les liens vers toutes les versions linguistiques.
+
+#### 6. URLs canoniques
+
+Les URLs canoniques sont **automatiquement générées** à partir de `request.url`.
+
+Si vous devez spécifier une URL canonique différente (par exemple pour éviter le contenu dupliqué) :
+
+```erb
+<% content_for :canonical_url, "https://migraine-tracker.eu/fr/page-principale" %>
+```
+
+#### 7. Images pour Open Graph
+
+Pour spécifier une image personnalisée pour le partage social :
+
+```erb
+<% content_for :og_image, asset_url('custom-image.png') %>
+```
+
+Par défaut, l'icône du site (`icon.png`) est utilisée.
+
+#### 8. Structured Data (JSON-LD)
+
+Les données structurées sont **automatiquement générées** dans le layout :
+- `Organization` : Informations sur l'organisation
+- `WebApplication` : Informations sur l'application web
+
+**NE PAS** modifier ces données structurées sauf si nécessaire pour des besoins spécifiques.
+
+### Checklist SEO avant de créer/modifier une page
+
+- [ ] Titre SEO défini avec `content_for :title`
+- [ ] Description SEO définie avec `content_for :description`
+- [ ] Traductions ajoutées dans `en.yml` et `fr.yml`
+- [ ] Si page publique : ajoutée au sitemap dans `sitemap_controller.rb`
+- [ ] Si page privée : vérifier qu'elle est dans `robots.txt` avec `Disallow:`
+- [ ] Balise `<h1>` unique et descriptive sur la page
+- [ ] Structure HTML sémantique (utiliser `<article>`, `<section>`, etc.)
+- [ ] Images avec attributs `alt` descriptifs
+- [ ] Liens internes avec texte descriptif (éviter "cliquez ici")
+
+### Erreurs SEO courantes à éviter
+
+❌ **NE PAS** :
+- Créer une page sans `content_for :title` et `content_for :description`
+- Oublier d'ajouter les traductions dans les deux langues
+- Ajouter des pages privées au sitemap
+- Dupliquer le contenu entre les versions linguistiques sans balises hreflang (déjà géré automatiquement)
+- Utiliser des titres génériques comme "Page" ou "Welcome" sans contexte
+- Créer des pages avec du contenu dupliqué
+
+✅ **TOUJOURS** :
+- Utiliser le helper SEO pour les métadonnées
+- Vérifier que les traductions existent dans les deux langues
+- Tester que les balises hreflang sont présentes (inspecter le HTML)
+- Utiliser des titres et descriptions uniques et descriptives
+- Maintenir la cohérence entre les versions linguistiques
+
+### Vérification SEO
+
+Pour vérifier que le SEO fonctionne correctement :
+
+1. **Vérifier les métadonnées** : Inspecter le HTML source de la page
+2. **Tester le sitemap** : Visiter `https://migraine-tracker.eu/sitemap.xml`
+3. **Vérifier robots.txt** : Visiter `https://migraine-tracker.eu/robots.txt`
+4. **Tester les balises hreflang** : Inspecter le `<head>` pour voir les balises `<link rel="alternate" hreflang="...">`
+5. **Vérifier les structured data** : Utiliser [Google Rich Results Test](https://search.google.com/test/rich-results)
+
+### Ressources SEO
+
+- Helper SEO : `app/helpers/seo_helper.rb`
+- Layout avec métadonnées : `app/views/layouts/application.html.erb`
+- Sitemap : `app/controllers/sitemap_controller.rb` et `app/views/sitemap/index.xml.erb`
+- Robots.txt : `public/robots.txt`
+- Traductions SEO : `config/locales/en.yml` et `config/locales/fr.yml`
