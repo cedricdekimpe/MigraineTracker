@@ -21,6 +21,12 @@ Rails.application.configure do
   # Don't use sassc compressor to avoid issues with modern CSS syntax in Tailwind
   config.assets.css_compressor = nil
 
+  # Use precompiled assets instead of compiling on the fly
+  config.assets.compile = false
+
+  # Enable serving of static files (assets) from the public directory
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present? || ENV["RACK_ENV"] == "production"
+
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
