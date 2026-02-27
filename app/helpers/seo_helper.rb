@@ -20,8 +20,8 @@ module SeoHelper
     elsif content_for(:og_image).present?
       content_for(:og_image)
     else
-      # Use request.base_url to get the full domain
-      "#{request.base_url}#{asset_path('icon.png')}"
+      # icon.png is in public/, so use direct path
+      "#{request.base_url}/icon.png"
     end
   end
 
@@ -57,7 +57,7 @@ module SeoHelper
       'name' => t('seo.site_name', default: 'Migraine Tracker'),
       'description' => seo_description,
       'url' => root_url(locale: I18n.locale, only_path: false),
-      'logo' => "#{request.base_url}#{asset_path('icon.png')}",
+      'logo' => "#{request.base_url}/icon.png",
       'sameAs' => []
     }
   end
