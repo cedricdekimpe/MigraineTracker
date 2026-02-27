@@ -33,6 +33,7 @@ fr:
   home:
     tagline: "Prenez le contrôle de vos migraines"
     description: "Enregistrez les épisodes, suivez l'efficacité des médicaments et identifiez les tendances avec des calendriers mensuels et annuels conçus pour les personnes souffrant de migraines."
+    geo_summary: "Une application web gratuite et axée sur la confidentialité pour suivre les migraines, surveiller l'efficacité des médicaments et identifier les tendances grâce à des calendriers visuels. Disponible en français et en anglais. Aucun compte requis pour en savoir plus."
     feature_calendars_title: "Calendriers visuels"
     feature_calendars_desc: "Capturez chaque migraine sur des vues mensuelles et annuelles avec code couleur. Voyez rapidement où les clusters apparaissent et quels jours restent sans symptômes."
     feature_medication_title: "Suivi des médicaments"

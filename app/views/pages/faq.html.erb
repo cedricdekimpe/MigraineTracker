@@ -1,6 +1,21 @@
 <% content_for :title, t('faq.title') %>
 <% content_for :description, t('faq.subtitle') %>
 
+<%
+  # Prepare FAQ structured data for GEO
+  faq_items = [
+    { question: t('faq.data_storage_question'), answer: strip_tags(t('faq.data_storage_answer')) },
+    { question: t('faq.gdpr_question'), answer: strip_tags(t('faq.gdpr_answer_html')) },
+    { question: t('faq.data_sharing_question'), answer: strip_tags(t('faq.data_sharing_answer')) },
+    { question: t('faq.delete_account_question'), answer: strip_tags(t('faq.delete_account_answer_html')) },
+    { question: t('faq.export_data_question'), answer: strip_tags(t('faq.export_data_answer')) },
+    { question: t('faq.import_data_question'), answer: strip_tags(t('faq.import_data_answer')) },
+    { question: t('faq.track_migraine_question'), answer: strip_tags(t('faq.track_migraine_answer')) },
+    { question: t('faq.medications_question'), answer: strip_tags(t('faq.medications_answer')) },
+    { question: t('faq.statistics_question'), answer: strip_tags(t('faq.statistics_answer')) }
+  ]
+%>
+
 <div class="mx-auto max-w-3xl">
   <header class="mb-8">
     <h1 class="text-3xl font-bold text-slate-900"><%= t('faq.title') %></h1>
@@ -187,3 +202,8 @@
     <%= link_to t('common.back'), root_path, class: "inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900" %>
   </div>
 </div>
+
+<%# FAQPage Structured Data for GEO %>
+<script type="application/ld+json">
+  <%= raw structured_data_faqpage(faq_items).to_json %>
+</script>

@@ -11,6 +11,12 @@
     <meta name="author" content="<%= t('seo.site_name', default: 'Migraine Tracker') %>">
     <meta name="robots" content="<%= content_for(:robots) || 'index, follow' %>">
     
+    <%# GEO Meta Tags - For Generative Engine Optimization %>
+    <meta name="generator" content="Rails <%= Rails.version %>">
+    <meta name="language" content="<%= I18n.locale %>">
+    <meta name="geo.region" content="<%= I18n.locale == :fr ? 'FR' : 'US' %>">
+    <meta name="rating" content="General">
+    
     <%# Canonical URL %>
     <link rel="canonical" href="<%= canonical_url %>">
     

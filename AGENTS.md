@@ -323,3 +323,193 @@ Pour vérifier que le SEO fonctionne correctement :
 - Sitemap : `app/controllers/sitemap_controller.rb` et `app/views/sitemap/index.xml.erb`
 - Robots.txt : `public/robots.txt`
 - Traductions SEO : `config/locales/en.yml` et `config/locales/fr.yml`
+
+---
+
+## GEO (Generative Engine Optimization) - Règles importantes
+
+### ⚠️ IMPORTANT : Optimiser pour les moteurs de recherche génératifs
+
+Le site doit être optimisé pour les **moteurs de recherche génératifs** (ChatGPT, Perplexity, Bing Chat, etc.) qui utilisent le contenu web pour générer des réponses conversationnelles.
+
+### Principe du GEO
+
+Les moteurs génératifs :
+- Scannent le contenu web pour répondre aux questions des utilisateurs
+- Préfèrent les réponses directes, factuelles et bien structurées
+- Utilisent les données structurées Schema.org pour comprendre le contexte
+- Apprécient le contenu conversationnel et naturel
+
+### Infrastructure GEO en place
+
+L'application dispose d'une infrastructure GEO complète :
+
+1. **Données structurées FAQPage** : Questions/réponses formatées pour Schema.org
+2. **Données structurées HowTo** : Instructions étape par étape
+3. **Données structurées SoftwareApplication** : Informations sur l'application
+4. **Contenu conversationnel** : Réponses directes aux questions courantes
+5. **Métadonnées GEO** : Balises meta spécifiques pour les moteurs génératifs
+
+### Règles à suivre pour le GEO
+
+#### 1. Réponses directes et factuelles
+
+**TOUJOURS** formuler les réponses de manière directe et factuelle :
+
+✅ **BON** :
+```
+"Migraine Tracker is a free web application that helps users track migraines, monitor medication effectiveness, and identify patterns through visual calendars."
+```
+
+❌ **MAUVAIS** :
+```
+"Migraine Tracker might be useful for some people who want to track their migraines."
+```
+
+**Pourquoi** : Les moteurs génératifs préfèrent les affirmations claires et factuelles plutôt que les formulations vagues.
+
+#### 2. Données structurées FAQPage
+
+**TOUJOURS** utiliser le helper `structured_data_faqpage` pour les pages FAQ :
+
+```ruby
+# Dans la vue FAQ
+<%
+  faq_items = [
+    { question: "Question?", answer: "Réponse directe et factuelle." },
+    # ... autres questions
+  ]
+%>
+
+<script type="application/ld+json">
+  <%= raw structured_data_faqpage(faq_items).to_json %>
+</script>
+```
+
+**Pourquoi** : Les données structurées FAQPage permettent aux moteurs génératifs de comprendre et d'utiliser directement les questions/réponses.
+
+#### 3. Contenu conversationnel
+
+**TOUJOURS** écrire le contenu comme si on répondait à une question :
+
+✅ **BON** :
+```
+"How do I track a migraine? Click 'New entry' from the Migraine Log page..."
+```
+
+❌ **MAUVAIS** :
+```
+"To track a migraine, users should navigate to the Migraine Log page..."
+```
+
+**Pourquoi** : Les moteurs génératifs recherchent des réponses conversationnelles qui correspondent au style des questions des utilisateurs.
+
+#### 4. Structure HTML sémantique
+
+**TOUJOURS** utiliser des balises HTML sémantiques avec microdata :
+
+```erb
+<article itemscope itemtype="https://schema.org/SoftwareApplication">
+  <h1 itemprop="name">Migraine Tracker</h1>
+  <p itemprop="description">Description...</p>
+</article>
+```
+
+**Pourquoi** : Les microdata aident les moteurs génératifs à comprendre la structure et le contexte du contenu.
+
+#### 5. Résumés GEO
+
+**TOUJOURS** ajouter un résumé concis en haut des pages importantes :
+
+```erb
+<p class="mt-2 text-sm text-slate-500">
+  <%= t('home.geo_summary', default: 'A free, privacy-focused web application...') %>
+</p>
+```
+
+**Pourquoi** : Les résumés permettent aux moteurs génératifs de comprendre rapidement le sujet de la page.
+
+#### 6. Données structurées HowTo
+
+Pour les instructions étape par étape, utiliser `structured_data_howto` :
+
+```ruby
+steps = [
+  { name: "Step 1", text: "Description..." },
+  { name: "Step 2", text: "Description..." }
+]
+
+structured_data_howto("How to track a migraine", "Instructions...", steps)
+```
+
+**Pourquoi** : Les données structurées HowTo permettent aux moteurs génératifs de présenter les instructions de manière structurée.
+
+#### 7. Métadonnées GEO
+
+Le layout inclut automatiquement des métadonnées GEO :
+
+```erb
+<meta name="generator" content="Rails <%= Rails.version %>">
+<meta name="language" content="<%= I18n.locale %>">
+<meta name="geo.region" content="<%= I18n.locale == :fr ? 'FR' : 'US' %>">
+```
+
+**NE PAS** modifier ces métadonnées sauf si nécessaire.
+
+#### 8. Contenu multilingue
+
+**TOUJOURS** maintenir la cohérence entre les versions linguistiques :
+
+- Les mêmes questions/réponses dans les deux langues
+- Les mêmes données structurées pour chaque langue
+- Les mêmes informations factuelles
+
+**Pourquoi** : Les moteurs génératifs peuvent utiliser le contenu dans différentes langues selon la requête de l'utilisateur.
+
+### Checklist GEO avant de créer/modifier une page
+
+- [ ] Réponses directes et factuelles (pas de formulations vagues)
+- [ ] Contenu conversationnel (style question/réponse)
+- [ ] Données structurées appropriées (FAQPage, HowTo, etc.)
+- [ ] Structure HTML sémantique avec microdata
+- [ ] Résumé GEO pour les pages importantes
+- [ ] Traductions cohérentes dans les deux langues
+- [ ] Informations vérifiables et factuelles
+- [ ] Formatage clair (listes, sections, etc.)
+
+### Erreurs GEO courantes à éviter
+
+❌ **NE PAS** :
+- Utiliser des formulations vagues ("might be", "could be", "possibly")
+- Écrire dans un style trop formel ou technique
+- Oublier les données structurées pour les FAQ
+- Créer du contenu dupliqué entre les langues sans cohérence
+- Utiliser des métaphores ou des expressions idiomatiques difficiles à comprendre
+- Oublier les résumés concis en haut des pages
+
+✅ **TOUJOURS** :
+- Répondre directement aux questions courantes
+- Utiliser un style conversationnel et naturel
+- Ajouter des données structurées appropriées
+- Maintenir la cohérence entre les versions linguistiques
+- Fournir des informations factuelles et vérifiables
+- Structurer le contenu de manière claire
+
+### Vérification GEO
+
+Pour vérifier que le GEO fonctionne correctement :
+
+1. **Tester avec ChatGPT/Perplexity** : Poser des questions sur l'application et vérifier que les réponses sont correctes
+2. **Vérifier les données structurées** : Utiliser [Google Rich Results Test](https://search.google.com/test/rich-results)
+3. **Vérifier le contenu** : S'assurer que les réponses sont directes et factuelles
+4. **Tester les deux langues** : Vérifier que les réponses sont cohérentes en français et en anglais
+
+### Ressources GEO
+
+- Helper SEO avec fonctions GEO : `app/helpers/seo_helper.rb`
+  - `structured_data_faqpage` : Pour les pages FAQ
+  - `structured_data_howto` : Pour les instructions
+  - `structured_data_webapp` : Pour les informations sur l'application
+- Page FAQ avec FAQPage : `app/views/pages/faq.html.erb`
+- Page d'accueil optimisée : `app/views/home/index.html.erb`
+- Traductions GEO : `config/locales/en.yml` et `config/locales/fr.yml`

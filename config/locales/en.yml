@@ -33,6 +33,7 @@ en:
   home:
     tagline: "Own your migraine story"
     description: "Log episodes, track medication effectiveness, and spot patterns with yearly and monthly calendars crafted for people living with migraines."
+    geo_summary: "A free, privacy-focused web application for tracking migraines, monitoring medication effectiveness, and identifying patterns through visual calendars. Available in English and French. No account required to learn more."
     feature_calendars_title: "Visual calendars"
     feature_calendars_desc: "Capture every migraine on color-coded monthly and yearly views. Quickly see when clusters appear and which days stay clear."
     feature_medication_title: "Medication tracking"
