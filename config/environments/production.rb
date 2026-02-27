@@ -25,7 +25,8 @@ Rails.application.configure do
   config.assets.compile = false
 
   # Enable serving of static files (assets) from the public directory
-  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present? || ENV["RACK_ENV"] == "production"
+  # With Kamal, assets are served from /rails/public/assets, so we need to enable this
+  config.public_file_server.enabled = true
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
