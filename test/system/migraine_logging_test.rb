@@ -2,7 +2,11 @@ require "application_system_test_case"
 
 class MigraineLoggingTest < ApplicationSystemTestCase
   setup do
-    @user = User.create!(email: "logger@example.com", password: "password123", password_confirmation: "password123")
+    @user = User.create!({
+      email: "logger@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    }.merge(consent_attrs))
   end
 
   test "user records migraine entry and sees monthly calendar" do

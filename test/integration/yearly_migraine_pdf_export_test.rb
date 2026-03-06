@@ -2,7 +2,11 @@ require "test_helper"
 
 class YearlyMigrainePdfExportTest < ActionDispatch::IntegrationTest
   test "signed in user can download yearly migraine pdf" do
-    user = User.create!(email: "export@example.com", password: "password123", password_confirmation: "password123")
+    user = User.create!({
+      email: "export@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    }.merge(consent_attrs))
     medication = user.medications.first
     user.migraines.create!(occurred_on: Date.new(2025, 5, 12), nature: "M", intensity: 7, on_period: false, medication: medication)
 

@@ -16,6 +16,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     super
   end
 
+  before_action :configure_sign_up_params, only: [:create]
+
   protected
 
   # Override to add custom flash message key
@@ -25,5 +27,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
     else
       super
     end
+  end
+
+  def configure_sign_up_params
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:health_data_consent])
   end
 end

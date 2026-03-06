@@ -49,6 +49,7 @@ Rails.application.routes.draw do
     
     # Static pages
     get 'faq', to: 'pages#faq', as: :faq
+    get 'privacy-policy', to: 'pages#privacy', as: :privacy
     
     # Account settings pages
     get 'account', to: 'account#show', as: :account

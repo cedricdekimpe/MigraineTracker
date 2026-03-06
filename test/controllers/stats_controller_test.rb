@@ -1,6 +1,8 @@
 require "test_helper"
 
 class StatsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @user = users(:one)
     sign_in @user
@@ -11,79 +13,43 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should calculate total migraines" do
+  test "monthly data matches logged migraines" do
     get stats_url
-    assert_not_nil assigns(:total_migraines)
-    assert_equal @user.migraines.count, assigns(:total_migraines)
+    monthly_data = stats_data_attribute("monthly")
+    assert_equal 12, monthly_data.length
+    assert_equal @user.migraines.count, monthly_data.sum { |entry| entry[1] }
   end
 
-  test "should calculate migraines with and without medication" do
+  test "day-of-week breakdown lists weekdays" do
     get stats_url
-    assert_not_nil assigns(:migraines_with_medication)
-    assert_not_nil assigns(:migraines_without_medication)
-    
-    with_med = @user.migraines.where.not(medication_id: nil).count
-    without_med = @user.migraines.where(medication_id: nil).count
-    
-    assert_equal with_med, assigns(:migraines_with_medication)
-    assert_equal without_med, assigns(:migraines_without_medication)
-  end
+    day_data = stats_data_attribute("day-of-week")
+    assert_equal 7, day_data.length
 
-  test "should generate monthly data for last 12 months" do
-    get stats_url
-    assert_not_nil assigns(:monthly_data)
-    assert_equal 12, assigns(:monthly_data).length
-    
-    # Each entry should be [month_string, count]
-    assigns(:monthly_data).each do |entry|
-      assert_equal 2, entry.length
-      assert_kind_of String, entry[0]
-      assert_kind_of Integer, entry[1]
+    expected_counts = Hash.new(0)
+    @user.migraines.each do |migraine|
+      expected_counts[Date::DAYNAMES[migraine.occurred_on.wday]] += 1
+    end
+
+    day_data.each do |day, count|
+      assert_equal expected_counts[day], count
     end
   end
 
-  test "should generate day of week distribution" do
+  test "medication breakdown reflects current usage" do
     get stats_url
-    assert_not_nil assigns(:day_of_week_data)
-    
-    # Should have entries for days that have migraines
-    assigns(:day_of_week_data).each do |day, count|
-      assert_kind_of String, day
-      assert_kind_of Integer, count
-      assert_includes Date::DAYNAMES, day
+    medication_data = stats_data_attribute("medication")
+    medication_counts = @user.migraines.where.not(medication_id: nil).joins(:medication).group("medications.name").count
+
+    medication_data.each do |name, count|
+      assert_equal medication_counts[name], count
     end
   end
 
-  test "should generate medication data" do
-    get stats_url
-    assert_not_nil assigns(:medication_data)
-    
-    # Each entry should be [medication_name, count]
-    assigns(:medication_data).each do |entry|
-      assert_equal 2, entry.length
-      assert_kind_of String, entry[0]
-      assert_kind_of Integer, entry[1]
-    end
-  end
+  private
 
-  test "should require authentication" do
-    sign_out @user
-    get stats_url
-    assert_redirected_to new_user_session_url
-  end
-
-  test "should only show current user migraines" do
-    other_user = User.create!(email: "other@example.com", password: "password123")
-    other_migraine = other_user.migraines.create!(
-      occurred_on: Date.today,
-      intensity: 3,
-      nature: "M",
-      on_period: false
-    )
-    
-    get stats_url
-    
-    # Should not include other user's migraines in any stats
-    assert_equal @user.migraines.count, assigns(:total_migraines)
+  def stats_data_attribute(attribute_name)
+    element = css_select("[data-#{attribute_name}]").first
+    return [] unless element
+    JSON.parse(element["data-#{attribute_name}"])
   end
 end

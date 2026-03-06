@@ -65,9 +65,9 @@ module Api
 
       def register_params
         if params[:user].present?
-          params.require(:user).permit(:email, :password, :password_confirmation)
+          params.require(:user).permit(:email, :password, :password_confirmation, :health_data_consent)
         else
-          params.permit(:email, :password, :password_confirmation)
+          params.permit(:email, :password, :password_confirmation, :health_data_consent)
         end
       end
 

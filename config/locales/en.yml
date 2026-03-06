@@ -13,6 +13,7 @@ en:
     create_account: "Create account"
     language: "Language"
     faq: "FAQ"
+    privacy: "Privacy policy"
   
   # SEO
   seo:
@@ -44,6 +45,7 @@ en:
     cta_description: "Build a complete picture of your migraine history and treatment plan. Whether you are preparing for a specialist visit or staying on top of daily wellbeing, Migraine Tracker gives you the structure you need."
     view_calendar: "View my calendar"
     manage_medications: "Manage medications"
+    disclaimer: "This service is a personal tracking tool and does not provide medical advice or diagnosis."
     
   # Migraines
   migraines:
@@ -220,6 +222,7 @@ en:
     edit: "Edit"
     back: "Back"
     loading: "Loading..."
+    disclaimer: "Migraine Tracker is only for personal health journaling and does not diagnose or treat medical conditions."
     
   # Date formats
   date:
@@ -257,8 +260,50 @@ en:
     contact_title: "Still have questions?"
     contact_text: "If you couldn't find the answer you're looking for, feel free to reach out to us. We're here to help!"
     go_to_data_settings: "Go to Data Settings"
+    disclaimer_title: "Medical disclaimer"
+    disclaimer_text: "Migraine Tracker is a personal log. It does not diagnose conditions, give treatment instructions, or replace medical advice."
 
-  # Devise custom messages
-  devise:
-    registrations:
-      password_invalid: "Incorrect password. Please try again."
+  privacy:
+    title: "Privacy Policy"
+    description: "Learn what data we collect, why we process it, and how to exercise your rights as a user."
+    intro: "Migraine Tracker only stores the information you enter explicitly to help you keep track of migraine episodes, medications, and patterns over time."
+    data_title: "Personal data we collect"
+    data_description: "Your migraine history is collected directly and intentionally when you log episodes or medications."
+    data_points:
+      - "Timestamped migraine occurrences with intensity, nature, on-period flag, and associated medication."
+      - "Medication names you provide so the same treatments can be reused when logging new entries."
+      - "Account email and securely hashed password for authentication and password recovery."
+    purpose_title: "Why we process this data"
+    purpose_points:
+      - "To give you a historical log of migraine occurrences with intensity and medication context."
+      - "To allow exports/imports so you keep control of your records."
+      - "To send transactional emails (account creation and password recovery) tied to your health profile."
+    retention_title: "Retention and backups"
+    retention_description: "We keep the data only as long as your account exists and handle logs/backups with minimal retention."
+    retention_points:
+      - "Application logs with request metadata are retained for 30 days before rotation."
+      - "Solid Queue job histories and failures are pruned on a 30-day schedule."
+      - "Exported JSON files are streamed directly to you and never stored persistently."
+    rights_title: "Your GDPR rights"
+    rights_description: "You control everything that pertains to your health data."
+    rights_points:
+      - "Access: export a complete JSON copy anytime from the Data Management page."
+      - "Rectification: edit migraines or medications directly in the app or via API."
+      - "Erasure: delete your account and every record linked to it in one action."
+      - "Portability: download backups and import them into another service if desired."
+    contact_title: "Contact and controller information"
+    contact_description: "Fill in the placeholders below with your actual controller details before publishing."
+    contact_email_label: "Controller email"
+    contact_email: "[privacy@migraine-tracker.eu]"
+    contact_address_label: "Controller address"
+    contact_address: "[Street, City, Country]"
+    hosting_title: "Hosting"
+    hosting_description: "Data resides on the Kamal-deployed container running in an EU region; persistent volumes stay within the controller's infrastructure."
+
+  forms:
+    health_consent_html: "I consent to the storage and processing of my health data (migraine episodes and medications) so Migraine Tracker can provide the service. Read the %{privacy} for details."
+
+    # Devise custom messages
+    devise:
+      registrations:
+        password_invalid: "Incorrect password. Please try again."

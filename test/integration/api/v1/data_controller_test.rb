@@ -71,7 +71,9 @@ class Api::V1::DataControllerTest < ActionDispatch::IntegrationTest
 
   test "import creates medications and migraines from export data" do
     # Create a new user for clean import test
-    new_user = User.create!(email: "import_test@example.com", password: "password123")
+    new_user = User.create!(
+      { email: "import_test@example.com", password: "password123" }.merge(consent_attrs)
+    )
     token = login_user(new_user.email, "password123")
 
     import_data = {

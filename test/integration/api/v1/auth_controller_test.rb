@@ -19,7 +19,8 @@ class Api::V1::AuthControllerTest < ActionDispatch::IntegrationTest
         params: {
           email: "newuser@example.com",
           password: "password123",
-          password_confirmation: "password123"
+          password_confirmation: "password123",
+          health_data_consent: true
         }.to_json,
         headers: api_headers
     end
@@ -35,7 +36,8 @@ class Api::V1::AuthControllerTest < ActionDispatch::IntegrationTest
       post "/api/v1/auth/register",
         params: {
           password: "password123",
-          password_confirmation: "password123"
+          password_confirmation: "password123",
+          health_data_consent: true
         }.to_json,
         headers: api_headers
     end
@@ -50,7 +52,8 @@ class Api::V1::AuthControllerTest < ActionDispatch::IntegrationTest
         params: {
           email: @user.email,
           password: "password123",
-          password_confirmation: "password123"
+          password_confirmation: "password123",
+          health_data_consent: true
         }.to_json,
         headers: api_headers
     end
@@ -65,12 +68,29 @@ class Api::V1::AuthControllerTest < ActionDispatch::IntegrationTest
         params: {
           email: "newuser@example.com",
           password: "password123",
-          password_confirmation: "different"
+          password_confirmation: "different",
+          health_data_consent: true
         }.to_json,
         headers: api_headers
     end
 
     assert_response :unprocessable_entity
+  end
+
+  test "register fails without health data consent" do
+    assert_no_difference("User.count") do
+      post "/api/v1/auth/register",
+        params: {
+          email: "noconsent@example.com",
+          password: "password123",
+          password_confirmation: "password123",
+          health_data_consent: false
+        }.to_json,
+        headers: api_headers
+    end
+
+    assert_response :unprocessable_entity
+    assert json_response[:errors].any? { |error| error[:detail].match?(/consent/i) }
   end
 
   # ===============

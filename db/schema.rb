@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_17_141223) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_06_123000) do
   create_table "jwt_denylist", force: :cascade do |t|
     t.datetime "exp", null: false
     t.string "jti", null: false
@@ -45,12 +45,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_17_141223) do
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.datetime "health_data_consent_given_at"
+    t.text "health_data_consent_text"
+    t.string "health_data_consent_version"
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.datetime "updated_at", null: false
     t.index ["admin"], name: "index_users_on_admin"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["health_data_consent_version"], name: "index_users_on_health_data_consent_version"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

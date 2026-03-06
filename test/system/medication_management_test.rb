@@ -2,7 +2,11 @@ require "application_system_test_case"
 
 class MedicationManagementTest < ApplicationSystemTestCase
   setup do
-    @user = User.create!(email: "meds@example.com", password: "password123", password_confirmation: "password123")
+    @user = User.create!({
+      email: "meds@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    }.merge(consent_attrs))
   end
 
   test "user adds and removes medication" do

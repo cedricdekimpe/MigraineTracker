@@ -2,7 +2,11 @@ require "test_helper"
 
 class MigraineTest < ActiveSupport::TestCase
   setup do
-    @user = User.create!(email: "author@example.com", password: "password123", password_confirmation: "password123")
+    @user = User.create!({
+      email: "author@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    }.merge(consent_attrs))
   end
 
   test "requires unique entry per user per day" do
@@ -24,7 +28,11 @@ class MigraineTest < ActiveSupport::TestCase
   end
 
   test "medication must belong to user" do
-    other_user = User.create!(email: "other@example.com", password: "password123", password_confirmation: "password123")
+    other_user = User.create!({
+      email: "other@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    }.merge(consent_attrs))
     foreign_medication = other_user.medications.first
 
     migraine = @user.migraines.build(occurred_on: Date.current, nature: "M", intensity: 4, on_period: false, medication: foreign_medication)

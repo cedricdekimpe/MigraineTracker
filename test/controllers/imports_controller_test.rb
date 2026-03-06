@@ -1,6 +1,7 @@
 require "test_helper"
 
 class ImportsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
   setup do
     @user = users(:one)
     sign_in @user
@@ -37,7 +38,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should reject invalid JSON file" do
-    file = fixture_file_upload("files/invalid.json", "application/json")
+    file = fixture_file_upload(Rails.root.join("test/fixtures/files/invalid.json"), "application/json")
     post imports_path, params: { file: file }
     
     assert_redirected_to new_import_path
@@ -104,7 +105,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
       migraines: [
         {
           occurred_on: Date.today.to_s,
-          nature: "strong",
+          nature: "M",
           intensity: 8,
           on_period: false,
           medication_name: "Test Med",
@@ -137,7 +138,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
     # Create existing migraine
     @user.migraines.create!(
       occurred_on: Date.today,
-      nature: "weak",
+      nature: "H",
       intensity: 3,
       on_period: false
     )
@@ -149,7 +150,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
       migraines: [
         {
           occurred_on: Date.today.to_s,
-          nature: "strong",
+          nature: "M",
           intensity: 8,
           on_period: true,
           medication_name: nil,
@@ -182,7 +183,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
       migraines: [
         {
           occurred_on: Date.today.to_s,
-          nature: "weak",
+          nature: "H",
           intensity: 4,
           on_period: true,
           medication_name: nil,
@@ -214,7 +215,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
       migraines: [
         {
           occurred_on: "invalid-date",
-          nature: "strong",
+          nature: "M",
           intensity: 8,
           on_period: false,
           medication_name: nil,
@@ -247,7 +248,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
       migraines: [
         {
           occurred_on: Date.today.to_s,
-          nature: "strong",
+          nature: "M",
           intensity: 7,
           on_period: false,
           medication_name: "New Med",

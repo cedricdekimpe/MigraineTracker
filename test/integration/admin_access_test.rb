@@ -3,11 +3,11 @@ require "test_helper"
 class AdminAccessTest < ActionDispatch::IntegrationTest
   setup do
     @regular_user = users(:one)
-    @admin_user = User.create!(
-      email: "admin@example.com",
+    @admin_user = User.create!({
+      email: "admin_access@example.com",
       password: "password123",
       admin: true
-    )
+    }.merge(consent_attrs))
   end
 
   test "guests are redirected to sign in" do

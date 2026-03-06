@@ -94,6 +94,7 @@ POST /api/v1/auth/register
   "password_confirmation": "securepassword123"
 }
 ```
+The request must also include `"health_data_consent": true` to confirm you accept the storage of migraine and medication data under the privacy policy.
 
 **Response:** `201 Created`
 ```json

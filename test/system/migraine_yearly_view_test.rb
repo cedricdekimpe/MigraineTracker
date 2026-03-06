@@ -2,7 +2,11 @@ require "application_system_test_case"
 
 class MigraineYearlyViewTest < ApplicationSystemTestCase
   setup do
-    @user = User.create!(email: "overview@example.com", password: "password123", password_confirmation: "password123")
+    @user = User.create!({
+      email: "overview@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    }.merge(consent_attrs))
     ibuprofen = @user.medications.find_by(name: "Ibuprofen")
     triptan = @user.medications.find_by(name: "Triptan")
 

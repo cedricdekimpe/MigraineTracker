@@ -30,6 +30,13 @@
         <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
       </div>
 
+      <div class="flex items-start gap-3 text-sm text-slate-600">
+        <%= form.check_box :health_data_consent, { required: true, class: "mt-1 h-4 w-4 rounded border-slate-300 focus:ring-emerald-500" }, "1", "0" %>
+        <label for="user_health_data_consent" class="block">
+          <%= t('forms.health_consent_html', privacy: link_to(t('navigation.privacy'), privacy_path, class: "font-semibold text-emerald-600 hover:text-emerald-700")).html_safe %>
+        </label>
+      </div>
+
       <%= form.submit "Create account", class: "w-full rounded-md bg-emerald-600 px-4 py-2 text-base font-semibold text-white transition hover:bg-emerald-700" %>
     <% end %>
 

@@ -5,6 +5,9 @@ one:
   admin: false
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
+  health_data_consent_given_at: <%= 1.day.ago %>
+  health_data_consent_version: <%= User::HEALTH_DATA_CONSENT_VERSION %>
+  health_data_consent_text: <%= User::HEALTH_DATA_CONSENT_TEXT %>
 
 two:
   email: another@example.com
@@ -12,6 +15,9 @@ two:
   admin: false
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
+  health_data_consent_given_at: <%= 1.day.ago %>
+  health_data_consent_version: <%= User::HEALTH_DATA_CONSENT_VERSION %>
+  health_data_consent_text: <%= User::HEALTH_DATA_CONSENT_TEXT %>
 
 admin:
   email: admin@example.com
@@ -19,3 +25,6 @@ admin:
   admin: true
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
+  health_data_consent_given_at: <%= 1.day.ago %>
+  health_data_consent_version: <%= User::HEALTH_DATA_CONSENT_VERSION %>
+  health_data_consent_text: <%= User::HEALTH_DATA_CONSENT_TEXT %>

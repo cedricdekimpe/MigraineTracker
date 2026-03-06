@@ -3,9 +3,8 @@
 # Configure CORS for API access from mobile apps and other clients
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    # In production, you should restrict this to specific origins
-    # For mobile apps, you typically need to allow all origins
-    origins '*'
+    allowed_origins = ENV.fetch("CORS_ALLOWED_ORIGINS", "https://migraine-tracker.eu").split(",").map(&:strip)
+    origins(*allowed_origins)
 
     resource '/api/*',
       headers: :any,

@@ -1,0 +1,63 @@
+<% content_for :title, t('privacy.title') %>
+<% content_for :description, t('privacy.description') %>
+
+<article class="mx-auto max-w-3xl space-y-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+  <header>
+    <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600"><%= t('navigation.privacy') %></p>
+    <h1 class="mt-2 text-3xl font-bold text-slate-900"><%= t('privacy.title') %></h1>
+    <p class="mt-2 text-sm text-slate-600"><%= t('privacy.intro') %></p>
+  </header>
+
+  <section>
+    <h2 class="text-xl font-semibold text-slate-900"><%= t('privacy.data_title') %></h2>
+    <p class="mt-2 text-sm text-slate-600"><%= t('privacy.data_description') %></p>
+    <ul class="mt-3 space-y-2 text-sm text-slate-600">
+      <% t('privacy.data_points').each do |point| %>
+        <li class="flex gap-2"><span class="text-emerald-600">•</span><span><%= point %></span></li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="text-xl font-semibold text-slate-900"><%= t('privacy.purpose_title') %></h2>
+    <ul class="mt-3 space-y-2 text-sm text-slate-600">
+      <% t('privacy.purpose_points').each do |point| %>
+        <li class="flex gap-2"><span class="text-emerald-600">•</span><span><%= point %></span></li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="text-xl font-semibold text-slate-900"><%= t('privacy.retention_title') %></h2>
+    <p class="mt-2 text-sm text-slate-600"><%= t('privacy.retention_description') %></p>
+    <ul class="mt-3 space-y-2 text-sm text-slate-600">
+      <% t('privacy.retention_points').each do |point| %>
+        <li class="flex gap-2"><span class="text-emerald-600">•</span><span><%= point %></span></li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="text-xl font-semibold text-slate-900"><%= t('privacy.rights_title') %></h2>
+    <p class="mt-2 text-sm text-slate-600"><%= t('privacy.rights_description') %></p>
+    <ul class="mt-3 space-y-2 text-sm text-slate-600">
+      <% t('privacy.rights_points').each do |point| %>
+        <li class="flex gap-2"><span class="text-emerald-600">•</span><span><%= point %></span></li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="text-xl font-semibold text-slate-900"><%= t('privacy.contact_title') %></h2>
+    <p class="mt-2 text-sm text-slate-600"><%= t('privacy.contact_description') %></p>
+    <p class="mt-2 text-sm text-slate-600"><strong><%= t('privacy.contact_email_label') %></strong> <%= t('privacy.contact_email') %></p>
+    <p class="text-sm text-slate-600"><strong><%= t('privacy.contact_address_label') %></strong> <%= t('privacy.contact_address') %></p>
+  </section>
+
+  <section>
+    <h2 class="text-xl font-semibold text-slate-900"><%= t('privacy.hosting_title') %></h2>
+    <p class="mt-2 text-sm text-slate-600"><%= t('privacy.hosting_description') %></p>
+  </section>
+
+  <p class="text-sm text-emerald-700"><%= t('common.disclaimer') %></p>
+</article>

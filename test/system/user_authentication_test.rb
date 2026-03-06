@@ -8,6 +8,7 @@ class UserAuthenticationTest < ApplicationSystemTestCase
     fill_in "Email", with: "test@example.com"
     fill_in "Password", with: "password123"
     fill_in "Password confirmation", with: "password123"
+    check "user_health_data_consent"
     click_button "Create account"
 
     assert_text "Welcome! You have signed up successfully."

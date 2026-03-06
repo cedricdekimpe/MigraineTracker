@@ -13,6 +13,7 @@ fr:
     create_account: "Créer un compte"
     language: "Langue"
     faq: "FAQ"
+    privacy: "Politique de confidentialité"
   
   # SEO
   seo:
@@ -44,6 +45,7 @@ fr:
     cta_description: "Construisez une image complète de votre historique de migraines et de votre plan de traitement. Que vous vous prépariez pour une visite chez un spécialiste ou que vous surveilliez votre bien-être quotidien, Migraine Tracker vous donne la structure dont vous avez besoin."
     view_calendar: "Voir mon calendrier"
     manage_medications: "Gérer les médicaments"
+    disclaimer: "Ce service est un outil de suivi personnel et ne fournit ni avis médical ni diagnostic."
     
   # Migraines
   migraines:
@@ -220,6 +222,7 @@ fr:
     edit: "Modifier"
     back: "Retour"
     loading: "Chargement..."
+    disclaimer: "Migraine Tracker sert uniquement à noter vos données de santé personnelles et ne remplace pas un avis médical."
     
   # Date formats
   date:
@@ -305,8 +308,50 @@ fr:
     contact_title: "Encore des questions ?"
     contact_text: "Si vous n'avez pas trouvé la réponse que vous cherchez, n'hésitez pas à nous contacter. Nous sommes là pour vous aider !"
     go_to_data_settings: "Aller aux paramètres de données"
+    disclaimer_title: "Avertissement médical"
+    disclaimer_text: "Migraine Tracker est un journal personnel. Il ne pose pas de diagnostic, ne donne pas de directives de traitement et ne remplace pas un avis médical."
 
-  # Messages Devise personnalisés
-  devise:
-    registrations:
-      password_invalid: "Mot de passe incorrect. Veuillez réessayer."
+  privacy:
+    title: "Politique de confidentialité"
+    description: "Découvrez quelles données nous collectons, pourquoi nous les traitons et comment exercer vos droits en tant qu'utilisateur."
+    intro: "Migraine Tracker conserve uniquement les informations que vous saisissez volontairement pour suivre vos épisodes de migraine, vos médicaments et vos tendances personnelles."
+    data_title: "Données personnelles collectées"
+    data_description: "Vous enregistrez directement les éléments de votre historique de migraines et de vos traitements."
+    data_points:
+      - "Occurrences datées de migraines avec intensité, nature, indicateur de cycle et médicament associé."
+      - "Noms des médicaments que vous saisissez afin de les réutiliser lors de nouveaux enregistrements."
+      - "Adresse e-mail du compte et mot de passe hashé pour l'authentification et la récupération."
+    purpose_title: "Pourquoi nous traitons ces données"
+    purpose_points:
+      - "Pour vous offrir un historique des migraines avec intensité et contexte médicamenteux."
+      - "Pour permettre l'export/import afin que vous gardiez le contrôle de vos dossiers."
+      - "Pour envoyer uniquement des e-mails transactionnels liés à votre compte et votre santé."
+    retention_title: "Conservation et sauvegardes"
+    retention_description: "Les données subsistent uniquement tant que votre compte existe et les logs/sauvegardes sont conservés brièvement."
+    retention_points:
+      - "Les journaux applicatifs contenant des métadonnées de requête sont conservés 30 jours avant rotation."
+      - "L'historique des jobs Solid Queue et les erreurs sont purgés tous les 30 jours."
+      - "Les fichiers JSON exportés sont transmis en flux vers vous et ne sont pas stockés durablement."
+    rights_title: "Vos droits RGPD"
+    rights_description: "Vous contrôlez tout ce qui concerne vos données de santé."
+    rights_points:
+      - "Accès : exportez une copie JSON complète depuis la page Gestion des données à tout moment."
+      - "Rectification : modifiez vos migraines ou médicaments dans l'application ou via l'API."
+      - "Effacement : supprimez votre compte et toutes les données associées en un seul geste."
+      - "Portabilité : téléchargez des sauvegardes et importez-les dans un autre service si vous le souhaitez."
+    contact_title: "Contact et responsable du traitement"
+    contact_description: "Remplacez les champs ci-dessous par vos informations réelles avant publication."
+    contact_email_label: "E-mail du responsable"
+    contact_email: "[privacy@migraine-tracker.eu]"
+    contact_address_label: "Adresse"
+    contact_address: "[Rue, Ville, Pays]"
+    hosting_title: "Hébergement"
+    hosting_description: "Les données résident dans le conteneur déployé avec Kamal, hébergé en région UE ; les volumes persistants restent sous votre infrastructure."
+
+  forms:
+    health_consent_html: "Je consens au stockage et au traitement de mes données de santé (épisodes de migraine et médicaments) afin que Migraine Tracker puisse fournir le service. Consultez la %{privacy} pour en savoir plus."
+
+    # Messages Devise personnalisés
+    devise:
+      registrations:
+        password_invalid: "Mot de passe incorrect. Veuillez réessayer."

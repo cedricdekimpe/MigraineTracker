@@ -1,6 +1,7 @@
 require "test_helper"
 
 class ExportsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
   setup do
     @user = users(:one)
     sign_in @user
@@ -68,7 +69,7 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
     medication = @user.medications.create!(name: "Test Med")
     migraine = @user.migraines.create!(
       occurred_on: Date.today,
-      nature: "strong",
+      nature: "M",
       intensity: 8,
       on_period: false,
       medication: medication
@@ -91,7 +92,7 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
   test "should handle migraine without medication" do
     @user.migraines.create!(
       occurred_on: Date.today,
-      nature: "weak",
+      nature: "H",
       intensity: 3,
       on_period: true
     )
@@ -105,15 +106,15 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should only export current user's data" do
-    other_user = User.create!(
+    other_user = User.create!({
       email: "other@example.com",
       password: "password123",
       password_confirmation: "password123"
-    )
+    }.merge(consent_attrs))
     other_user.medications.create!(name: "Other Med")
     other_user.migraines.create!(
       occurred_on: Date.today,
-      nature: "strong",
+      nature: "M",
       intensity: 7,
       on_period: false
     )

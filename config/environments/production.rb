@@ -38,7 +38,10 @@ Rails.application.configure do
   # config.assume_ssl = true
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
+  config.ssl_options = {
+    hsts: { expires: 1.year, subdomains: true, preload: true }
+  }
 
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
@@ -55,6 +58,15 @@ Rails.application.configure do
 
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
+
+  config.action_dispatch.cookies_same_site_protection = :strict
+
+  config.action_dispatch.default_headers.merge!(
+    "X-Frame-Options" => "DENY",
+    "X-Content-Type-Options" => "nosniff",
+    "Referrer-Policy" => "strict-origin-when-cross-origin",
+    "Permissions-Policy" => "geolocation=(), microphone=(), camera=()"
+  )
 
   # Replace the default in-process memory cache store with a durable alternative.
   config.cache_store = :solid_cache_store

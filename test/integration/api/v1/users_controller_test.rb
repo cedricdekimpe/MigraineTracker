@@ -100,7 +100,9 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "destroy deletes user account with confirmation" do
     # Create a user to delete to avoid breaking other tests
-    user_to_delete = User.create!(email: "delete_me@example.com", password: "password123")
+    user_to_delete = User.create!(
+      { email: "delete_me@example.com", password: "password123" }.merge(consent_attrs)
+    )
     token = login_user(user_to_delete.email, "password123")
 
     assert_difference("User.count", -1) do
@@ -154,7 +156,9 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "destroy deletes all associated data" do
     # Create user with data
-    user = User.create!(email: "full_delete@example.com", password: "password123")
+    user = User.create!(
+      { email: "full_delete@example.com", password: "password123" }.merge(consent_attrs)
+    )
     medication = user.medications.create!(name: "Test Med")
     user.migraines.create!(occurred_on: Date.current - 500.days, nature: "M", intensity: 3, medication: medication)
 
