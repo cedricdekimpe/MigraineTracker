@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <% @pages.each do |page| %>
+    <url>
+      <loc><%= page[:url] %></loc>
+      <lastmod><%= page[:lastmod].strftime('%Y-%m-%d') %></lastmod>
+      <changefreq><%= page[:changefreq] %></changefreq>
+      <priority><%= page[:priority] %></priority>
+      <%# Add alternate language versions %>
+      <% I18n.available_locales.each do |locale| %>
+        <% alt_url = page[:url].gsub(/\/#{page[:locale]}(\/|$)/, "/#{locale}\\1") %>
+        <xhtml:link rel="alternate" hreflang="<%= locale %>" href="<%= alt_url %>" />
+      <% end %>
+      <%# Add x-default pointing to default locale %>
+      <% default_url = page[:url].gsub(/\/#{page[:locale]}(\/|$)/, "/#{I18n.default_locale}\\1") %>
+      <xhtml:link rel="alternate" hreflang="x-default" href="<%= default_url %>" />
+    </url>
+  <% end %>
+</urlset>

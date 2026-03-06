@@ -8,6 +8,7 @@ module.exports = {
     extend: {}
   },
   safelist: [
+    // Classes existantes
     "px-3",
     "py-2",
     "text-center",
@@ -24,7 +25,11 @@ module.exports = {
     "text-white",
     "text-slate-900",
     "text-slate-400",
-    "opacity-40"
+    "opacity-40",
+    // Patterns pour les couleurs rouge (text-red-*, bg-red-*, border-red-*)
+    { pattern: /^(text|bg|border)-red-(50|100|200|300|400|500|600|700|800|900)$/ },
+    // Patterns pour hover states avec rouge
+    { pattern: /^hover:(text|bg|border)-red-(50|100|200|300|400|500|600|700|800|900)$/ }
   ],
   plugins: []
 }
