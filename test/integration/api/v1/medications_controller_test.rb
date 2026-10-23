@@ -8,7 +8,7 @@ class Api::V1::MedicationsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:one)
     @token = nil
-    @medication = medications(:one)
+    @medication = medications(:ibuprofen)
   end
 
   def authenticated_token
@@ -24,8 +24,17 @@ class Api::V1::MedicationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_json_api_collection("medication")
-    # User one has 2 medications
-    assert_equal 2, json_response[:data].length
+    # Active medications only (the archived one is hidden)
+    assert_equal 3, json_response[:data].length
+    assert_not_includes json_response[:data].map { |m| m[:attributes][:name] }, "Old Med"
+  end
+
+  test "index can include archived medications" do
+    get "/api/v1/medications", params: { include_archived: "true" }, headers: api_headers(authenticated_token)
+
+    assert_equal 4, json_response[:data].length
+    old = json_response[:data].find { |m| m[:attributes][:name] == "Old Med" }
+    assert_equal true, old[:attributes][:archived]
   end
 
   test "index fails without authentication" do
@@ -53,7 +62,7 @@ class Api::V1::MedicationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show fails for another user's medication" do
-    other_medication = medications(:three) # belongs to user two
+    other_medication = medications(:aspirin) # belongs to user two
 
     get "/api/v1/medications/#{other_medication.id}", headers: api_headers(authenticated_token)
 
@@ -120,7 +129,7 @@ class Api::V1::MedicationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "update fails for another user's medication" do
-    other_medication = medications(:three)
+    other_medication = medications(:aspirin)
 
     patch "/api/v1/medications/#{other_medication.id}",
       params: { name: "Hacked" }.to_json,
@@ -144,8 +153,35 @@ class Api::V1::MedicationsControllerTest < ActionDispatch::IntegrationTest
     assert_response :no_content
   end
 
+  test "destroy archives a medication that has history" do
+    assert_no_difference("MedicationIntake.count") do
+      delete "/api/v1/medications/#{@medication.id}", headers: api_headers(authenticated_token)
+    end
+
+    assert_response :no_content
+    assert @medication.reload.archived?
+  end
+
+  test "create accepts kind and default dose" do
+    post "/api/v1/medications",
+      params: { name: "Rizatriptan", kind: "acute", default_dose: "10 mg" }.to_json,
+      headers: api_headers(authenticated_token)
+
+    assert_response :created
+    attrs = json_response[:data][:attributes]
+    assert_equal ["acute", "10 mg"], [attrs[:kind], attrs[:default_dose]]
+  end
+
+  test "create rejects an unknown kind" do
+    post "/api/v1/medications",
+      params: { name: "Mystery", kind: "magic" }.to_json,
+      headers: api_headers(authenticated_token)
+
+    assert_response :unprocessable_entity
+  end
+
   test "destroy fails for another user's medication" do
-    other_medication = medications(:three)
+    other_medication = medications(:aspirin)
 
     assert_no_difference("Medication.count") do
       delete "/api/v1/medications/#{other_medication.id}", headers: api_headers(authenticated_token)

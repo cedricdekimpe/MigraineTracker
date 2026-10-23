@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
-# Imports a backup (as produced by ExportsController / Api::V1::DataController#export)
-# into a user's account. All-or-nothing: any invalid row aborts the whole import.
+# Imports a backup (as produced by DataExporter, format version 2) into a user's account.
+# All-or-nothing: any invalid row aborts the whole import.
 #
 # Only DataImporter::InvalidData is meant to be rescued by callers; its message is
 # written for the end user and never contains internal exception details.
 class DataImporter
   MAX_MEDICATIONS = 500
-  MAX_MIGRAINES = 20_000
+  MAX_TRIGGERS = 200
+  MAX_EPISODES = 20_000
+  TIME_FORMAT = /\A([01]\d|2[0-3]):[0-5]\d\z/
 
-  Result = Struct.new(:medications, :migraines, keyword_init: true)
+  Result = Struct.new(:medications, :triggers, :episodes, keyword_init: true)
 
   class InvalidData < StandardError; end
 
@@ -21,77 +23,131 @@ class DataImporter
   def call
     validate_shape!
 
-    result = Result.new(medications: 0, migraines: 0)
+    result = Result.new(medications: 0, triggers: 0, episodes: 0)
     ActiveRecord::Base.transaction do
-      @medications = @user.medications.index_by { |medication| medication_key(medication.name) }
-      @existing_dates = @user.migraines.pluck(:occurred_on).to_set
+      @medications = @user.medications.index_by { |medication| key(medication.name) }
+      @triggers = @user.triggers.index_by { |trigger| key(trigger.name) }
+      @seen = @user.episodes.map { |episode| signature(episode.occurred_on, episode.started_time&.strftime("%H:%M"), episode.pain_kind, episode.aura, episode.intensity, episode.duration_minutes) }.to_set
 
-      Array(@data["medications"]).each_with_index { |row, index| import_medication(row, index, result) }
-      Array(@data["migraines"]).each_with_index { |row, index| import_migraine(row, index, result) }
+      list("medications").each_with_index { |row, index| import_medication_row(row, index, result) }
+      list("triggers").each_with_index { |row, index| import_trigger_row(row, index, result) }
+      list("episodes").each_with_index { |row, index| import_episode(row, index, result) }
     end
     result
   end
 
   private
 
+  def list(name)
+    @data[name] || []
+  end
+
   def validate_shape!
     raise InvalidData, t("invalid_structure") unless @data.is_a?(Hash)
+    raise InvalidData, t("invalid_structure") unless @data["episodes"].is_a?(Array)
 
-    medications = @data["medications"]
-    migraines = @data["migraines"]
+    %w[medications triggers].each do |name|
+      raise InvalidData, t("invalid_structure") unless @data[name].nil? || @data[name].is_a?(Array)
+    end
 
-    raise InvalidData, t("invalid_structure") unless migraines.is_a?(Array)
-    raise InvalidData, t("invalid_structure") unless medications.nil? || medications.is_a?(Array)
-    raise InvalidData, t("too_many", what: t("medications_label"), max: MAX_MEDICATIONS) if medications.to_a.size > MAX_MEDICATIONS
-    raise InvalidData, t("too_many", what: t("migraines_label"), max: MAX_MIGRAINES) if migraines.size > MAX_MIGRAINES
+    raise InvalidData, t("too_many", what: t("medications_label"), max: MAX_MEDICATIONS) if list("medications").size > MAX_MEDICATIONS
+    raise InvalidData, t("too_many", what: t("triggers_label"), max: MAX_TRIGGERS) if list("triggers").size > MAX_TRIGGERS
+    raise InvalidData, t("too_many", what: t("episodes_label"), max: MAX_EPISODES) if list("episodes").size > MAX_EPISODES
   end
 
-  def import_medication(row, index, result)
-    fail_row = -> { raise InvalidData, t("invalid_row", kind: t("medication_kind"), index: index + 1, details: t("invalid_name")) }
+  def import_medication_row(row, index, result)
+    fail_row = -> { raise InvalidData, row_message("medication_kind", index, t("invalid_name")) }
     fail_row.call unless row.is_a?(Hash) && row["name"].is_a?(String)
 
-    find_or_create_medication(row["name"], result, &fail_row)
+    find_or_create_medication(row["name"], result, kind: row["kind"], default_dose: row["default_dose"], archived: row["archived"], &fail_row)
   end
 
-  def import_migraine(row, index, result)
-    fail_row = ->(details) { raise InvalidData, t("invalid_row", kind: t("migraine_kind"), index: index + 1, details: details) }
+  def import_trigger_row(row, index, result)
+    name = row.is_a?(Hash) ? row["name"] : row
+    find_or_create_trigger(name, result) { raise InvalidData, row_message("trigger_kind", index, t("invalid_name")) }
+  end
+
+  def import_episode(row, index, result)
+    fail_row = ->(details) { raise InvalidData, row_message("episode_kind", index, details) }
     fail_row.call(t("invalid_row_shape")) unless row.is_a?(Hash)
 
     occurred_on = parse_date(row["occurred_on"]) || fail_row.call(t("invalid_date"))
-    return if @existing_dates.include?(occurred_on)
+    started_time = parse_time(row["started_time"]) { fail_row.call(t("invalid_time")) }
 
-    medication = find_or_create_medication(row["medication_name"], result) { fail_row.call(t("invalid_name")) }
-
-    migraine = @user.migraines.new(
+    episode = @user.episodes.new(
       occurred_on: occurred_on,
-      nature: row["nature"],
+      started_time: started_time,
+      duration_minutes: row["duration_minutes"],
+      aura: ActiveModel::Type::Boolean.new.cast(row["aura"]) || false,
+      pain_kind: row["pain_kind"],
       intensity: row["intensity"],
       on_period: ActiveModel::Type::Boolean.new.cast(row["on_period"]) || false,
-      medication: medication
+      notes: row["notes"].is_a?(String) ? row["notes"] : nil
     )
-    fail_row.call(migraine.errors.full_messages.to_sentence) unless migraine.save
 
-    @existing_dates << occurred_on
-    result.migraines += 1
+    sign = signature(occurred_on, started_time, episode.pain_kind, episode.aura, episode.intensity, episode.duration_minutes)
+    return if @seen.include?(sign)
+
+    Array(row["medications"]).each do |intake|
+      fail_row.call(t("invalid_row_shape")) unless intake.is_a?(Hash)
+      medication = find_or_create_medication(intake["name"], result) { fail_row.call(t("invalid_name")) }
+      next unless medication
+
+      taken_time = parse_time(intake["taken_time"]) { fail_row.call(t("invalid_time")) }
+      episode.medication_intakes.build(medication: medication, dose: intake["dose"].to_s, taken_time: taken_time, effect: intake["effect"])
+    end
+
+    Array(row["triggers"]).each do |name|
+      trigger = find_or_create_trigger(name, result) { fail_row.call(t("invalid_name")) }
+      episode.triggers << trigger if trigger && !episode.triggers.include?(trigger)
+    end
+
+    fail_row.call(episode.errors.full_messages.to_sentence) unless episode.save
+
+    @seen << sign
+    result.episodes += 1
   end
 
-  # Returns nil for a blank name (no medication); yields when the name is unusable.
-  def find_or_create_medication(name, result)
-    return nil if name.nil? || (name.is_a?(String) && name.strip.empty?)
+  # Returns nil for a blank name; yields when the name is unusable. Existing medications
+  # (archived or not) are reused as-is, never un-archived by an import.
+  def find_or_create_medication(name, result, kind: nil, default_dose: nil, archived: false)
+    return nil if blank_name?(name)
 
     yield unless name.is_a?(String)
 
-    key = medication_key(name)
-    @medications[key] ||= begin
-      medication = @user.medications.new(name: name)
+    @medications[key(name)] ||= begin
+      medication = @user.medications.new(name: name, default_dose: default_dose.is_a?(String) ? default_dose : nil)
+      medication.kind = kind if Medication::KINDS.include?(kind)
+      medication.archived_at = Time.current if ActiveModel::Type::Boolean.new.cast(archived)
       yield unless medication.save
       result.medications += 1
       medication
     end
   end
 
-  def medication_key(name)
+  def find_or_create_trigger(name, result)
+    return nil if blank_name?(name)
+
+    yield unless name.is_a?(String)
+
+    @triggers[key(name)] ||= begin
+      trigger = @user.triggers.new(name: name)
+      yield unless trigger.save
+      result.triggers += 1
+      trigger
+    end
+  end
+
+  def blank_name?(name)
+    name.nil? || (name.is_a?(String) && name.strip.empty?)
+  end
+
+  def key(name)
     name.to_s.strip.downcase
+  end
+
+  def signature(*parts)
+    parts.map { |part| part.respond_to?(:iso8601) && !part.is_a?(String) ? part.iso8601 : part.to_s }
   end
 
   # Strict ISO 8601 calendar date (YYYY-MM-DD); anything else is rejected.
@@ -101,6 +157,19 @@ class DataImporter
     Date.iso8601(value)
   rescue Date::Error
     nil
+  end
+
+  # "HH:MM" or nil; yields on anything else.
+  def parse_time(value)
+    return nil if value.nil? || value == ""
+
+    yield unless value.is_a?(String) && value.match?(TIME_FORMAT)
+
+    value
+  end
+
+  def row_message(kind, index, details)
+    t("invalid_row", kind: t(kind), index: index + 1, details: details)
   end
 
   def t(key, **options)

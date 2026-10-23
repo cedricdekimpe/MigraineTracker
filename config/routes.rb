@@ -21,7 +21,7 @@ Rails.application.routes.draw do
       post 'data/import', to: 'data#import'
 
       # Resources
-      resources :migraines, only: %i[index show create update destroy] do
+      resources :episodes, only: %i[index show create update destroy] do
         collection do
           get :calendar
           get :yearly
@@ -29,13 +29,15 @@ Rails.application.routes.draw do
       end
 
       resources :medications, only: %i[index show create update destroy]
+      resources :triggers, only: %i[index create update destroy]
 
       # Statistics
       get 'stats', to: 'stats#index'
       get 'stats/monthly', to: 'stats#monthly'
       get 'stats/by_day_of_week', to: 'stats#by_day_of_week'
       get 'stats/by_medication', to: 'stats#by_medication'
-      get 'stats/by_nature', to: 'stats#by_nature'
+      get 'stats/by_pain_kind', to: 'stats#by_pain_kind'
+      get 'stats/by_trigger', to: 'stats#by_trigger'
       get 'stats/by_intensity', to: 'stats#by_intensity'
     end
   end
@@ -55,7 +57,9 @@ Rails.application.routes.draw do
     get 'account', to: 'account#show', as: :account
     get 'account/profile', to: 'account#profile', as: :account_profile
     get 'account/medications', to: 'account#medications', as: :account_medications
+    get 'account/triggers', to: 'account#triggers', as: :account_triggers
     get 'account/data', to: 'account#data', as: :account_data
+    patch 'account/preferences', to: 'account#update_preferences', as: :account_preferences
     
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -67,14 +71,18 @@ Rails.application.routes.draw do
     # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
     # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-    resources :migraines, only: %i[index new create edit update destroy] do
+    resources :episodes, only: %i[index new create edit update destroy] do
       collection do
         get :yearly
         get :history
       end
     end
 
-    resources :medications, only: %i[create destroy]
+    resources :medications, only: %i[create update destroy] do
+      patch :unarchive, on: :member
+    end
+
+    resources :triggers, only: %i[create destroy]
 
     resources :stats, only: [:index]
 

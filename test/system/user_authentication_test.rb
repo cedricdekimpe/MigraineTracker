@@ -2,9 +2,8 @@ require "application_system_test_case"
 
 class UserAuthenticationTest < ApplicationSystemTestCase
   test "user signs up and signs in" do
-    visit root_path
+    visit new_user_registration_path
 
-    click_link "Create an account"
     fill_in "Email", with: "test@example.com"
     fill_in "Password", with: "password123"
     fill_in "Password confirmation", with: "password123"
@@ -14,10 +13,10 @@ class UserAuthenticationTest < ApplicationSystemTestCase
     assert_text "Welcome! You have signed up successfully."
     assert_text "Signed in as test@example.com"
 
-    click_button "Sign out"
+    click_button "Sign out", match: :first
     assert_text "Signed out successfully."
 
-    click_link "Sign in", href: new_user_session_path
+    click_link "Sign in", match: :first
     fill_in "Email", with: "test@example.com"
     fill_in "Password", with: "password123"
     click_button "Sign in"

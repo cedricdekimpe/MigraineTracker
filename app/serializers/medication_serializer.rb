@@ -3,9 +3,11 @@
 class MedicationSerializer
   include JSONAPI::Serializer
 
-  attributes :name, :created_at, :updated_at
+  attributes :name, :kind, :default_dose, :created_at, :updated_at
 
-  attribute :migraines_count do |medication|
-    medication.migraines.count
+  attribute :archived, &:archived?
+
+  attribute :episodes_count do |medication|
+    medication.medication_intakes.distinct.count(:episode_id)
   end
 end

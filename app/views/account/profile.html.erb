@@ -48,6 +48,20 @@
           <%= form.submit t('account.update_account'), class: "rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 cursor-pointer" %>
         </div>
       <% end %>
+
+      <section class="mt-10 border-t border-slate-200 pt-8">
+        <h2 class="text-lg font-semibold text-slate-900"><%= t('preferences.title') %></h2>
+        <%= form_with model: current_user, scope: :user, url: account_preferences_path, method: :patch, data: { turbo: false }, class: "mt-4 space-y-4" do |form| %>
+          <div class="flex items-start gap-3">
+            <%= form.check_box :track_cycle, class: "mt-1 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" %>
+            <div>
+              <%= form.label :track_cycle, t('preferences.track_cycle'), class: "text-sm font-medium text-slate-700" %>
+              <p class="text-xs text-slate-500"><%= t('preferences.track_cycle_hint') %></p>
+            </div>
+          </div>
+          <%= form.submit t('common.save'), class: "cursor-pointer rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-emerald-400 hover:text-emerald-700" %>
+        <% end %>
+      </section>
     </div>
   </main>
 </div>

@@ -5,8 +5,10 @@ class UserSerializer
 
   attributes :email, :created_at, :updated_at
 
-  attribute :migraines_count do |user|
-    user.migraines.count
+  attributes :track_cycle
+
+  attribute :episodes_count do |user|
+    user.episodes.count
   end
 
   attribute :medications_count do |user|

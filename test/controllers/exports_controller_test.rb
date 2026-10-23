@@ -2,9 +2,14 @@ require "test_helper"
 
 class ExportsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
+
   setup do
     @user = users(:one)
     sign_in @user
+  end
+
+  def exported
+    JSON.parse(response.body)
   end
 
   test "should require authentication" do
@@ -13,119 +18,68 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_user_session_path
   end
 
-  test "should export user data as JSON" do
+  test "downloads a JSON attachment named after the user and timestamp" do
     post exports_path
+
     assert_response :success
-    assert_equal "application/json", response.content_type
+    assert_equal "application/json", response.media_type
+    assert_match(/attachment/, response.headers["Content-Disposition"])
+    assert_match(/migraine_data_#{@user.id}_\d{8}_\d{6}\.json/, response.headers["Content-Disposition"])
   end
 
-  test "should set attachment disposition" do
+  test "contains version, timestamp and email" do
     post exports_path
-    assert_response :success
-    assert_match /attachment/, response.headers["Content-Disposition"]
+
+    assert_equal DataExporter::FORMAT_VERSION, exported["format_version"]
+    assert_equal @user.email, exported["user_email"]
+    assert_nothing_raised { Time.iso8601(exported["exported_at"]) }
   end
 
-  test "should include filename with user id and timestamp" do
+  test "exports every medication, trigger and episode of the user" do
     post exports_path
-    assert_response :success
-    assert_match /migraine_data_#{@user.id}_\d{8}_\d{6}\.json/, response.headers["Content-Disposition"]
+
+    assert_equal @user.medications.pluck(:name).sort, exported["medications"].map { |m| m["name"] }.sort
+    assert_equal @user.triggers.pluck(:name).sort, exported["triggers"].map { |t| t["name"] }.sort
+    assert_equal @user.episodes.count, exported["episodes"].length
   end
 
-  test "exported JSON should contain user email" do
+  test "episodes carry aura, pain, time, intakes and triggers" do
     post exports_path
-    assert_response :success
-    
-    data = JSON.parse(response.body)
-    assert_equal @user.email, data["user_email"]
+
+    episode = exported["episodes"].find { |e| e["started_time"] == "08:30" }
+    assert_equal [true, "migraine", 7, 240], episode.values_at("aura", "pain_kind", "intensity", "duration_minutes")
+    assert_equal ["Lack of sleep", "Stress"], episode["triggers"]
+    assert_equal ["Ibuprofen", "Paracetamol"], episode["medications"].map { |m| m["name"] }.sort
+
+    aura_only = exported["episodes"].find { |e| e["aura"] && e["pain_kind"].nil? }
+    assert_nil aura_only["intensity"]
   end
 
-  test "exported JSON should contain exported_at timestamp" do
+  test "does not include another user's data" do
     post exports_path
-    assert_response :success
-    
-    data = JSON.parse(response.body)
-    assert_not_nil data["exported_at"]
-    assert_nothing_raised { Time.iso8601(data["exported_at"]) }
+
+    assert_not_includes exported["medications"].map { |m| m["name"] }, "Aspirin"
+    assert_not_includes exported["episodes"].map { |e| e["occurred_on"] }, episodes(:other_users).occurred_on.iso8601
   end
 
-  test "should export all user medications" do
-    # Create test medications
-    med1 = @user.medications.create!(name: "Aspirin")
-    med2 = @user.medications.create!(name: "Sumatriptan")
-    
+  test "an empty account exports empty lists" do
+    sign_in User.create!({ email: "empty@example.com", password: "password123" }.merge(consent_attrs)).tap { |u| u.triggers.destroy_all }
     post exports_path
-    assert_response :success
-    
-    data = JSON.parse(response.body)
-    assert_equal @user.medications.count, data["medications"].length
-    
-    medication_names = data["medications"].map { |m| m["name"] }
-    assert_includes medication_names, "Aspirin"
-    assert_includes medication_names, "Sumatriptan"
+
+    assert_equal [], exported["episodes"]
+    assert_equal [], exported["medications"]
   end
 
-  test "should export all user migraines with medication names" do
-    # Create test data
-    medication = @user.medications.create!(name: "Test Med")
-    migraine = @user.migraines.create!(
-      occurred_on: Date.today,
-      nature: "M",
-      intensity: 8,
-      on_period: false,
-      medication: medication
-    )
-    
+  test "export can be imported back into a fresh account" do
     post exports_path
-    assert_response :success
-    
-    data = JSON.parse(response.body)
-    assert_equal @user.migraines.count, data["migraines"].length
+    backup = response.body
 
-    exported_migraine = data["migraines"].find { |m| m["occurred_on"] == Date.today.to_s }
-    assert_equal Date.today.to_s, exported_migraine["occurred_on"]
-    assert_equal "M", exported_migraine["nature"]
-    assert_equal 8, exported_migraine["intensity"]
-    assert_equal false, exported_migraine["on_period"]
-    assert_equal "Test Med", exported_migraine["medication_name"]
-  end
+    fresh = User.create!({ email: "fresh@example.com", password: "password123" }.merge(consent_attrs))
+    result = DataImporter.new(fresh, JSON.parse(backup.sub(@user.email, fresh.email))).call
 
-  test "should handle migraine without medication" do
-    @user.migraines.create!(
-      occurred_on: Date.today,
-      nature: "H",
-      intensity: 3,
-      on_period: true
-    )
-    
-    post exports_path
-    assert_response :success
-    
-    data = JSON.parse(response.body)
-    exported_migraine = data["migraines"].find { |m| m["occurred_on"] == Date.today.to_s }
-    assert_nil exported_migraine["medication_name"]
-  end
-
-  test "should only export current user's data" do
-    other_user = User.create!({
-      email: "other@example.com",
-      password: "password123",
-      password_confirmation: "password123"
-    }.merge(consent_attrs))
-    other_user.medications.create!(name: "Other Med")
-    other_user.migraines.create!(
-      occurred_on: Date.today,
-      nature: "M",
-      intensity: 7,
-      on_period: false
-    )
-    
-    post exports_path
-    assert_response :success
-    
-    data = JSON.parse(response.body)
-    assert_equal @user.email, data["user_email"]
-    assert_equal @user.medications.count, data["medications"].length
-    assert_equal @user.migraines.count, data["migraines"].length
-    assert_not_includes data["medications"].map { |m| m["name"] }, "Other Med"
+    assert_equal @user.episodes.count, result.episodes
+    assert_equal @user.episodes.count, fresh.episodes.count
+    assert_equal MedicationIntake.where(episode: @user.episodes).count, MedicationIntake.where(episode: fresh.episodes).count
+    assert_equal @user.episodes.joins(:triggers).count, fresh.episodes.joins(:triggers).count
   end
 end

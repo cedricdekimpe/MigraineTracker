@@ -20,15 +20,15 @@
   <div class="grid gap-6 sm:grid-cols-3">
     <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <p class="text-sm font-medium text-slate-500"><%= t('stats.total_migraines') %></p>
-      <p class="mt-2 text-3xl font-semibold text-slate-900"><%= @total_migraines %></p>
+      <p class="mt-2 text-3xl font-semibold text-slate-900"><%= @total_episodes %></p>
     </div>
     <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <p class="text-sm font-medium text-slate-500"><%= t('stats.with_medication') %></p>
-      <p class="mt-2 text-3xl font-semibold text-emerald-600"><%= @migraines_with_medication %></p>
+      <p class="mt-2 text-3xl font-semibold text-emerald-600"><%= @episodes_with_medication %></p>
     </div>
     <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <p class="text-sm font-medium text-slate-500"><%= t('stats.without_medication') %></p>
-      <p class="mt-2 text-3xl font-semibold text-slate-600"><%= @migraines_without_medication %></p>
+      <p class="mt-2 text-3xl font-semibold text-slate-600"><%= @episodes_without_medication %></p>
     </div>
   </div>
 
@@ -46,6 +46,30 @@
     <div class="h-80">
       <canvas data-charts-target="dayChart"></canvas>
     </div>
+  </div>
+
+  <!-- Triggers -->
+  <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm" data-triggers>
+    <h2 class="text-lg font-semibold text-slate-900"><%= t('stats.triggers_title') %></h2>
+    <% if @trigger_data.any? %>
+      <p class="mb-4 mt-1 text-sm text-slate-500"><%= t('stats.triggers_description') %></p>
+      <ul class="space-y-3">
+        <% @trigger_data.each do |name, count| %>
+          <% percent = @total_episodes.positive? ? (count * 100.0 / @total_episodes).round : 0 %>
+          <li>
+            <div class="flex items-baseline justify-between text-sm">
+              <span class="font-medium text-slate-800"><%= name %></span>
+              <span class="text-slate-500"><%= t('stats.trigger_count', count: count, total: @total_episodes, percent: percent) %></span>
+            </div>
+            <div class="mt-1 h-2 rounded-full bg-slate-100">
+              <div class="h-2 rounded-full bg-emerald-500" style="width: <%= percent %>%"></div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="mt-2 text-sm text-slate-500"><%= t('stats.no_trigger_data') %></p>
+    <% end %>
   </div>
 
   <!-- Medication Usage Chart -->

@@ -18,50 +18,43 @@ class Api::V1::DataControllerTest < ActionDispatch::IntegrationTest
   # Export
   # ===============
 
-  test "export returns all user data" do
+  test "export returns all user data in the v2 format" do
     get "/api/v1/data/export", headers: api_headers(authenticated_token)
 
     assert_response :success
     assert_json_api_resource("export")
 
     attrs = json_response[:data][:attributes]
-    assert attrs[:exported_at].present?
+    assert_equal DataExporter::FORMAT_VERSION, attrs[:format_version]
     assert_equal @user.email, attrs[:user_email]
-    assert attrs[:medications].is_a?(Array)
-    assert attrs[:migraines].is_a?(Array)
-
-    # Check meta info
-    assert json_response[:meta][:medications_count].present? || json_response[:meta][:medications_count] == 0
-    assert json_response[:meta][:migraines_count].present? || json_response[:meta][:migraines_count] == 0
+    assert_equal @user.medications.count, attrs[:medications].length
+    assert_equal @user.triggers.count, attrs[:triggers].length
+    assert_equal @user.episodes.count, attrs[:episodes].length
+    assert_equal @user.episodes.count, json_response[:meta][:episodes_count]
   end
 
-  test "export includes medication and migraine details" do
+  test "export includes aura, intakes, triggers and archived medications" do
     get "/api/v1/data/export", headers: api_headers(authenticated_token)
 
-    assert_response :success
-
     attrs = json_response[:data][:attributes]
+    episode = attrs[:episodes].find { |e| e[:started_time] == "08:30" }
+    assert_equal true, episode[:aura]
+    assert_equal "migraine", episode[:pain_kind]
+    assert_equal ["Lack of sleep", "Stress"], episode[:triggers]
+    ibuprofen = episode[:medications].find { |m| m[:name] == "Ibuprofen" }
+    assert_equal ["400 mg", "08:45", "partial"], [ibuprofen[:dose], ibuprofen[:taken_time], ibuprofen[:effect]]
+    assert_equal true, attrs[:medications].find { |m| m[:name] == "Old Med" }[:archived]
+  end
 
-    # Check medications structure
-    if attrs[:medications].any?
-      med = attrs[:medications].first
-      assert med[:name].present?
-      assert med[:created_at].present?
-    end
+  test "export only contains the user's own data" do
+    get "/api/v1/data/export", headers: api_headers(authenticated_token)
 
-    # Check migraines structure
-    if attrs[:migraines].any?
-      migraine = attrs[:migraines].first
-      assert migraine[:occurred_on].present?
-      assert migraine.key?(:nature)
-      assert migraine.key?(:intensity)
-      assert migraine.key?(:on_period)
-    end
+    assert_not_includes json_response[:data][:attributes][:medications].map { |m| m[:name] }, "Aspirin"
+    assert_equal 4, json_response[:data][:attributes][:episodes].length
   end
 
   test "export fails without authentication" do
     get "/api/v1/data/export", headers: api_headers
-
     assert_response :unauthorized
   end
 
@@ -69,174 +62,112 @@ class Api::V1::DataControllerTest < ActionDispatch::IntegrationTest
   # Import
   # ===============
 
-  test "import creates medications and migraines from export data" do
-    # Create a new user for clean import test
-    new_user = User.create!(
-      { email: "import_test@example.com", password: "password123" }.merge(consent_attrs)
-    )
+  def post_import(data = nil, token: authenticated_token, **attributes)
+    payload = (data || {}).merge(attributes)
+    post "/api/v1/data/import", params: { data: payload }.to_json, headers: api_headers(token)
+  end
+
+  test "import creates medications, triggers and episodes" do
+    new_user = User.create!({ email: "import_test@example.com", password: "password123" }.merge(consent_attrs))
     token = login_user(new_user.email, "password123")
+    new_user.triggers.destroy_all
 
-    import_data = {
-      data: {
-        user_email: new_user.email,
-        medications: [
-          { name: "Imported Med 1" },
-          { name: "Imported Med 2" }
-        ],
-        migraines: [
-          {
-            occurred_on: (Date.current - 100.days).iso8601,
-            nature: "M",
-            intensity: 3,
-            on_period: false,
-            medication_name: "Imported Med 1"
-          },
-          {
-            occurred_on: (Date.current - 101.days).iso8601,
-            nature: "H",
-            intensity: 5,
-            on_period: true,
-            medication_name: nil
-          }
-        ]
-      }
-    }
-
-    assert_difference(["new_user.medications.count", "new_user.migraines.count"], 2) do
-      post "/api/v1/data/import",
-        params: import_data.to_json,
-        headers: api_headers(token)
+    assert_difference ["new_user.medications.count", "new_user.triggers.count"], 1 do
+      assert_difference "new_user.episodes.count", 2 do
+        post_import({
+          user_email: new_user.email,
+          medications: [{ name: "Imported Med", kind: "preventive", default_dose: "10 mg" }],
+          triggers: [{ name: "Noise" }],
+          episodes: [
+            { occurred_on: "2024-01-10", started_time: "06:30", aura: true, pain_kind: "migraine", intensity: 6,
+              triggers: ["Noise"], medications: [{ name: "Imported Med", dose: "10 mg", effect: "good" }] },
+            { occurred_on: "2024-01-10", aura: true }
+          ]
+        }, token: token)
+      end
     end
 
     assert_response :success
     assert_json_api_resource("import_result")
-
     attrs = json_response[:data][:attributes]
-    assert_equal 2, attrs[:medications_imported]
-    assert_equal 2, attrs[:migraines_imported]
+    assert_equal [1, 1, 2], [attrs[:medications_imported], attrs[:triggers_imported], attrs[:episodes_imported]]
+
+    episode = new_user.episodes.find_by!(started_time: "06:30")
+    assert_equal ["Noise"], episode.triggers.map(&:name)
+    assert_equal "preventive", new_user.medications.find_by!(name: "Imported Med").kind
   end
 
-  test "import skips duplicate medications" do
-    # User one already has Ibuprofen
-    import_data = {
-      data: {
-        user_email: @user.email,
-        medications: [
-          { name: "Ibuprofen" }, # Already exists
-          { name: "New Medication" }
-        ],
-        migraines: []
-      }
-    }
+  test "importing your own export again does not duplicate anything" do
+    get "/api/v1/data/export", headers: api_headers(authenticated_token)
+    exported = json_response[:data][:attributes]
 
-    assert_difference("@user.medications.count", 1) do
-      post "/api/v1/data/import",
-        params: import_data.to_json,
-        headers: api_headers(authenticated_token)
+    assert_no_difference ["@user.episodes.count", "@user.medications.count", "@user.triggers.count"] do
+      post_import(exported.except(:exported_at))
     end
-
     assert_response :success
-    assert_equal 1, json_response[:data][:attributes][:medications_imported]
+    assert_equal 0, json_response[:data][:attributes][:episodes_imported]
   end
 
-  test "import skips duplicate migraines on same date" do
-    existing_date = migraines(:one).occurred_on
-
-    import_data = {
-      data: {
-        user_email: @user.email,
-        medications: [],
-        migraines: [
-          {
-            occurred_on: existing_date.iso8601,
-            nature: "M",
-            intensity: 1,
-            on_period: false
-          }
-        ]
-      }
-    }
-
-    assert_no_difference("@user.migraines.count") do
-      post "/api/v1/data/import",
-        params: import_data.to_json,
-        headers: api_headers(authenticated_token)
-    end
+  test "import does not un-archive existing medications" do
+    post_import(episodes: [{ occurred_on: "2024-02-01", pain_kind: "headache", intensity: 2, medications: [{ name: "Old Med" }] }])
 
     assert_response :success
-    assert_equal 0, json_response[:data][:attributes][:migraines_imported]
+    assert medications(:old_med).reload.archived?
   end
 
   test "import fails with mismatched email" do
-    import_data = {
-      data: {
-        user_email: "different@example.com",
-        medications: [],
-        migraines: []
-      }
-    }
-
-    post "/api/v1/data/import",
-      params: import_data.to_json,
-      headers: api_headers(authenticated_token)
+    post_import(user_email: "different@example.com", medications: [], episodes: [])
 
     assert_response :unprocessable_entity
     assert json_response[:errors].present?
-  end
-
-  test "import fails without authentication" do
-    post "/api/v1/data/import",
-      params: { data: {} }.to_json,
-      headers: api_headers
-
-    assert_response :unauthorized
+    assert_no_match(/different@example.com/, json_response[:errors].first[:detail])
   end
 
   test "import is all-or-nothing and reports the faulty row" do
-    import_data = {
-      data: {
-        migraines: [
-          { occurred_on: (Date.current - 200.days).iso8601, nature: "M", intensity: 3 },
-          { occurred_on: "not-a-date", nature: "M", intensity: 3 }
+    assert_no_difference ["@user.episodes.count", "@user.medications.count"] do
+      post_import(
+        medications: [{ name: "Never Created" }],
+        episodes: [
+          { occurred_on: (Date.current - 200.days).iso8601, pain_kind: "migraine", intensity: 3 },
+          { occurred_on: "not-a-date", pain_kind: "migraine", intensity: 3 }
         ]
-      }
-    }
-    user = users(:one)
-
-    assert_no_difference "user.migraines.count" do
-      post "/api/v1/data/import", params: import_data.to_json, headers: api_headers(authenticated_token)
+      )
     end
 
     assert_response :unprocessable_entity
-    assert_match(/Migraine #2/, json_response[:errors].first[:detail])
+    assert_match(/Episode #2/, json_response[:errors].first[:detail])
+  end
+
+  test "import reports episodes that break the aura-or-pain rule" do
+    post_import(episodes: [{ occurred_on: "2024-03-01" }])
+
+    assert_response :unprocessable_entity
+    assert_match(/Episode #1/, json_response[:errors].first[:detail])
   end
 
   test "import rejects malformed collections" do
-    post "/api/v1/data/import",
-      params: { data: { migraines: "nope" } }.to_json,
-      headers: api_headers(authenticated_token)
-    assert_response :unprocessable_entity
-
-    post "/api/v1/data/import",
-      params: { data: { migraines: ["2020-01-01"] } }.to_json,
-      headers: api_headers(authenticated_token)
-    assert_response :unprocessable_entity
+    [{ episodes: "nope" }, { episodes: ["2020-01-01"] }, { episodes: [], medications: "x" }, { episodes: [], triggers: ["Stress"] }].each do |payload|
+      post_import(payload)
+      assert_response :unprocessable_entity, "expected #{payload.inspect} to be rejected"
+    end
   end
 
   test "import ignores unknown attributes instead of mass-assigning them" do
-    user = users(:one)
-    post "/api/v1/data/import",
-      params: { data: { migraines: [{ occurred_on: (Date.current - 300.days).iso8601, nature: "M", intensity: 4, user_id: users(:two).id, id: 1 }] } }.to_json,
-      headers: api_headers(authenticated_token)
+    post_import(episodes: [{ occurred_on: (Date.current - 300.days).iso8601, pain_kind: "migraine", intensity: 4, user_id: users(:two).id, id: 1 }])
 
     assert_response :success
-    assert user.migraines.exists?(occurred_on: Date.current - 300.days)
-    assert_not users(:two).migraines.exists?(occurred_on: Date.current - 300.days)
+    assert @user.episodes.exists?(occurred_on: Date.current - 300.days)
+    assert_not users(:two).episodes.exists?(occurred_on: Date.current - 300.days)
   end
 
   test "import rejects oversized payloads" do
-    big = { data: { migraines: [], padding: "x" * (Api::V1::DataController::MAX_IMPORT_BYTES + 1) } }
+    big = { data: { episodes: [], padding: "x" * (Api::V1::DataController::MAX_IMPORT_BYTES + 1) } }
     post "/api/v1/data/import", params: big.to_json, headers: api_headers(authenticated_token)
-    assert_response :payload_too_large
+    assert_response :content_too_large
+  end
+
+  test "import fails without authentication" do
+    post "/api/v1/data/import", params: { data: {} }.to_json, headers: api_headers
+    assert_response :unauthorized
   end
 end

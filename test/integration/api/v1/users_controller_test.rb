@@ -160,13 +160,14 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
       { email: "full_delete@example.com", password: "password123" }.merge(consent_attrs)
     )
     medication = user.medications.create!(name: "Test Med")
-    user.migraines.create!(occurred_on: Date.current - 500.days, nature: "M", intensity: 3, medication: medication)
+    episode = user.episodes.create!(occurred_on: Date.current - 500.days, pain_kind: "migraine", intensity: 3)
+    episode.medication_intakes.create!(medication: medication)
+    episode.triggers << user.triggers.first
 
     token = login_user(user.email, "password123")
 
     user_count_before = User.count
     med_count_before = user.medications.count
-    migraine_count_before = user.migraines.count
 
     delete "/api/v1/user",
       params: {
@@ -178,6 +179,8 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal user_count_before - 1, User.count
     assert_equal 0, Medication.where(user_id: user.id).count
-    assert_equal 0, Migraine.where(user_id: user.id).count
+    assert_equal 0, Episode.where(user_id: user.id).count
+    assert_equal 0, Trigger.where(user_id: user.id).count
+    assert_equal 0, MedicationIntake.where(medication_id: medication.id).count
   end
 end

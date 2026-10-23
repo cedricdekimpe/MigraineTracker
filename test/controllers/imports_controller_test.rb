@@ -2,311 +2,138 @@ require "test_helper"
 
 class ImportsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
+
   setup do
     @user = users(:one)
     sign_in @user
   end
 
-  test "should require authentication for new" do
+  def upload(content, filename: "export.json")
+    Rack::Test::UploadedFile.new(StringIO.new(content.is_a?(String) ? content : content.to_json), "application/json", original_filename: filename)
+  end
+
+  def import(data)
+    post imports_path, params: { file: upload(data) }
+  end
+
+  test "should require authentication" do
     sign_out @user
     get new_import_path
     assert_redirected_to new_user_session_path
-  end
 
-  test "should require authentication for create" do
-    sign_out @user
     post imports_path
     assert_redirected_to new_user_session_path
   end
 
-  test "should get new import page" do
+  test "shows the upload form" do
     get new_import_path
     assert_response :success
-    assert_select "h1", "Import Data"
+    assert_select "input[type=file]"
   end
 
-  test "should show file upload form" do
-    get new_import_path
-    assert_response :success
-    assert_select "input[type='file'][name='file']"
-  end
-
-  test "should reject import without file" do
+  test "rejects a request without file" do
     post imports_path
     assert_redirected_to new_import_path
-    assert_equal "Please select a file to import.", flash[:alert]
+    assert_equal I18n.t("flash.export_file_missing"), flash[:alert]
   end
 
-  test "should reject invalid JSON file" do
-    file = fixture_file_upload(Rails.root.join("test/fixtures/files/invalid.json"), "application/json")
-    post imports_path, params: { file: file }
-    
-    assert_redirected_to new_import_path
-    assert_match /Invalid JSON file/, flash[:alert]
-  end
-
-  test "should reject JSON with wrong user email" do
-    export_data = {
-      exported_at: Time.current.iso8601,
-      user_email: "wrong@example.com",
-      medications: [],
-      migraines: []
-    }
-    
-    file = Rack::Test::UploadedFile.new(
-      StringIO.new(export_data.to_json),
-      "application/json",
-      original_filename: "export.json"
-    )
-    
-    post imports_path, params: { file: file }
-    assert_redirected_to new_import_path
-    assert_match /does not match your account/, flash[:alert]
-  end
-
-  test "should successfully import medications" do
-    export_data = {
-      exported_at: Time.current.iso8601,
-      user_email: @user.email,
-      medications: [
-        { name: "Aspirin", created_at: 1.day.ago.iso8601 },
-        { name: "Sumatriptan", created_at: 2.days.ago.iso8601 }
-      ],
-      migraines: []
-    }
-    
-    file = Rack::Test::UploadedFile.new(
-      StringIO.new(export_data.to_json),
-      "application/json",
-      original_filename: "export.json"
-    )
-    
-    assert_difference "@user.medications.count", 2 do
-      post imports_path, params: { file: file }
-    end
-    
-    assert_redirected_to edit_user_registration_path
-    assert_equal "Successfully imported 2 medications and 0 migraines.", flash[:notice]
-    
-    assert @user.medications.exists?(name: "Aspirin")
-    assert @user.medications.exists?(name: "Sumatriptan")
-  end
-
-  test "should successfully import migraines with medications" do
-    # First create a medication
-    medication = @user.medications.create!(name: "Test Med")
-    
-    export_data = {
-      exported_at: Time.current.iso8601,
-      user_email: @user.email,
-      medications: [
-        { name: "Test Med", created_at: 1.day.ago.iso8601 }
-      ],
-      migraines: [
-        {
-          occurred_on: Date.today.to_s,
-          nature: "M",
-          intensity: 8,
-          on_period: false,
-          medication_name: "Test Med",
-          created_at: Time.current.iso8601
-        }
-      ]
-    }
-    
-    file = Rack::Test::UploadedFile.new(
-      StringIO.new(export_data.to_json),
-      "application/json",
-      original_filename: "export.json"
-    )
-    
-    initial_count = @user.migraines.count
-    post imports_path, params: { file: file }
-    
-    assert_redirected_to edit_user_registration_path
-    assert_equal "Successfully imported 0 medications and 1 migraines.", flash[:notice]
-    
-    migraine = @user.migraines.find_by!(occurred_on: Date.today)
-    assert_equal "M", migraine.nature
-    assert_equal 8, migraine.intensity
-    assert_equal false, migraine.on_period
-    assert_equal medication.id, migraine.medication_id
-  end
-
-  test "should skip duplicate migraines based on occurred_on date" do
-    # Create existing migraine
-    @user.migraines.create!(
-      occurred_on: Date.today,
-      nature: "H",
-      intensity: 3,
-      on_period: false
-    )
-    
-    export_data = {
-      exported_at: Time.current.iso8601,
-      user_email: @user.email,
-      medications: [],
-      migraines: [
-        {
-          occurred_on: Date.today.to_s,
-          nature: "M",
-          intensity: 8,
-          on_period: true,
-          medication_name: nil,
-          created_at: Time.current.iso8601
-        }
-      ]
-    }
-    
-    file = Rack::Test::UploadedFile.new(
-      StringIO.new(export_data.to_json),
-      "application/json",
-      original_filename: "export.json"
-    )
-    
-    assert_no_difference "@user.migraines.count" do
-      post imports_path, params: { file: file }
-    end
-    
-    # Verify original migraine data wasn't changed
-    migraine = @user.migraines.find_by(occurred_on: Date.today)
-    assert_equal "H", migraine.nature
-    assert_equal 3, migraine.intensity
-  end
-
-  test "should handle migraines without medication" do
-    export_data = {
-      exported_at: Time.current.iso8601,
-      user_email: @user.email,
-      medications: [],
-      migraines: [
-        {
-          occurred_on: Date.today.to_s,
-          nature: "H",
-          intensity: 4,
-          on_period: true,
-          medication_name: nil,
-          created_at: Time.current.iso8601
-        }
-      ]
-    }
-    
-    file = Rack::Test::UploadedFile.new(
-      StringIO.new(export_data.to_json),
-      "application/json",
-      original_filename: "export.json"
-    )
-    
-    assert_difference "@user.migraines.count", 1 do
-      post imports_path, params: { file: file }
-    end
-    
-    migraine = @user.migraines.last
-    assert_nil migraine.medication_id
-  end
-
-  test "should rollback on error during import" do
-    # Create invalid data that will cause an error
-    export_data = {
-      exported_at: Time.current.iso8601,
-      user_email: @user.email,
-      medications: [],
-      migraines: [
-        {
-          occurred_on: "invalid-date",
-          nature: "M",
-          intensity: 8,
-          on_period: false,
-          medication_name: nil,
-          created_at: Time.current.iso8601
-        }
-      ]
-    }
-    
-    file = Rack::Test::UploadedFile.new(
-      StringIO.new(export_data.to_json),
-      "application/json",
-      original_filename: "export.json"
-    )
-    
-    assert_no_difference "@user.migraines.count" do
-      post imports_path, params: { file: file }
-    end
-    
-    assert_redirected_to new_import_path
-    assert_match /Error importing data/, flash[:alert]
-  end
-
-  test "should create medication if it doesn't exist when importing migraine" do
-    export_data = {
-      exported_at: Time.current.iso8601,
-      user_email: @user.email,
-      medications: [
-        { name: "New Med", created_at: 1.day.ago.iso8601 }
-      ],
-      migraines: [
-        {
-          occurred_on: Date.today.to_s,
-          nature: "M",
-          intensity: 7,
-          on_period: false,
-          medication_name: "New Med",
-          created_at: Time.current.iso8601
-        }
-      ]
-    }
-    
-    file = Rack::Test::UploadedFile.new(
-      StringIO.new(export_data.to_json),
-      "application/json",
-      original_filename: "export.json"
-    )
-    
-    assert_difference "@user.medications.count", 1 do
-      post imports_path, params: { file: file }
-    end
-    
-    medication = @user.medications.find_by(name: "New Med")
-    assert_not_nil medication
-    
-    migraine = @user.migraines.last
-    assert_equal medication.id, migraine.medication_id
-  end
-
-  test "should reject a file field that is not an uploaded file" do
+  test "rejects a file field that is not an uploaded file" do
     post imports_path, params: { file: "not-a-file" }
     assert_redirected_to new_import_path
     assert_equal I18n.t("flash.export_file_missing"), flash[:alert]
   end
 
-  test "should reject files above the size limit" do
-    big = Rack::Test::UploadedFile.new(
-      StringIO.new("{" + " " * (ImportsController::MAX_FILE_SIZE + 1) + "}"),
-      "application/json",
-      original_filename: "big.json"
-    )
+  test "rejects invalid JSON" do
+    post imports_path, params: { file: upload("{ nope", filename: "bad.json") }
+    assert_redirected_to new_import_path
+    assert_match(/Invalid JSON/, flash[:alert])
+  end
 
-    assert_no_difference "@user.migraines.count" do
-      post imports_path, params: { file: big }
+  test "rejects JSON nested too deeply" do
+    post imports_path, params: { file: upload(("[" * 50) + ("]" * 50)) }
+    assert_redirected_to new_import_path
+    assert_match(/Invalid JSON/, flash[:alert])
+  end
+
+  test "rejects files above the size limit" do
+    big = "{" + " " * (ImportsController::MAX_FILE_SIZE + 1) + "}"
+    assert_no_difference "@user.episodes.count" do
+      post imports_path, params: { file: upload(big) }
     end
     assert_redirected_to new_import_path
     assert_match(/too large/, flash[:alert])
   end
 
-  test "should reject JSON that is not a backup structure" do
-    file = Rack::Test::UploadedFile.new(StringIO.new("[1, 2, 3]"), "application/json", original_filename: "x.json")
-    post imports_path, params: { file: file }
+  test "rejects JSON that is not a backup" do
+    import([1, 2, 3])
     assert_redirected_to new_import_path
     assert_match(/valid backup data/, flash[:alert])
   end
 
-  test "should not leak exception details for invalid dates" do
-    export_data = { migraines: [{ occurred_on: "31/12/2020", nature: "M", intensity: 3 }] }
-    file = Rack::Test::UploadedFile.new(StringIO.new(export_data.to_json), "application/json", original_filename: "x.json")
-
-    post imports_path, params: { file: file }
+  test "rejects a backup of another account without echoing nothing sensitive" do
+    import(user_email: "someone@else.com", episodes: [])
     assert_redirected_to new_import_path
-    assert_match(/Migraine #1/, flash[:alert])
-    assert_no_match(/Date::Error|invalid date\b|ActiveRecord|NoMethodError/, flash[:alert])
+    assert_match(/does not match your account/, flash[:alert])
+  end
+
+  test "imports medications, triggers and episodes" do
+    assert_difference "@user.medications.count", 1 do
+      assert_difference "@user.triggers.count", 1 do
+        assert_difference "@user.episodes.count", 1 do
+          import(
+            user_email: @user.email,
+            medications: [{ name: "Sumatriptan", kind: "acute", default_dose: "50 mg" }],
+            triggers: [{ name: "Noise" }],
+            episodes: [{ occurred_on: "2024-05-05", aura: true, pain_kind: "migraine", intensity: 8, triggers: ["Noise"],
+                         medications: [{ name: "Sumatriptan", dose: "50 mg", taken_time: "10:00", effect: "good" }] }]
+          )
+        end
+      end
+    end
+
+    assert_redirected_to edit_user_registration_path
+    assert_equal "Successfully imported 1 medications and 1 episodes.", flash[:notice]
+
+    episode = @user.episodes.find_by!(occurred_on: "2024-05-05")
+    assert episode.aura?
+    assert_equal ["Noise"], episode.triggers.map(&:name)
+    assert_equal "10:00", episode.medication_intakes.first.taken_time.strftime("%H:%M")
+  end
+
+  test "skips episodes that are already there but accepts a second one the same day" do
+    existing = episodes(:headache)
+    row = { occurred_on: existing.occurred_on.iso8601, pain_kind: "headache", intensity: 4 }
+
+    assert_difference "@user.episodes.count", 1 do
+      import(episodes: [row, row.merge(started_time: "22:00")])
+    end
+    assert_equal "Successfully imported 0 medications and 1 episodes.", flash[:notice]
+  end
+
+  test "matches existing medications ignoring case" do
+    assert_no_difference "@user.medications.count" do
+      import(episodes: [{ occurred_on: "2024-06-01", pain_kind: "migraine", intensity: 5, medications: [{ name: "ibuprofen" }] }])
+    end
+    assert_equal medications(:ibuprofen), @user.episodes.find_by!(occurred_on: "2024-06-01").medications.first
+  end
+
+  test "rolls back everything on an invalid row" do
+    assert_no_difference ["@user.episodes.count", "@user.medications.count", "@user.triggers.count"] do
+      import(
+        medications: [{ name: "Brand New" }],
+        triggers: [{ name: "Brand New" }],
+        episodes: [{ occurred_on: "2024-07-01", aura: true }, { occurred_on: "invalid-date", pain_kind: "migraine", intensity: 5 }]
+      )
+    end
+
+    assert_redirected_to new_import_path
+    assert_match(/Error importing data: Episode #2/, flash[:alert])
+  end
+
+  test "error messages never leak exception details" do
+    import(episodes: [{ occurred_on: "31/12/2020", pain_kind: "migraine", intensity: 3 }])
+
+    assert_match(/Episode #1/, flash[:alert])
+    assert_no_match(/Date::Error|ActiveRecord|NoMethodError|Validation failed/, flash[:alert])
   end
 end

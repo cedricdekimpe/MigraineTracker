@@ -1,0 +1,43 @@
+<div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+  <table class="min-w-full table-fixed">
+    <thead>
+      <tr>
+        <th class="sticky left-0 bg-white px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"><%= t("episodes.calendar.attribute") %></th>
+        <% days.each do |day| %>
+          <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <% if day <= month.end_of_month.day %>
+              <%= link_to day, new_episode_path(date: month.change(day: day).iso8601), title: t("episodes.calendar.add_on_day"), class: "block rounded hover:bg-emerald-50 hover:text-emerald-700" %>
+            <% else %>
+              <%= day %>
+            <% end %>
+          </th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody class="text-sm">
+      <%
+        rows = [
+          [:type, t("episodes.calendar.type"), ->(episodes) { day_codes(episodes) }],
+          [:intensity, t("episodes.calendar.intensity"), ->(episodes) { day_intensity(episodes) }]
+        ]
+        rows << [:cycle, t("episodes.calendar.cycle"), ->(episodes) { day_cycle(episodes) }] if current_user.track_cycle?
+        rows << [:medication, t("episodes.calendar.medication"), ->(episodes) { day_medications(episodes) }]
+      %>
+      <% rows.each do |attribute, label, renderer| %>
+        <tr>
+          <th scope="row" class="sticky left-0 bg-white px-4 py-3 text-left font-medium text-slate-700"><%= label %></th>
+          <% days.each do |day| %>
+            <% day_episodes = episodes_by_day[day] %>
+            <td class="<%= episode_cell_classes(day, month) %>" data-day="<%= day %>" data-attribute="<%= attribute %>">
+              <% if day_episodes.present? %>
+                <%= link_to history_episodes_path(date: month.change(day: day).iso8601), class: "block hover:underline" do %><%= renderer.call(day_episodes) %><% end %>
+              <% else %>
+                –
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

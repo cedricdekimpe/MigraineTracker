@@ -94,7 +94,7 @@ POST /api/v1/auth/register
   "password_confirmation": "securepassword123"
 }
 ```
-The request must also include `"health_data_consent": true` to confirm you accept the storage of migraine and medication data under the privacy policy.
+The request must also include `"health_data_consent": true` to confirm you accept the storage of your health data (episodes, medications, triggers) under the privacy policy.
 
 **Response:** `201 Created`
 ```json
@@ -106,7 +106,7 @@ The request must also include `"health_data_consent": true` to confirm you accep
       "email": "user@example.com",
       "created_at": "2026-02-17T14:00:00Z",
       "updated_at": "2026-02-17T14:00:00Z",
-      "migraines_count": 0,
+      "episodes_count": 0,
       "medications_count": 0
     }
   }
@@ -146,7 +146,7 @@ POST /api/v1/auth/login
       "email": "user@example.com",
       "created_at": "2026-02-17T14:00:00Z",
       "updated_at": "2026-02-17T14:00:00Z",
-      "migraines_count": 5,
+      "episodes_count": 5,
       "medications_count": 2
     }
   }
@@ -220,7 +220,7 @@ GET /api/v1/auth/me
       "email": "user@example.com",
       "created_at": "2026-02-17T14:00:00Z",
       "updated_at": "2026-02-17T14:00:00Z",
-      "migraines_count": 5,
+      "episodes_count": 5,
       "medications_count": 2
     }
   }
@@ -302,484 +302,167 @@ DELETE /api/v1/user
 
 ---
 
-## Migraines Endpoints
+## Episodes Endpoints
 
-### List Migraines
+An **episode** is one headache-type event. A day can have several. It has pain (`pain_kind`:
+`migraine` or `headache`, or none), an independent `aura` flag (an aura can precede a migraine
+or happen alone), an `intensity` from 1 to 10 (required with pain, empty without), and optional
+start time, duration, notes and cycle flag. At least one of aura or pain is required.
 
-Get a paginated list of the user's migraines.
+Episode resource:
 
-```
-GET /api/v1/migraines
-```
-
-**Headers:** Authorization required
-
-**Query Parameters:**
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `page` | integer | Page number (default: 1) |
-| `year` | string | Filter by year (e.g., "2026") |
-| `month` | string | Filter by month (e.g., "2026-02") |
-
-**Response:** `200 OK`
 ```json
 {
-  "data": [
-    {
-      "id": "1",
-      "type": "migraine",
-      "attributes": {
-        "occurred_on": "2026-02-15",
-        "nature": "M",
-        "intensity": 5,
-        "on_period": false,
-        "nature_label": "Migraine (M)",
-        "created_at": "2026-02-15T10:00:00Z",
-        "updated_at": "2026-02-15T10:00:00Z"
-      },
-      "relationships": {
-        "medication": {
-          "data": {
-            "id": "1",
-            "type": "medication"
-          }
-        }
-      }
-    }
-  ],
-  "meta": {
-    "current_page": 1,
-    "total_pages": 3,
-    "total_count": 45,
-    "per_page": 20
-  },
-  "links": {
-    "self": "/api/v1/migraines?page=1",
-    "first": "/api/v1/migraines?page=1",
-    "last": "/api/v1/migraines?page=3",
-    "next": "/api/v1/migraines?page=2"
+  "id": "12",
+  "type": "episode",
+  "attributes": {
+    "occurred_on": "2026-02-10",
+    "started_time": "08:30",
+    "duration_minutes": 240,
+    "aura": true,
+    "pain_kind": "migraine",
+    "intensity": 7,
+    "on_period": false,
+    "notes": null,
+    "code": "MA",
+    "triggers": [{ "id": 3, "name": "Stress" }],
+    "medications": [
+      { "id": 5, "medication_id": 2, "name": "Ibuprofen", "dose": "400 mg", "taken_time": "08:45", "effect": "partial" }
+    ],
+    "created_at": "2026-02-10T09:00:00.000Z",
+    "updated_at": "2026-02-10T09:00:00.000Z"
   }
 }
 ```
 
----
+`code` is a compact label: `M` migraine, `H` headache, `A` aura alone, `MA`/`HA` pain preceded by aura.
+`effect` is one of `none`, `partial`, `good`. Times are `HH:MM`.
 
-### Get Migraine
-
-```
-GET /api/v1/migraines/:id
-```
-
-**Headers:** Authorization required
-
-**Response:** `200 OK`
-
----
-
-### Create Migraine
+### List Episodes
 
 ```
-POST /api/v1/migraines
+GET /api/v1/episodes
 ```
 
-**Headers:** Authorization required
+**Query parameters:** `page`, `year` (e.g. `2026`), `month` (e.g. `2026-02`). Newest first.
 
-**Request Body:**
+**Response:** `200 OK` with `data` (episodes), `meta` (pagination) and `links`.
+
+### Get Episode
+
+```
+GET /api/v1/episodes/:id
+```
+
+### Create Episode
+
+```
+POST /api/v1/episodes
+```
+
+**Body** (JSON, either at the top level or wrapped in `episode`):
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `occurred_on` | date | required, `YYYY-MM-DD` |
+| `pain_kind` | string | `migraine`, `headache` or omitted |
+| `aura` | boolean | default `false` |
+| `intensity` | integer | 1-10, required when `pain_kind` is set |
+| `started_time` | string | `HH:MM` |
+| `duration_minutes` | integer | 1 to 4320 |
+| `on_period` | boolean | |
+| `notes` | string | |
+| `trigger_ids` | integer[] | ids of your own triggers |
+| `medication_intakes_attributes` | object[] | `{ "medication_id", "dose", "taken_time", "effect" }`; to edit/remove on update add `id` and `_destroy` |
+
 ```json
 {
-  "occurred_on": "2026-02-17",
-  "nature": "M",
-  "intensity": 5,
-  "on_period": false,
-  "medication_id": 1
+  "occurred_on": "2026-02-10", "aura": true, "pain_kind": "migraine", "intensity": 7,
+  "trigger_ids": [3],
+  "medication_intakes_attributes": [{ "medication_id": 2, "dose": "400 mg" }]
 }
 ```
 
-**Nature Values:**
-| Value | Description |
-|-------|-------------|
-| `M` | Migraine |
-| `H` | Headache |
-| `A` | Migraine with aura |
-| `MA` | Migraine with aura |
-| `MH` | Migraine with headache |
+**Response:** `201 Created` with the episode. `422` when neither aura nor pain is given, the intensity is
+out of range, or a medication/trigger belongs to someone else. The write is atomic: on error nothing is saved.
 
-**Intensity:** Integer from 0-10
-
-**Response:** `201 Created`
-
----
-
-### Update Migraine
+### Update Episode
 
 ```
-PATCH /api/v1/migraines/:id
+PATCH /api/v1/episodes/:id
 ```
 
-**Headers:** Authorization required
+Same fields as create. `trigger_ids` replaces the whole set of triggers.
 
-**Request Body:** (any subset of create fields)
-```json
-{
-  "intensity": 7,
-  "on_period": true
-}
-```
-
-**Response:** `200 OK`
-
----
-
-### Delete Migraine
+### Delete Episode
 
 ```
-DELETE /api/v1/migraines/:id
+DELETE /api/v1/episodes/:id
 ```
 
-**Headers:** Authorization required
-
-**Response:** `204 No Content`
-
----
+**Response:** `204 No Content` (intakes and trigger links are removed with the episode).
 
 ### Calendar View
 
-Get migraines for a specific month (for calendar display).
-
 ```
-GET /api/v1/migraines/calendar
+GET /api/v1/episodes/calendar?month=2026-02
 ```
 
-**Headers:** Authorization required
-
-**Query Parameters:**
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `month` | string | Month in YYYY-MM format (default: current month) |
-
-**Response:** `200 OK`
-```json
-{
-  "data": [...],
-  "meta": {
-    "month": 2,
-    "year": 2026,
-    "month_name": "February",
-    "days_in_month": 28,
-    "migraines_by_day": {
-      "5": 123,
-      "15": 124
-    }
-  }
-}
-```
-
----
+Returns the month's episodes and `meta.episodes_by_day` (`{ "10": [12, 13] }`, day to episode ids).
+`400` for a malformed month.
 
 ### Yearly View
 
-Get all migraines for a year with monthly breakdown.
-
 ```
-GET /api/v1/migraines/yearly
+GET /api/v1/episodes/yearly?year=2026
 ```
 
-**Headers:** Authorization required
-
-**Query Parameters:**
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `year` | integer | Year (default: current year) |
-
-**Response:** `200 OK`
-```json
-{
-  "data": [...],
-  "meta": {
-    "year": 2026,
-    "total_count": 45,
-    "months": [
-      {
-        "month": "2026-01",
-        "month_name": "January",
-        "count": 3,
-        "migraine_ids": [1, 2, 3]
-      }
-    ]
-  }
-}
-```
+Returns the year's episodes and `meta.months` (`month`, `month_name`, `count`, `episode_ids`).
 
 ---
 
 ## Medications Endpoints
 
-### List Medications
+Medication resource attributes: `name`, `kind` (`acute`, `preventive`, `other`), `default_dose`,
+`archived`, `episodes_count`, `created_at`, `updated_at`.
 
-```
-GET /api/v1/medications
-```
-
-**Headers:** Authorization required
-
-**Response:** `200 OK`
-```json
-{
-  "data": [
-    {
-      "id": "1",
-      "type": "medication",
-      "attributes": {
-        "name": "Ibuprofen",
-        "created_at": "2026-01-01T00:00:00Z",
-        "updated_at": "2026-01-01T00:00:00Z",
-        "migraines_count": 10
-      }
-    }
-  ]
-}
-```
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/api/v1/medications` | active medications; add `?include_archived=true` for all |
+| GET | `/api/v1/medications/:id` | |
+| POST | `/api/v1/medications` | `{ "name", "kind", "default_dose" }`; name unique per user, ignoring case |
+| PATCH | `/api/v1/medications/:id` | same fields |
+| DELETE | `/api/v1/medications/:id` | **archives** the medication when it was used in an episode (history is kept), deletes it otherwise. `204` either way |
 
 ---
 
-### Get Medication
+## Triggers Endpoints
 
-```
-GET /api/v1/medications/:id
-```
+Trigger resource attributes: `name`, `episodes_count`, `created_at`, `updated_at`. New accounts start
+with a default list (stress, lack of sleep, ...) in the language of the sign-up page.
 
-**Headers:** Authorization required
-
-**Response:** `200 OK`
-
----
-
-### Create Medication
-
-```
-POST /api/v1/medications
-```
-
-**Headers:** Authorization required
-
-**Request Body:**
-```json
-{
-  "name": "Sumatriptan"
-}
-```
-
-**Response:** `201 Created`
-
----
-
-### Update Medication
-
-```
-PATCH /api/v1/medications/:id
-```
-
-**Headers:** Authorization required
-
-**Request Body:**
-```json
-{
-  "name": "Updated Name"
-}
-```
-
-**Response:** `200 OK`
-
----
-
-### Delete Medication
-
-```
-DELETE /api/v1/medications/:id
-```
-
-**Headers:** Authorization required
-
-**Response:** `204 No Content`
+| Method | Path | Notes |
+|--------|------|-------|
+| GET | `/api/v1/triggers` | alphabetical |
+| POST | `/api/v1/triggers` | `{ "name" }`, unique per user ignoring case |
+| PATCH | `/api/v1/triggers/:id` | |
+| DELETE | `/api/v1/triggers/:id` | removed from past episodes too; `204` |
 
 ---
 
 ## Statistics Endpoints
 
-### Overall Stats
+All endpoints require authorization and only count the caller's data.
 
-```
-GET /api/v1/stats
-```
-
-**Headers:** Authorization required
-
-**Response:** `200 OK`
-```json
-{
-  "data": {
-    "id": "1-stats",
-    "type": "stats",
-    "attributes": {
-      "total_migraines": 45,
-      "with_medication": 30,
-      "without_medication": 15,
-      "average_intensity": 4.5
-    }
-  }
-}
-```
-
----
-
-### Monthly Stats
-
-```
-GET /api/v1/stats/monthly
-```
-
-**Headers:** Authorization required
-
-**Query Parameters:**
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `months` | integer | Number of months to include (default: 12) |
-
-**Response:** `200 OK`
-```json
-{
-  "data": {
-    "id": "1-monthly",
-    "type": "monthly_stats",
-    "attributes": {
-      "period_start": "2025-03-01",
-      "period_end": "2026-02-28",
-      "months": [
-        {
-          "month": "2026-02",
-          "month_name": "February",
-          "year": 2026,
-          "count": 5,
-          "with_medication": 3,
-          "without_medication": 2,
-          "average_intensity": 4.2
-        }
-      ]
-    }
-  }
-}
-```
-
----
-
-### Stats by Day of Week
-
-```
-GET /api/v1/stats/by_day_of_week
-```
-
-**Headers:** Authorization required
-
-**Response:** `200 OK`
-```json
-{
-  "data": {
-    "id": "1-dow",
-    "type": "day_of_week_stats",
-    "attributes": {
-      "days": [
-        { "day": "sunday", "day_number": 0, "count": 5 },
-        { "day": "monday", "day_number": 1, "count": 8 }
-      ],
-      "total": 45
-    }
-  }
-}
-```
-
----
-
-### Stats by Medication
-
-```
-GET /api/v1/stats/by_medication
-```
-
-**Headers:** Authorization required
-
-**Response:** `200 OK`
-```json
-{
-  "data": {
-    "id": "1-meds",
-    "type": "medication_stats",
-    "attributes": {
-      "medications": [
-        { "name": "Ibuprofen", "count": 15 },
-        { "name": "Paracetamol", "count": 10 },
-        { "name": "None", "count": 20 }
-      ],
-      "total": 45
-    }
-  }
-}
-```
-
----
-
-### Stats by Nature
-
-```
-GET /api/v1/stats/by_nature
-```
-
-**Headers:** Authorization required
-
-**Response:** `200 OK`
-```json
-{
-  "data": {
-    "id": "1-nature",
-    "type": "nature_stats",
-    "attributes": {
-      "natures": [
-        { "nature": "M", "label": "Migraine (M)", "count": 25 },
-        { "nature": "H", "label": "Headache (H)", "count": 15 }
-      ],
-      "total": 45
-    }
-  }
-}
-```
-
----
-
-### Stats by Intensity
-
-```
-GET /api/v1/stats/by_intensity
-```
-
-**Headers:** Authorization required
-
-**Response:** `200 OK`
-```json
-{
-  "data": {
-    "id": "1-intensity",
-    "type": "intensity_stats",
-    "attributes": {
-      "intensities": [
-        { "intensity": 0, "count": 0 },
-        { "intensity": 1, "count": 2 },
-        { "intensity": 5, "count": 15 }
-      ],
-      "total": 45,
-      "average": 4.5
-    }
-  }
-}
-```
+| Path | Response attributes |
+|------|---------------------|
+| `GET /api/v1/stats` | `total_episodes`, `with_medication`, `without_medication`, `average_intensity`, `aura_count`, `on_period_count` |
+| `GET /api/v1/stats/monthly?months=12` | `months: [{ month, month_name, count }]`, the current month plus the previous ones (1-24) |
+| `GET /api/v1/stats/by_day_of_week` | `days: [{ day, day_number, count }]` (Sunday = 0), `total` |
+| `GET /api/v1/stats/by_medication` | `medications: [{ name, count }]` (number of intakes, plus `None` for episodes without medication), `total` |
+| `GET /api/v1/stats/by_pain_kind` | `kinds: [{ kind, count }]` for `migraine`, `headache`, `aura_only`; `with_aura`, `total` |
+| `GET /api/v1/stats/by_intensity` | `intensities: [{ intensity, count }]` for 1-10, `total`, `average` (episodes with pain only) |
+| `GET /api/v1/stats/by_trigger` | `triggers: [{ name, count }]` sorted by frequency, `total_episodes` |
 
 ---
 
@@ -787,101 +470,56 @@ GET /api/v1/stats/by_intensity
 
 ### Export Data
 
-Export all user data (medications and migraines) in JSON format.
-
 ```
 GET /api/v1/data/export
 ```
 
-**Headers:** Authorization required
+**Response:** `200 OK`. `data.attributes` is the backup (format version 2):
 
-**Response:** `200 OK`
 ```json
 {
-  "data": {
-    "id": "uuid",
-    "type": "export",
-    "attributes": {
-      "exported_at": "2026-02-17T14:00:00Z",
-      "user_email": "user@example.com",
-      "medications": [
-        {
-          "name": "Ibuprofen",
-          "created_at": "2026-01-01T00:00:00Z"
-        }
-      ],
-      "migraines": [
-        {
-          "occurred_on": "2026-02-15",
-          "nature": "M",
-          "intensity": 5,
-          "on_period": false,
-          "medication_name": "Ibuprofen",
-          "created_at": "2026-02-15T10:00:00Z"
-        }
-      ]
-    }
-  },
-  "meta": {
-    "medications_count": 2,
-    "migraines_count": 45
-  }
+  "format_version": 2,
+  "exported_at": "2026-02-10T10:00:00Z",
+  "user_email": "user@example.com",
+  "medications": [{ "name": "Ibuprofen", "kind": "acute", "default_dose": "400 mg", "archived": false, "created_at": "..." }],
+  "triggers": [{ "name": "Stress" }],
+  "episodes": [{
+    "occurred_on": "2026-02-10", "started_time": "08:30", "duration_minutes": 240,
+    "aura": true, "pain_kind": "migraine", "intensity": 7, "on_period": false, "notes": null,
+    "triggers": ["Stress"],
+    "medications": [{ "name": "Ibuprofen", "dose": "400 mg", "taken_time": "08:45", "effect": "partial" }],
+    "created_at": "..."
+  }]
 }
 ```
 
----
+`meta` holds `medications_count`, `triggers_count`, `episodes_count`.
 
 ### Import Data
-
-Import medications and migraines from a previously exported JSON file.
 
 ```
 POST /api/v1/data/import
 ```
 
-**Headers:** Authorization required
+**Body:** `{ "data": <backup as above> }` (up to 2 MB). Only `episodes` is required.
 
-**Request Body:**
-```json
-{
-  "data": {
-    "user_email": "user@example.com",
-    "medications": [
-      { "name": "Imported Med" }
-    ],
-    "migraines": [
-      {
-        "occurred_on": "2025-01-15",
-        "nature": "M",
-        "intensity": 4,
-        "on_period": false,
-        "medication_name": "Imported Med"
-      }
-    ]
-  }
-}
-```
-
-**Notes:**
-- Duplicate medications (by name) are skipped
-- Duplicate migraines (by date) are skipped
-- Email must match the authenticated user's email
+Rules:
+- All or nothing: one invalid row rejects the whole import (`422`), and the error names the row
+  (`"Episode #2: invalid or missing date (expected YYYY-MM-DD)"`).
+- Dates are strict `YYYY-MM-DD`, times `HH:MM`.
+- Medications and triggers are matched by name ignoring case; unknown ones are created. Existing
+  (even archived) medications are reused and never un-archived.
+- Episodes identical to an existing one (date, time, pain, aura, intensity, duration) are skipped, so
+  importing your own export twice changes nothing. Two different episodes the same day are kept.
+- `user_email`, when present, must match your account.
+- Limits: 20,000 episodes, 500 medications, 200 triggers. `413` above 2 MB.
 
 **Response:** `200 OK`
 ```json
 {
-  "data": {
-    "id": "uuid",
-    "type": "import_result",
-    "attributes": {
-      "imported_at": "2026-02-17T14:00:00Z",
-      "medications_imported": 1,
-      "migraines_imported": 1
-    }
-  },
-  "meta": {
-    "message": "Successfully imported 1 medications and 1 migraines."
-  }
+  "data": { "type": "import_result", "id": "...", "attributes": {
+    "imported_at": "...", "medications_imported": 1, "triggers_imported": 1, "episodes_imported": 2 } },
+  "meta": { "message": "Successfully imported 1 medications, 1 triggers and 2 episodes." }
 }
 ```
 
@@ -907,8 +545,8 @@ class MigraineTrackerAPI {
     this.token = response.headers.get('Authorization')?.replace('Bearer ', '') || null;
   }
 
-  async getMigraines(page = 1): Promise<any> {
-    const response = await fetch(`${API_BASE}/migraines?page=${page}`, {
+  async getEpisodes(page = 1): Promise<any> {
+    const response = await fetch(`${API_BASE}/episodes?page=${page}`, {
       headers: {
         'Authorization': `Bearer ${this.token}`,
         'Accept': 'application/vnd.api+json'
@@ -917,14 +555,15 @@ class MigraineTrackerAPI {
     return response.json();
   }
 
-  async createMigraine(data: {
+  async createEpisode(data: {
     occurred_on: string;
-    nature: string;
-    intensity: number;
-    on_period?: boolean;
-    medication_id?: number;
+    pain_kind?: 'migraine' | 'headache';
+    aura?: boolean;
+    intensity?: number;
+    trigger_ids?: number[];
+    medication_intakes_attributes?: { medication_id: number; dose?: string }[];
   }): Promise<any> {
-    const response = await fetch(`${API_BASE}/migraines`, {
+    const response = await fetch(`${API_BASE}/episodes`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${this.token}`,
@@ -960,8 +599,8 @@ struct MigraineTrackerAPI {
         }
     }
     
-    func getMigraines() async throws -> Data {
-        var request = URLRequest(url: URL(string: "\(baseURL)/migraines")!)
+    func getEpisodes() async throws -> Data {
+        var request = URLRequest(url: URL(string: "\(baseURL)/episodes")!)
         request.setValue("Bearer \(token ?? "")", forHTTPHeaderField: "Authorization")
         request.setValue("application/vnd.api+json", forHTTPHeaderField: "Accept")
         
@@ -978,8 +617,21 @@ struct MigraineTrackerAPI {
 ### v1.0.0 (February 2026)
 - Initial API release
 - JWT authentication with 1-hour token expiration
-- Full CRUD for migraines and medications
-- Statistics endpoints (overall, monthly, by day, by medication, by nature, by intensity)
+- Full CRUD for episodes and medications
+- Statistics endpoints
 - Data export/import functionality
 - User profile management including account deletion
 - Rate limiting (100 req/min authenticated, 10 req/min for auth endpoints)
+
+### v2.0.0 (October 2026)
+Breaking changes (no production data existed, so there is no migration path):
+- `migraines` became `episodes` (`/api/v1/migraines` is gone). The `nature` codes `M/H/A/MA/MH` are
+  replaced by `pain_kind` (`migraine`/`headache`/none) plus an independent `aura` flag; several episodes
+  per day are allowed; optional `started_time`, `duration_minutes`, `notes`.
+- One medication per migraine became several `medication_intakes` per episode with dose, time and effect.
+- Medications gained `kind`, `default_dose` and archiving (`DELETE` archives used medications).
+- New `/api/v1/triggers` and `trigger_ids` on episodes; `GET /stats/by_trigger`.
+- `GET /stats/by_nature` became `GET /stats/by_pain_kind`; `total_migraines` became `total_episodes`;
+  intensity is 1-10 and only present with pain.
+- Backup format version 2 (export and import); imports are all-or-nothing with row-numbered errors.
+- User resources expose `episodes_count` (was `migraines_count`) and `track_cycle` (read-only for now).

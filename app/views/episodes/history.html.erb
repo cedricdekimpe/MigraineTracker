@@ -1,0 +1,92 @@
+<% content_for :title, t('migraines.history_title') %>
+
+<section class="mx-auto w-full max-w-4xl">
+  <header class="mb-6">
+    <h1 class="text-2xl font-semibold text-slate-900"><%= t('migraines.history_title') %></h1>
+    <p class="mt-2 text-sm text-slate-500"><%= t('migraines.history_description') %></p>
+  </header>
+
+  <%# Year Filter %>
+  <% if @years.any? %>
+    <div class="mb-6 flex flex-wrap items-center gap-3">
+      <span class="text-sm font-medium text-slate-700"><%= t('migraines.filter_by_year') %>:</span>
+      <%= link_to t('migraines.all_years'), history_episodes_path, 
+          class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{@selected_year.nil? ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}" %>
+      <% @years.each do |year| %>
+        <%= link_to year, history_episodes_path(year: year), 
+            class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{@selected_year == year ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @selected_date %>
+    <p class="mb-4 text-sm text-slate-600">
+      <%= l(@selected_date, format: :long) %> ·
+      <%= link_to t("migraines.all_years"), history_episodes_path, class: "font-medium text-emerald-700 hover:text-emerald-800" %>
+    </p>
+  <% end %>
+
+  <% if @episodes.any? %>
+    <ul class="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <% @episodes.each do |episode| %>
+        <li class="flex flex-col gap-3 p-4 sm:flex-row sm:items-start sm:justify-between">
+          <div class="space-y-1">
+            <p class="font-medium text-slate-900">
+              <%= l(episode.occurred_on, format: :long) %>
+              <% if episode_time_label(episode) %><span class="font-normal text-slate-500">· <%= episode_time_label(episode) %></span><% end %>
+            </p>
+            <p class="text-sm text-slate-700">
+              <%= episode_kind_label(episode) %>
+              <% if episode.on_period? && current_user.track_cycle? %><span class="ml-2 text-rose-600">· <%= t("episodes.on_period") %></span><% end %>
+            </p>
+            <% if episode.medication_intakes.any? %>
+              <p class="text-sm text-slate-600">
+                <%= episode.medication_intakes.map { |intake| [intake.medication.name, intake.dose].compact_blank.join(" ") }.to_sentence %>
+              </p>
+            <% end %>
+            <% if episode.triggers.any? %>
+              <p class="flex flex-wrap gap-1.5 pt-1">
+                <% episode.triggers.sort_by(&:name).each do |trigger| %>
+                  <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-700"><%= trigger.name %></span>
+                <% end %>
+              </p>
+            <% end %>
+            <% if episode.notes.present? %>
+              <p class="pt-1 text-sm italic text-slate-500"><%= episode.notes %></p>
+            <% end %>
+          </div>
+          <div class="flex items-center gap-3 sm:flex-col sm:items-end">
+            <% if episode.intensity %>
+              <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium <%= intensity_badge_class(episode.intensity) %>"><%= episode.intensity %>/10</span>
+            <% end %>
+            <div class="flex items-center gap-2">
+              <%= link_to t("migraines.edit"), edit_episode_path(episode, year: @selected_year), class: "rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50" %>
+              <%= button_to t("migraines.delete"), episode_path(episode, year: @selected_year), method: :delete,
+                    data: { turbo_confirm: t("migraines.confirm_delete") },
+                    class: "rounded-md border border-rose-300 bg-white px-3 py-1.5 text-sm font-medium text-rose-600 transition hover:bg-rose-50",
+                    form: { class: "inline" } %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+
+    <%# Pagination %>
+    <% if @pagy.pages > 1 %>
+      <div class="mt-6">
+        <%== pagy_tailwind_nav(@pagy) %>
+      </div>
+    <% end %>
+  <% else %>
+    <%# Empty State %>
+    <div class="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+      <svg class="mx-auto h-12 w-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+      </svg>
+      <h3 class="mt-4 text-lg font-medium text-slate-900"><%= t('migraines.no_history') %></h3>
+      <p class="mt-2 text-sm text-slate-500"><%= t('migraines.no_history_hint') %></p>
+      <%= link_to t('migraines.new_entry'), new_episode_path, 
+          class: "mt-4 inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700" %>
+    </div>
+  <% end %>
+</section>

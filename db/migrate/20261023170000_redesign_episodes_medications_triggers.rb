@@ -22,7 +22,7 @@ class RedesignEpisodesMedicationsTriggers < ActiveRecord::Migration[8.1]
       t.string :default_dose
       t.datetime :archived_at
     end
-    add_index :medications, [:user_id, :archived_at]
+    add_index :medications, [ :user_id, :archived_at ]
 
     create_table :episodes do |t|
       t.references :user, null: false, foreign_key: true
@@ -38,7 +38,7 @@ class RedesignEpisodesMedicationsTriggers < ActiveRecord::Migration[8.1]
 
       t.check_constraint "aura = 1 OR pain_kind IS NOT NULL", name: "episodes_aura_or_pain"
       t.check_constraint "intensity IS NULL OR (intensity >= 1 AND intensity <= 10)", name: "episodes_intensity_range"
-      t.index [:user_id, :occurred_on]
+      t.index [ :user_id, :occurred_on ]
     end
 
     create_table :medication_intakes do |t|
@@ -63,7 +63,7 @@ class RedesignEpisodesMedicationsTriggers < ActiveRecord::Migration[8.1]
       t.references :trigger, null: false, foreign_key: true
       t.timestamps
 
-      t.index [:episode_id, :trigger_id], unique: true
+      t.index [ :episode_id, :trigger_id ], unique: true
     end
   end
 end

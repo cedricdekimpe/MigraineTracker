@@ -7,7 +7,8 @@ module Api
 
       # GET /api/v1/medications
       def index
-        medications = current_user.medications.order(:name)
+        medications = current_user.medications.alphabetical
+        medications = medications.active unless params[:include_archived] == "true"
 
         render json: {
           data: MedicationSerializer.new(medications).serializable_hash[:data]
@@ -47,7 +48,8 @@ module Api
 
       # DELETE /api/v1/medications/:id
       def destroy
-        @medication.destroy
+        # Used medications are archived (history kept), unused ones are deleted
+        @medication.retire!
         head :no_content
       end
 
@@ -59,9 +61,9 @@ module Api
 
       def medication_params
         if params[:medication].present?
-          params.require(:medication).permit(:name)
+          params.require(:medication).permit(:name, :kind, :default_dose)
         else
-          params.permit(:name)
+          params.permit(:name, :kind, :default_dose)
         end
       end
     end

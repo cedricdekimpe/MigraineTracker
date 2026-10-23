@@ -3,20 +3,20 @@
 require "prawn"
 require "prawn/table"
 
-module Migraines
+module Reports
   class YearlyReportPdf
-    attr_reader :user, :year, :months, :grouped_migraines, :days
+    attr_reader :user, :year, :months, :grouped_episodes, :days
 
     HEADER_COLOR = "E2E8F0"
     ATTR_TEXT_COLOR = "0F172A"
     EMPTY_TEXT_COLOR = "94A3B8"
     EMPTY_BACKGROUND = "F8FAFC"
 
-    def initialize(user:, year:, months:, grouped_migraines:, days: (1..31).to_a)
+    def initialize(user:, year:, months:, grouped_episodes:, days: (1..31).to_a)
       @user = user
       @year = year
       @months = months
-      @grouped_migraines = grouped_migraines
+      @grouped_episodes = grouped_episodes
       @days = days
     end
 
@@ -54,8 +54,8 @@ module Migraines
       pdf.text month.strftime("%B"), size: 16, style: :bold, color: ATTR_TEXT_COLOR
       pdf.move_down 8
 
-      entries = Array.wrap(grouped_migraines[month])
-      entries_by_day = entries.index_by { |migraine| migraine.occurred_on.day }
+      entries = Array.wrap(grouped_episodes[month])
+      entries_by_day = entries.group_by { |episode| episode.occurred_on.day }
 
       table_data = build_table_data(month, entries_by_day)
       render_calendar_table(pdf, month, table_data)
@@ -70,25 +70,25 @@ module Migraines
     end
 
     def attribute_rows(month, entries_by_day)
-      [
-        build_attribute_row("Nature", month, entries_by_day) { |migraine| migraine&.nature || "–" },
-        build_attribute_row("Intensity", month, entries_by_day) { |migraine| migraine&.intensity || "–" },
-        build_attribute_row("Menstrual cycle", month, entries_by_day) do |migraine|
-          next "–" unless migraine
-
-          migraine.on_period? ? "Yes" : "No"
-        end,
-        build_attribute_row("Medication", month, entries_by_day) do |migraine|
-          migraine&.medication&.abbreviation || "–"
-        end
+      rows = [
+        build_attribute_row("Type", month, entries_by_day) { |episodes| episodes.map(&:code).join(" ") },
+        build_attribute_row("Intensity", month, entries_by_day) { |episodes| episodes.filter_map(&:intensity).max || "–" }
       ]
+      if user.track_cycle?
+        rows << build_attribute_row("Menstrual cycle", month, entries_by_day) { |episodes| episodes.any?(&:on_period?) ? "Yes" : "No" }
+      end
+      rows << build_attribute_row("Medication", month, entries_by_day) do |episodes|
+        names = episodes.flat_map(&:medications).uniq.map(&:abbreviation)
+        names.empty? ? "–" : names.first(2).join(" ") + (names.size > 2 ? " +" : "")
+      end
+      rows
     end
 
-    def build_attribute_row(label, month, entries_by_day)
+    # `yield` receives the day's episodes; days without episodes show a dash.
+    def build_attribute_row(label, _month, entries_by_day)
       [label] + days.map do |day|
-        yield entries_by_day[day]
-      rescue NoMethodError
-        "–"
+        episodes = entries_by_day[day]
+        episodes.present? ? yield(episodes) : "–"
       end
     end
 

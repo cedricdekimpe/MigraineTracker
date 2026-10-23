@@ -38,9 +38,9 @@ class AdminAccessTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "admins can access migraine management" do
+  test "admins can access episode management" do
     sign_in @admin_user, scope: :user
-    get rails_admin.index_path(model_name: 'migraine')
+    get rails_admin.index_path(model_name: 'episode')
     assert_response :success
   end
 

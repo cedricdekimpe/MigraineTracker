@@ -1,0 +1,29 @@
+<% content_for :title, t('migraines.yearly_title') %>
+
+<section class="flex flex-col gap-6">
+  <header class="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p class="text-sm font-medium text-slate-500"><%= t('migraines.year_label') %></p>
+      <h1 class="text-2xl font-semibold text-slate-900"><%= @current_year %></h1>
+    </div>
+    <div class="flex flex-wrap items-center gap-3 text-sm">
+      <%= link_to t('migraines.previous'), yearly_episodes_path(year: @previous_year), class: "rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400" %>
+      <%= link_to t('migraines.next'), yearly_episodes_path(year: @next_year), class: "rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400" %>
+      <%= link_to t('migraines.export_pdf'), yearly_episodes_path(year: @current_year, format: :pdf), data: { turbo: false }, class: "rounded-md border border-emerald-200 bg-emerald-50 px-3 py-1.5 font-semibold text-emerald-700 transition hover:bg-emerald-100" %>
+      <%= link_to t('navigation.migraine_log'), episodes_path(month: Date.new(@current_year, Date.current.month, 1).strftime("%Y-%m")), class: "rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400" %>
+      <%= link_to t('migraines.new_entry'), new_episode_path, class: "rounded-md bg-emerald-600 px-3 py-1.5 font-semibold text-white transition hover:bg-emerald-700" %>
+    </div>
+  </header>
+
+  <div class="grid gap-8 grid-cols-1">
+    <% @months.each do |month| %>
+      <div class="flex flex-col gap-3" data-month="<%= month.strftime("%Y-%m") %>">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-slate-900"><%= l(month, format: :month_year) %></h2>
+          <%= link_to t('migraines.yearly_view'), episodes_path(month: month.strftime("%Y-%m")), class: "text-sm font-medium text-emerald-700 hover:text-emerald-800" %>
+        </div>
+        <%= render partial: "calendar_table", locals: { month: month, episodes_by_day: @calendars_by_month[month] || {}, days: @days } %>
+      </div>
+    <% end %>
+  </div>
+</section>

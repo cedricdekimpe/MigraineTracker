@@ -11,7 +11,7 @@ class Episode < ApplicationRecord
   has_many :triggers, through: :episode_triggers
 
   accepts_nested_attributes_for :medication_intakes, allow_destroy: true,
-    reject_if: ->(attributes) { attributes["medication_id"].blank? }
+    reject_if: ->(attributes) { attributes["id"].blank? && attributes["medication_id"].blank? }
 
   before_validation :normalize_pain
 

@@ -2,42 +2,47 @@ class StatsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @migraines = current_user.migraines.includes(:medication)
-    
+    @episodes = current_user.episodes
+
     # Total counts
-    @total_migraines = @migraines.count
-    @migraines_with_medication = @migraines.where.not(medication_id: nil).count
-    @migraines_without_medication = @total_migraines - @migraines_with_medication
-    
-    # Migraines over time (last 12 months)
+    @total_episodes = @episodes.count
+    @episodes_with_medication = @episodes.where(id: MedicationIntake.select(:episode_id)).count
+    @episodes_without_medication = @total_episodes - @episodes_with_medication
+
+    # Episodes over time (current month and the 11 before)
     start_date = 11.months.ago.beginning_of_month
     end_date = Date.today.end_of_month
-    
-    # Group migraines by month
-    migraines_in_range = @migraines.where("occurred_on >= ? AND occurred_on <= ?", start_date, end_date).to_a
-    monthly_counts = migraines_in_range.group_by { |m| m.occurred_on.beginning_of_month.strftime("%b %Y") }
-                                       .transform_values(&:count)
-    
-    # Fill in all months with counts
+
+    monthly_counts = @episodes.where(occurred_on: start_date..end_date).to_a
+                              .group_by { |episode| episode.occurred_on.beginning_of_month.strftime("%b %Y") }
+                              .transform_values(&:count)
+
     @monthly_data = (0..11).map do |i|
-      month = start_date + i.months
-      month_key = month.strftime("%b %Y")
-      count = monthly_counts[month_key] || 0
-      [month_key, count]
+      month_key = (start_date + i.months).strftime("%b %Y")
+      [month_key, monthly_counts[month_key] || 0]
     end
-    
-    # Distribution by day of week
+
+    # Distribution by day of week (Monday first, empty days included)
     day_order = %w[monday tuesday wednesday thursday friday saturday sunday]
-    counts_by_day = @migraines.group_by { |m| m.occurred_on.cwday }.transform_values(&:count)
+    counts_by_day = @episodes.pluck(:occurred_on).group_by(&:cwday).transform_values(&:count)
     @day_of_week_data = day_order.each_with_index.map do |day, index|
       [I18n.t("days.#{day}"), counts_by_day.fetch(index + 1, 0)]
     end
-    
-    # Medication usage
-    @medication_data = @migraines
-      .joins(:medication)
-      .group("medications.name")
-      .count
-      .to_a
+
+    # Medication usage: number of intakes per medication
+    @medication_data = MedicationIntake.joins(:medication, :episode)
+                                       .where(episodes: { user_id: current_user.id })
+                                       .group("medications.name")
+                                       .order(Arel.sql("COUNT(*) DESC"))
+                                       .count
+                                       .to_a
+
+    # Trigger frequency: in how many episodes each trigger was ticked
+    @trigger_data = EpisodeTrigger.joins(:trigger, :episode)
+                                  .where(episodes: { user_id: current_user.id })
+                                  .group("triggers.name")
+                                  .order(Arel.sql("COUNT(*) DESC"), Arel.sql("triggers.name"))
+                                  .count
+                                  .to_a
   end
 end

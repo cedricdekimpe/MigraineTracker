@@ -25,10 +25,12 @@ class Api::V1::StatsControllerTest < ActionDispatch::IntegrationTest
     assert_json_api_resource("stats")
 
     attrs = json_response[:data][:attributes]
-    assert attrs[:total_migraines].present? || attrs[:total_migraines] == 0
-    assert attrs.key?(:with_medication)
-    assert attrs.key?(:without_medication)
-    assert attrs.key?(:average_intensity)
+    assert_equal 4, attrs[:total_episodes]
+    assert_equal 2, attrs[:with_medication]
+    assert_equal 2, attrs[:without_medication]
+    assert_equal 2, attrs[:aura_count]
+    assert_equal 1, attrs[:on_period_count]
+    assert_in_delta 5.3, attrs[:average_intensity], 0.1
   end
 
   test "index fails without authentication" do
@@ -41,82 +43,87 @@ class Api::V1::StatsControllerTest < ActionDispatch::IntegrationTest
   # Monthly
   # ===============
 
-  test "monthly returns monthly breakdown" do
-    get "/api/v1/stats/monthly", headers: api_headers(authenticated_token)
+  test "monthly returns the current month and the previous ones" do
+    get "/api/v1/stats/monthly", params: { months: 6 }, headers: api_headers(authenticated_token)
 
     assert_response :success
     assert_json_api_resource("monthly_stats")
 
-    attrs = json_response[:data][:attributes]
-    assert attrs[:months].is_a?(Array)
-    assert attrs[:months].first.key?(:month) if attrs[:months].any?
+    months = json_response[:data][:attributes][:months]
+    assert_equal 6, months.length
+    assert_equal Date.current.strftime("%Y-%m"), months.last[:month]
   end
 
-  test "monthly accepts months parameter" do
-    get "/api/v1/stats/monthly",
-      params: { months: 6 },
-      headers: api_headers(authenticated_token)
+  test "monthly clamps the months parameter" do
+    get "/api/v1/stats/monthly", params: { months: 500 }, headers: api_headers(authenticated_token)
 
     assert_response :success
-    assert json_response[:data][:attributes][:months].length <= 6
+    assert_equal 24, json_response[:data][:attributes][:months].length
   end
 
   # ===============
-  # By Day of Week
+  # Other breakdowns
   # ===============
 
-  test "by_day_of_week returns weekday distribution" do
+  test "by_day_of_week returns all seven days" do
     get "/api/v1/stats/by_day_of_week", headers: api_headers(authenticated_token)
 
     assert_response :success
-    assert_json_api_resource("day_of_week_stats")
-
     attrs = json_response[:data][:attributes]
-    assert attrs[:days].is_a?(Array)
     assert_equal 7, attrs[:days].length
+    assert_equal 4, attrs[:total]
+    assert_equal 4, attrs[:days].sum { |day| day[:count] }
   end
 
-  # ===============
-  # By Medication
-  # ===============
-
-  test "by_medication returns medication usage stats" do
+  test "by_medication counts intakes and episodes without medication" do
     get "/api/v1/stats/by_medication", headers: api_headers(authenticated_token)
 
     assert_response :success
-    assert_json_api_resource("medication_stats")
-
-    attrs = json_response[:data][:attributes]
-    assert attrs[:medications].is_a?(Array)
-    assert attrs.key?(:total)
+    medications = json_response[:data][:attributes][:medications].index_by { |entry| entry[:name] }
+    assert_equal 2, medications["Ibuprofen"][:count]
+    assert_equal 1, medications["Paracetamol"][:count]
+    assert_equal 2, medications["None"][:count]
   end
 
-  # ===============
-  # By Nature
-  # ===============
-
-  test "by_nature returns nature distribution" do
-    get "/api/v1/stats/by_nature", headers: api_headers(authenticated_token)
+  test "by_pain_kind separates migraines, headaches and isolated auras" do
+    get "/api/v1/stats/by_pain_kind", headers: api_headers(authenticated_token)
 
     assert_response :success
-    assert_json_api_resource("nature_stats")
-
     attrs = json_response[:data][:attributes]
-    assert attrs[:natures].is_a?(Array)
+    kinds = attrs[:kinds].to_h { |entry| [entry[:kind], entry[:count]] }
+    assert_equal({ "migraine" => 2, "headache" => 1, "aura_only" => 1 }, kinds)
+    assert_equal 2, attrs[:with_aura]
   end
 
-  # ===============
-  # By Intensity
-  # ===============
-
-  test "by_intensity returns intensity distribution" do
+  test "by_intensity covers 1 to 10 and ignores episodes without pain" do
     get "/api/v1/stats/by_intensity", headers: api_headers(authenticated_token)
 
     assert_response :success
-    assert_json_api_resource("intensity_stats")
-
     attrs = json_response[:data][:attributes]
-    assert attrs[:intensities].is_a?(Array)
-    assert attrs.key?(:average)
+    assert_equal (1..10).to_a, attrs[:intensities].map { |entry| entry[:intensity] }
+    assert_equal 3, attrs[:total]
+    assert_equal 1, attrs[:intensities].find { |entry| entry[:intensity] == 7 }[:count]
+  end
+
+  test "by_trigger lists trigger frequencies" do
+    get "/api/v1/stats/by_trigger", headers: api_headers(authenticated_token)
+
+    assert_response :success
+    attrs = json_response[:data][:attributes]
+    assert_equal [["Lack of sleep", 1], ["Stress", 1]], attrs[:triggers].map { |entry| [entry[:name], entry[:count]] }
+    assert_equal 4, attrs[:total_episodes]
+  end
+
+  test "stats never include another user's data" do
+    get "/api/v1/stats", headers: api_headers(login_user(users(:two).email, "password456"))
+
+    assert_equal 1, json_response[:data][:attributes][:total_episodes]
+  end
+
+  %w[by_day_of_week by_medication by_pain_kind by_intensity by_trigger monthly].each do |endpoint|
+    test "#{endpoint} requires authentication" do
+      get "/api/v1/stats/#{endpoint}", headers: api_headers
+      assert_response :unauthorized
+    end
   end
 end

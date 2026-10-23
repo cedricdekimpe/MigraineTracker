@@ -12,7 +12,19 @@ class AccountController < ApplicationController
   end
 
   def medications
-    @medications = current_user.medications.order(:name)
+    @medications = current_user.medications.active.alphabetical
+    @archived_medications = current_user.medications.archived.alphabetical
+    known = current_user.medications.map { |medication| medication.name.downcase }
+    @suggestions = (I18n.t("medication_suggestions.acute") + I18n.t("medication_suggestions.preventive")).reject { |name| known.include?(name.downcase) }
+  end
+
+  def triggers
+    @triggers = current_user.triggers.alphabetical
+  end
+
+  def update_preferences
+    current_user.update(params.require(:user).permit(:track_cycle))
+    redirect_to account_profile_path, notice: t("preferences.saved")
   end
 
   def data

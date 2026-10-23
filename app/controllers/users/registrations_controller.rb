@@ -11,7 +11,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     # Log deletion stats before destroying (for audit purposes if needed)
     Rails.logger.info("Account deletion: User #{resource.id} (#{resource.email}) - " \
-                      "#{resource.migraines.count} migraines, #{resource.medications.count} medications")
+                      "#{resource.episodes.count} episodes, #{resource.medications.count} medications")
 
     super
   end

@@ -86,7 +86,7 @@
               <p class="mt-1 text-sm text-red-600"><%= t('account.delete_account_warning') %></p>
               <p class="mt-2 text-sm text-slate-600">
                 <%= t('account.data_to_delete') %>
-                <strong><%= t('account.migraines_count', count: current_user.migraines.count) %></strong>,
+                <strong><%= t('account.migraines_count', count: current_user.episodes.count) %></strong>,
                 <strong><%= t('account.medications_count', count: current_user.medications.count) %></strong>
               </p>
             </div>
@@ -120,7 +120,7 @@
               <strong><%= t('account.delete_modal_warning') %></strong>
             </p>
             <ul class="mt-2 list-inside list-disc text-sm text-red-700">
-              <li><%= t('account.migraines_count', count: current_user.migraines.count) %></li>
+              <li><%= t('account.migraines_count', count: current_user.episodes.count) %></li>
               <li><%= t('account.medications_count', count: current_user.medications.count) %></li>
               <li><%= t('account.delete_modal_account_info') %></li>
             </ul>

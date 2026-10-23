@@ -27,7 +27,7 @@ class ImportsController < ApplicationController
     result = DataImporter.new(current_user, import_data).call
 
     redirect_to edit_user_registration_path,
-      notice: t('flash.import_success', medications: result.medications, migraines: result.migraines)
+      notice: t('flash.import_success', medications: result.medications, episodes: result.episodes)
   rescue JSON::ParserError, JSON::NestingError
     redirect_to new_import_path, alert: t('flash.import_invalid_json')
   rescue DataImporter::InvalidData => e
