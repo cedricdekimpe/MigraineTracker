@@ -22,7 +22,7 @@
           <ul class="space-y-3">
             <% @medications.each do |medication| %>
               <li id="medication-<%= medication.id %>" class="rounded-xl border border-ink-200 p-4">
-                <%= form_with model: medication, url: medication_path(medication), method: :patch, data: { turbo: false }, class: "grid gap-3 sm:grid-cols-[2fr_1fr_1fr_auto] sm:items-end" do |form| %>
+                <%= form_with model: medication, url: medication_path(medication), method: :patch, data: { turbo: false }, class: "grid gap-3 sm:grid-cols-[2fr_2fr_1fr_auto] sm:items-end" do |form| %>
                   <div>
                     <%= form.label :name, t('account.medication_name'), class: "block text-xs font-medium text-ink-600" %>
                     <%= form.text_field :name, class: "#{field} w-full" %>
@@ -67,7 +67,7 @@
 
         <div class="border-t border-ink-200 pt-6">
           <h3 class="mb-4 text-sm font-medium text-ink-900"><%= t('account.add_new_medication') %></h3>
-          <%= form_with model: Medication.new, url: medications_path, data: { turbo: false }, class: "grid gap-3 sm:grid-cols-[2fr_1fr_1fr_auto]" do |form| %>
+          <%= form_with model: Medication.new, url: medications_path, data: { turbo: false }, class: "grid gap-3 sm:grid-cols-[2fr_2fr_1fr_auto]" do |form| %>
             <%= form.label :name, t('account.medication_name'), class: "sr-only" %>
             <%= form.text_field :name, placeholder: t('account.medication_name'), class: field %>
             <%= form.select :kind, Medication::KINDS.map { |kind| [t("medications_page.kinds.#{kind}"), kind] }, {}, "aria-label": t('medications_page.kind'), class: field %>
