@@ -68,19 +68,28 @@ class EpisodesController < ApplicationController
 
   def update
     if save_episode
-      redirect_to history_episodes_path(year: params[:year]), notice: t("episodes.flash.updated")
+      redirect_to history_episodes_path(history_context), notice: t("episodes.flash.updated")
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    year = @episode.occurred_on.year
+    day = @episode.occurred_on
     @episode.destroy
-    redirect_to history_episodes_path(year: year), notice: t("episodes.flash.deleted")
+
+    # Come back to the page the user was on. A day filter that just became empty falls back to the year.
+    context = history_context
+    context = { year: day.year } if context[:date] && !current_user.episodes.exists?(occurred_on: day)
+    redirect_to history_episodes_path(context), notice: t("episodes.flash.deleted")
   end
 
   private
+
+  # Filters of the history page to restore after editing or deleting an episode from it.
+  def history_context
+    { year: params[:year].presence, date: parse_date(params[:date])&.iso8601 }.compact
+  end
 
   def set_current_month
     @current_month = if params[:month].present?

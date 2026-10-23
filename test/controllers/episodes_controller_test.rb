@@ -274,6 +274,52 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
 
   # --- history / yearly -----------------------------------------------------
 
+  test "deleting from a day-filtered history stays on that day while it still has episodes" do
+    day = episodes(:migraine_with_aura).occurred_on # two episodes that day
+    delete episode_path(id: episodes(:second_same_day), date: day.iso8601)
+
+    assert_redirected_to history_episodes_path(date: day.iso8601)
+  end
+
+  test "deleting the last episode of a filtered day falls back to the year" do
+    day = episodes(:headache).occurred_on
+    delete episode_path(id: episodes(:headache), date: day.iso8601)
+
+    assert_redirected_to history_episodes_path(year: day.year)
+  end
+
+  test "deleting keeps the year filter" do
+    delete episode_path(id: episodes(:headache), year: "2026")
+    assert_redirected_to history_episodes_path(year: "2026")
+  end
+
+  test "updating from a day-filtered history returns to that day" do
+    day = episodes(:migraine_with_aura).occurred_on
+    patch episode_path(id: episodes(:migraine_with_aura)), params: { date: day.iso8601, year: day.year.to_s, episode: { intensity: "8" } }
+
+    assert_redirected_to history_episodes_path(year: day.year.to_s, date: day.iso8601)
+  end
+
+  test "history links carry the day filter to edit and delete" do
+    day = episodes(:migraine_with_aura).occurred_on
+    get history_episodes_path(date: day.iso8601)
+
+    assert_select "a[href*='/edit'][href*='date=#{day.iso8601}']"
+    assert_select "form[action*='date=#{day.iso8601}']"
+  end
+
+  test "the edit form keeps the day filter for cancel and save" do
+    get edit_episode_path(id: episodes(:headache), date: "2026-10-23")
+
+    assert_select "input[type=hidden][name=date][value='2026-10-23']"
+    assert_select "a[href*='date=2026-10-23']", text: "Cancel"
+  end
+
+  test "a malformed date filter is dropped on redirect" do
+    delete episode_path(id: episodes(:headache), date: "nonsense")
+    assert_redirected_to history_episodes_path
+  end
+
   test "history lists episodes with medications, triggers and notes" do
     get history_episodes_path
 

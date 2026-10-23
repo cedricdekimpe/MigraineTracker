@@ -10,6 +10,7 @@
 
 <%= form_with model: episode, class: "mt-6 space-y-8" do |form| %>
   <%= hidden_field_tag :year, params[:year] if params[:year].present? %>
+  <%= hidden_field_tag :date, params[:date] if params[:date].present? %>
 
   <div class="space-y-2">
     <%= form.label :occurred_on, t("episodes.date"), class: "block text-sm font-medium text-slate-700" %>

@@ -7,5 +7,5 @@
   </header>
 
   <%= render "form", episode: @episode, medications: @medications, triggers: @triggers, suggested_medications: @suggested_medications,
-        cancel_path: history_episodes_path(year: params[:year]), submit_label: t("episodes.update") %>
+        cancel_path: history_episodes_path({ year: params[:year].presence, date: params[:date].presence }.compact), submit_label: t("episodes.update") %>
 </section>
