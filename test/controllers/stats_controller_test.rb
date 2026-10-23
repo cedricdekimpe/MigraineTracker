@@ -111,11 +111,12 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     log(Date.new(2026, 10, 5), medications: [@acute])
     visit_stats
 
-    assert_select "[data-chart=pain-days] svg[role=img]"
-    assert_select "[data-chart=pain-days] svg g rect", count: 1 # only October has a column
+    assert_select "[data-chart=pain-days] svg[role=img]", count: 2 # wide and phone versions
+    assert_select "[data-chart=pain-days] .sm\\:hidden svg g rect", count: 1 # only October has a column
+    assert_select "[data-chart=pain-days] .sm\\:hidden svg text", text: "O" # one-letter months on phones
     assert_select "[data-chart=pain-days] svg text", text: /oct|Oct/
-    assert_select "[data-chart=acute-days] svg line[style*='stroke-dasharray']"
-    assert_select "[data-chart=acute-days] svg text", text: "10 days"
+    assert_select "[data-chart=acute-days] svg line[style*='stroke-dasharray']", count: 2
+    assert_select "[data-chart=acute-days] svg text", text: "10 days", count: 2
     assert_select "[data-chart=pain-days] svg rect[style*='--amber-']" # October's ink
   end
 
