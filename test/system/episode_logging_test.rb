@@ -28,14 +28,11 @@ class EpisodeLoggingTest < ApplicationSystemTestCase
       click_button "Save"
 
       assert_text "Episode was logged."
-      within "td[data-day='10'][data-attribute='type']" do
-        assert_text "MA"
-      end
-      within "td[data-day='10'][data-attribute='intensity']" do
-        assert_text "7"
-      end
-      within "td[data-day='10'][data-attribute='medication']" do
-        assert_selector "span[title='Ibuprofen']", text: "Ibu"
+      within "section[data-month='2025-12'] table" do
+        assert_selector "td[data-day='10'][data-attribute='type']", text: "M"
+        assert_selector "td[data-day='10'][data-attribute='type'] sup", text: "a" # aura came with the pain
+        assert_selector "td[data-day='10'][data-attribute='intensity']", text: "7"
+        assert_selector "td[data-day='10'][data-attribute='treatment']", text: "X"
       end
     end
   end

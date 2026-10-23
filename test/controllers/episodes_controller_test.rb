@@ -14,29 +14,127 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_user_session_path
   end
 
-  # --- calendar -------------------------------------------------------------
+  # --- the sheet (calendar) --------------------------------------------------
 
-  test "calendar shows the codes of every episode of a day" do
+  test "the journal shows the paper sheet: a quarter of three months with the four rows" do
     day = episodes(:migraine_with_aura).occurred_on
     get episodes_path(month: day.strftime("%Y-%m"))
 
     assert_response :success
-    assert_select "td[data-day='#{day.day}'][data-attribute='type']", text: /MA · M/
-    assert_select "td[data-day='#{day.day}'][data-attribute='intensity']", text: /7/
+    quarter = Sheet.quarter_of(day.beginning_of_month)
+    quarter.each { |month| assert_select "section[data-month='#{month.strftime('%Y-%m')}']", minimum: 1 }
+    assert_select "table[class*=border-collapse]", count: 3
+    %w[type intensity treatment].each { |row| assert_select "td[data-attribute=#{row}]", minimum: 1 }
   end
 
-  test "calendar hides the cycle row unless cycle tracking is on" do
+  test "a day cell carries the letter, the strongest intensity and the treatment, and opens the day" do
+    day = episodes(:migraine_with_aura).occurred_on # a migraine with aura and a second migraine, Ibuprofen + Paracetamol
+    get episodes_path(month: day.strftime("%Y-%m"))
+
+    assert_select "table td[data-day='#{day.day}'][data-attribute=type] a[href*='date=#{day.iso8601}']", text: /M/
+    assert_select "table td[data-day='#{day.day}'][data-attribute=type] sup", text: "a" # aura with pain
+    assert_select "table td[data-day='#{day.day}'][data-attribute=intensity]", text: /7/
+    assert_select "table td[data-day='#{day.day}'][data-attribute=treatment]", text: /X/
+  end
+
+  test "a headache is a T and an isolated aura an A" do
+    get episodes_path(month: episodes(:headache).occurred_on.strftime("%Y-%m"))
+    assert_select "table td[data-day='#{episodes(:headache).occurred_on.day}'][data-attribute=type]", text: /T/
+
+    get episodes_path(month: episodes(:aura_only).occurred_on.strftime("%Y-%m"))
+    assert_select "table td[data-day='#{episodes(:aura_only).occurred_on.day}'][data-attribute=type]", text: /A/
+  end
+
+  test "triptans are written t" do
+    triptan = @user.medications.create!(name: "Sumatriptan", kind: "triptan")
+    episodes(:headache).medication_intakes.create!(medication: triptan)
+    day = episodes(:headache).occurred_on
+    get episodes_path(month: day.strftime("%Y-%m"))
+
+    assert_select "table td[data-day='#{day.day}'][data-attribute=treatment]", text: /X.*t/m
+  end
+
+  test "the cycle row only exists with cycle tracking, and marks period days with 0" do
     get episodes_path
-    assert_select "td[data-attribute='cycle']", count: 0
+    assert_select "td[data-attribute=cycle]", count: 0
+    assert_select "dt", text: "0", count: 0 # no cycle line in the legend
 
     @user.reload.update!(track_cycle: true)
-    get episodes_path
-    assert_select "td[data-attribute='cycle']"
+    day = episodes(:headache).occurred_on # on_period: true
+    get episodes_path(month: day.strftime("%Y-%m"))
+    assert_select "table td[data-day='#{day.day}'][data-attribute=cycle]", text: /0/
+    assert_select "dt", text: "0"
   end
 
-  test "calendar day headers link to a new episode on that day" do
+  test "day numbers link to a new episode that day, but not in the future" do
     get episodes_path
-    assert_select "th a[href*='/episodes/new?date=']"
+    assert_select "th a[href*='/episodes/new?date=#{Date.current.iso8601}']"
+    future = Date.current + 3
+    assert_select "th a[href*='date=#{future.iso8601}']", count: 0 if future.month == Date.current.month
+  end
+
+  test "months are tinted with the paper's yellow, pink and blue" do
+    get episodes_path(month: "2026-01")
+    assert_select "section[data-month='2026-01'].border-amber-400"
+    assert_select "section[data-month='2026-02'].border-rose-400"
+    assert_select "section[data-month='2026-03'].border-sky-400"
+  end
+
+  test "navigation moves a quarter at a time on large screens and a month on phones" do
+    get episodes_path(month: "2026-05")
+
+    assert_select "nav[aria-label=Quarters] a[href*='month=2026-01']" # previous quarter
+    assert_select "nav[aria-label=Quarters] a[href*='month=2026-07']" # next quarter
+    assert_select "nav[aria-label=Months] a[href*='month=2026-04']"
+    assert_select "nav[aria-label=Months] a[href*='month=2026-06']"
+  end
+
+  test "phones get one row per day, the empty ones inviting to add an episode" do
+    day = episodes(:migraine_with_aura).occurred_on
+    get episodes_path(month: day.strftime("%Y-%m"))
+
+    assert_select "li[data-date='#{day.iso8601}'] a[href*='history'][href*='date=#{day.iso8601}']"
+    assert_select "li[data-date='#{day.iso8601}'] [data-attribute=type]", text: /M/
+    assert_select "li[data-date='#{day.iso8601}'] [data-attribute=intensity]", text: /7/
+    assert_select "ol > li", count: day.end_of_month.day
+
+    empty = (day.beginning_of_month..day.end_of_month).find { |d| d <= Date.current && @user.episodes.where(occurred_on: d).none? }
+    assert_select "li[data-date='#{empty.iso8601}'] a[href*='/episodes/new'][href*='date=#{empty.iso8601}']"
+  end
+
+  test "future days are not links" do
+    future = Date.current + 1
+    get episodes_path(month: future.strftime("%Y-%m"))
+
+    assert_select "li[data-date='#{future.iso8601}'] a", count: 0
+  end
+
+  test "today is marked" do
+    get episodes_path
+    assert_select "li[data-date='#{Date.current.iso8601}'] a.ring-accent-600"
+  end
+
+  test "the monthly summary and the legend are there" do
+    get episodes_path(month: episodes(:migraine_with_aura).occurred_on.strftime("%Y-%m"))
+
+    assert_select "[data-month-summary]", text: /days with pain/
+    assert_select "section[aria-label=Legend] dt", text: "X"
+    assert_select "section[aria-label=Legend] dt", text: "t"
+  end
+
+  test "the journal is in French under /fr and uses the paper's wording" do
+    get episodes_path(locale: "fr")
+
+    assert_match(/Migraine \(M\) \/ Maux de tête \(T\)/, response.body)
+    assert_match(/Intensité de la douleur/, response.body)
+    assert_match(/Traitement aigu/, response.body)
+    assert_match(/Légende/, response.body)
+  end
+
+  test "an unreadable month falls back to the current one" do
+    get episodes_path(month: "nonsense")
+    assert_response :success
+    assert_select "section[data-month='#{Date.current.strftime('%Y-%m')}']", minimum: 1
   end
 
   # --- new / create ---------------------------------------------------------

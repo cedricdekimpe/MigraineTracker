@@ -7,10 +7,13 @@ class EpisodesController < ApplicationController
   before_action :load_form_collections, only: %i[new create edit update]
 
   def index
-    episodes = current_user.episodes.includes(:medications, :triggers).for_month(@current_month).chronological
-    @episodes_by_day = episodes.group_by { |episode| episode.occurred_on.day }
-    @previous_month = @current_month.prev_month
-    @next_month = @current_month.next_month
+    @month = @current_month
+    @quarter = Sheet.quarter_of(@month)
+    @sheet = Sheet.new(current_user, months: @quarter)
+    @previous_month = @month.prev_month
+    @next_month = @month.next_month
+    @previous_quarter = @quarter.first.advance(months: -3)
+    @next_quarter = @quarter.first.advance(months: 3)
   end
 
   def history
@@ -39,9 +42,7 @@ class EpisodesController < ApplicationController
     yearly_episodes = current_user.episodes.includes(:medications).where(occurred_on: start_of_year..end_of_year).chronological
     @grouped_episodes = yearly_episodes.group_by { |episode| episode.occurred_on.beginning_of_month }
 
-    @calendars_by_month = @months.index_with do |month|
-      (@grouped_episodes[month] || []).group_by { |episode| episode.occurred_on.day }
-    end
+    @sheet = Sheet.new(current_user, months: @months)
 
     respond_to do |format|
       format.html
@@ -98,7 +99,7 @@ class EpisodesController < ApplicationController
       Date.current.beginning_of_month
     end
   rescue Date::Error
-    Date.current.beginning_of_month
+    @current_month = Date.current.beginning_of_month
   end
 
   def set_days

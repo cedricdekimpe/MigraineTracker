@@ -514,15 +514,6 @@ fr:
       headache: "Mal de tête"
       headache_aura: "Mal de tête avec aura"
       aura_only: "Aura sans douleur"
-    calendar:
-      attribute: "Attribut"
-      type: "Type"
-      intensity: "Intensité"
-      cycle: "Cycle menstruel"
-      medication: "Médicament"
-      add_on_day: "Ajouter un épisode ce jour-là"
-      "yes": "Oui"
-      "no": "Non"
     flash:
       created: "L'épisode a été enregistré."
       updated: "L'épisode a été mis à jour."
@@ -584,3 +575,33 @@ fr:
     auto: "Auto"
     light: "Papier"
     night: "Nuit"
+
+  sheet:
+    title: "Journal"
+    eyebrow: "Votre feuille de calendrier"
+    month_summary: "%{pain} jours de douleur · %{treatment} avec traitement"
+    add_on_day: "Ajouter un épisode ce jour-là"
+    rows:
+      type: "Migraine (M) / Maux de tête (T)"
+      intensity: "Intensité de la douleur"
+      cycle: "Cycle menstruel"
+      treatment: "Traitement aigu"
+    nav:
+      previous: "Précédent"
+      next: "Suivant"
+      today: "Aujourd'hui"
+      months: "Mois"
+      quarters: "Trimestres"
+    links:
+      past_episode: "Enregistrer un épisode passé"
+      history: "Historique détaillé"
+      year: "Vue annuelle"
+    legend:
+      title: "Légende"
+      migraine: "Migraine"
+      headache: "Maux de tête (autre que migraine)"
+      aura: "Aura sans douleur"
+      intensity: "Intensité de la douleur (0 = pas de douleur, 10 = insupportable)"
+      cycle: "Cycle menstruel"
+      acute: "Prise de traitement aigu"
+      triptan: "Prise de triptan"

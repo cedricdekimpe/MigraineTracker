@@ -1,4 +1,5 @@
 <% content_for :title, t('migraines.yearly_title') %>
+<% content_for :wide, true %>
 
 <section class="flex flex-col gap-6">
   <header class="flex flex-col gap-4 rounded-2xl border border-ink-200 bg-paper p-6 sm:flex-row sm:items-center sm:justify-between">
@@ -15,15 +16,13 @@
     </div>
   </header>
 
-  <div class="grid gap-8 grid-cols-1">
+  <div class="space-y-6">
     <% @months.each do |month| %>
-      <div class="flex flex-col gap-3" data-month="<%= month.strftime("%Y-%m") %>">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-ink-900"><%= l(month, format: :month_year) %></h2>
-          <%= link_to t('migraines.yearly_view'), episodes_path(month: month.strftime("%Y-%m")), class: "text-sm font-medium text-accent-700 hover:text-accent-800" %>
-        </div>
-        <%= render partial: "calendar_table", locals: { month: month, episodes_by_day: @calendars_by_month[month] || {}, days: @days } %>
+      <div class="overflow-x-auto">
+        <div class="min-w-[44rem]"><%= render "sheet_month", month: month, sheet: @sheet %></div>
       </div>
     <% end %>
   </div>
+
+  <%= render "legend" %>
 </section>

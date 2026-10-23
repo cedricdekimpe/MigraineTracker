@@ -421,15 +421,6 @@ en:
       headache: "Headache"
       headache_aura: "Headache with aura"
       aura_only: "Aura without pain"
-    calendar:
-      attribute: "Attribute"
-      type: "Type"
-      intensity: "Intensity"
-      cycle: "Menstrual cycle"
-      medication: "Medication"
-      add_on_day: "Add an episode on this day"
-      "yes": "Yes"
-      "no": "No"
     flash:
       created: "Episode was logged."
       updated: "Episode was updated."
@@ -491,3 +482,33 @@ en:
     auto: "Auto"
     light: "Paper"
     night: "Night"
+
+  sheet:
+    title: "Journal"
+    eyebrow: "Your calendar sheet"
+    month_summary: "%{pain} days with pain · %{treatment} with treatment"
+    add_on_day: "Add an episode on this day"
+    rows:
+      type: "Migraine (M) / Headache (T)"
+      intensity: "Pain intensity"
+      cycle: "Menstrual cycle"
+      treatment: "Acute treatment"
+    nav:
+      previous: "Previous"
+      next: "Next"
+      today: "Today"
+      months: "Months"
+      quarters: "Quarters"
+    links:
+      past_episode: "Log a past episode"
+      history: "Detailed history"
+      year: "Year view"
+    legend:
+      title: "Legend"
+      migraine: "Migraine"
+      headache: "Headache (other than migraine)"
+      aura: "Aura without pain"
+      intensity: "Pain intensity (0 = no pain, 10 = unbearable)"
+      cycle: "Menstrual cycle"
+      acute: "Acute treatment taken"
+      triptan: "Triptan taken"

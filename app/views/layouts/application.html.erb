@@ -105,7 +105,7 @@
       </div>
     </header>
 
-    <main class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-5 py-8 <%= 'pb-32 md:pb-10' if user_signed_in? %>">
+    <main class="mx-auto flex w-full <%= content_for?(:wide) ? "max-w-7xl" : "max-w-4xl" %> flex-1 flex-col gap-6 px-5 py-8 <%= 'pb-32 md:pb-10' if user_signed_in? %>">
       <% flash.each do |type, message| %>
         <% next if message.blank? %>
         <% tone = type.to_sym == :alert ? "border-red-200 bg-red-50 text-red-700" : "border-accent-200 bg-accent-50 text-accent-800" %>

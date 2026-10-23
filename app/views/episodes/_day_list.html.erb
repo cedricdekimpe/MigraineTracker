@@ -1,0 +1,34 @@
+<%# The sheet turned 90 degrees for a phone: one row per day. Tap a day to open it, tap an empty one to add. %>
+<section class="overflow-hidden rounded-2xl border-2 border-dashed <%= sheet_frame_class(month) %> bg-paper" data-month="<%= month.strftime("%Y-%m") %>">
+  <ol>
+    <% sheet.days_of(month).each do |day| %>
+      <% date = day.date %>
+      <% today = date == Date.current %>
+      <% future = sheet_future?(date) %>
+      <% target = day.any? ? history_episodes_path(date: date.iso8601) : new_episode_path(date: date.iso8601) %>
+      <li data-date="<%= date.iso8601 %>" class="<%= sheet_column_class(date.day, month) %> <%= 'opacity-50' if future %>">
+        <% row_class = "flex min-h-12 items-center gap-3 px-3 py-2 #{'ring-2 ring-inset ring-accent-600' if today}" %>
+        <% content = capture do %>
+          <span class="w-9 shrink-0 text-center leading-none">
+            <span class="font-display text-xl font-semibold text-ink-900"><%= date.day %></span>
+            <span class="mt-0.5 block text-[0.65rem] uppercase tracking-wide text-ink-600"><%= l(date, format: "%a") %></span>
+          </span>
+
+          <% if day.any? %>
+            <span class="w-7 shrink-0 text-center text-xl font-bold text-accent-700" data-attribute="type"><%= sheet_letter(day) %></span>
+            <% if day.intensity %>
+              <span class="inline-flex min-w-8 items-center justify-center rounded-full px-2 py-0.5 text-sm font-semibold <%= intensity_color_class(day.intensity) %>" data-attribute="intensity"><%= day.intensity %></span>
+            <% end %>
+            <span class="ml-auto flex items-center gap-3 text-base font-semibold text-accent-700">
+              <% if current_user.track_cycle? && day.cycle? %><span data-attribute="cycle" title="<%= t("sheet.legend.cycle") %>">0</span><% end %>
+              <% if day.treatment? %><span data-attribute="treatment"><%= sheet_treatment(day) %></span><% end %>
+            </span>
+          <% elsif !future %>
+            <span class="ml-auto text-lg text-ink-400" aria-label="<%= t("sheet.add_on_day") %>">+</span>
+          <% end %>
+        <% end %>
+        <%= future ? tag.div(content, class: row_class) : link_to(target, class: row_class) { content } %>
+      </li>
+    <% end %>
+  </ol>
+</section>
