@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_170000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_180000) do
   create_table "episode_triggers", force: :cascade do |t|
     t.integer "episode_id", null: false
     t.integer "trigger_id", null: false
@@ -37,12 +37,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_170000) do
     t.index ["user_id"], name: "index_episodes_on_user_id"
     t.check_constraint "aura = 1 OR pain_kind IS NOT NULL", name: "episodes_aura_or_pain"
     t.check_constraint "intensity IS NULL OR (intensity >= 1 AND intensity <= 10)", name: "episodes_intensity_range"
-  end
-
-  create_table "jwt_denylist", force: :cascade do |t|
-    t.datetime "exp", null: false
-    t.string "jti", null: false
-    t.index ["jti"], name: "index_jwt_denylist_on_jti"
   end
 
   create_table "medication_intakes", force: :cascade do |t|
@@ -80,7 +74,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_170000) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.boolean "admin", default: false, null: false
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -92,7 +85,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_170000) do
     t.string "reset_password_token"
     t.datetime "updated_at", null: false
     t.boolean "track_cycle", default: false, null: false
-    t.index ["admin"], name: "index_users_on_admin"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["health_data_consent_version"], name: "index_users_on_health_data_consent_version"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

@@ -73,15 +73,8 @@ end
 
 gem "devise", "~> 5.0"
 gem "rails-i18n", "~> 8.0"
-gem "devise-jwt", "~> 0.12"
-gem "rails_admin", "~> 3.3"
-gem "dartsass-sprockets", "~> 3.1"  # Modern Sass compiler for RailsAdmin SCSS
 
 # API
-gem "jsonapi-serializer", "~> 2.2"
-gem "rack-cors", "~> 2.0"
 gem "rack-attack", "~> 6.7"
 
 # API Documentation
-gem "rswag-api", "~> 2.16"
-gem "rswag-ui", "~> 2.16"

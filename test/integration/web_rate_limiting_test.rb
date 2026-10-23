@@ -97,11 +97,4 @@ class WebRateLimitingTest < ActionDispatch::IntegrationTest
     post "/users/sign_in", params: "user=notahash&user[email]=x", env: { "REMOTE_ADDR" => "192.0.2.80" }
     assert_not_equal 500, response.status
   end
-
-  test "API throttling keeps its JSON error format" do
-    11.times { post "/api/v1/auth/login", params: { email: "x@example.com", password: "y" }.to_json, headers: { "Content-Type" => "application/json" }, env: { "REMOTE_ADDR" => "192.0.2.90" } }
-
-    assert_response :too_many_requests
-    assert_equal "429", JSON.parse(response.body)["errors"].first["status"]
-  end
 end

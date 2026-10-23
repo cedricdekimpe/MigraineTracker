@@ -75,9 +75,8 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def stats_data_attribute(attribute_name)
-    element = css_select("[data-#{attribute_name}]").first
-    return [] unless element
-    JSON.parse(element["data-#{attribute_name}"])
+  # Rows of a server-rendered bar list as [[label, count], ...]
+  def stats_data_attribute(name)
+    css_select("[data-bars='#{name}'] li").map { |row| [row["data-label"], row["data-count"].to_i] }
   end
 end

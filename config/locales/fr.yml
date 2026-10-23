@@ -6,7 +6,6 @@ fr:
     statistics: "Statistiques"
     history: "Historique"
     account: "Compte"
-    admin: "Admin"
     signed_in_as: "Connecté en tant que %{email}"
     sign_out: "Déconnexion"
     sign_in: "Connexion"
@@ -20,15 +19,6 @@ fr:
     site_name: "Migraine Tracker"
     default_description: "Suivez vos migraines, médicaments et tendances avec des calendriers visuels conçus pour les personnes souffrant de migraines. Enregistrez les épisodes, identifiez les déclencheurs et partagez des informations avec les professionnels de santé."
     keywords: "suivi migraines, journal migraines, calendrier migraines, suivi santé, gestion migraines, application santé, tracking médical, suivi médical"
-    
-  # Admin
-  admin:
-    access_denied: "Vous n'avez pas la permission d'accéder à l'espace d'administration."
-    dashboard:
-      title: "Tableau de bord Admin"
-      subtitle: "Gérez les données et les utilisateurs de votre application"
-      manage: "Gérer"
-      quick_actions: "Actions rapides"
     
   # Home page
   home:

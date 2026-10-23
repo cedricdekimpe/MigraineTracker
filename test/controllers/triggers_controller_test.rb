@@ -49,9 +49,9 @@ class TriggersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "preferences cannot change other attributes" do
-    patch account_preferences_path, params: { user: { track_cycle: "1", admin: "1", email: "x@example.com" } }
+    patch account_preferences_path, params: { user: { track_cycle: "1", email: "x@example.com", health_data_consent_version: "hacked" } }
     @user.reload
-    assert_not @user.admin?
     assert_equal "user@example.com", @user.email
+    assert_not_equal "hacked", @user.health_data_consent_version
   end
 end

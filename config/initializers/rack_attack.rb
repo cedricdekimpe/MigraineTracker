@@ -1,31 +1,6 @@
 # frozen_string_literal: true
 
 class Rack::Attack
-  # Throttle authenticated API requests by user id
-  # 100 requests per minute per user
-  throttle('api/authenticated', limit: 100, period: 1.minute) do |req|
-    if req.path.start_with?('/api/') && req.env['warden']&.user&.id
-      req.env['warden'].user.id
-    end
-  end
-
-  # Throttle unauthenticated API requests by IP
-  # 100 requests per minute per IP
-  throttle('api/unauthenticated', limit: 100, period: 1.minute) do |req|
-    if req.path.start_with?('/api/')
-      req.ip
-    end
-  end
-
-  # Stricter throttle for authentication endpoints
-  # 10 requests per minute per IP to prevent brute force
-  throttle('api/auth', limit: 10, period: 1.minute) do |req|
-    if req.path.start_with?('/api/v1/auth/login') || 
-       req.path.start_with?('/api/v1/auth/register')
-      req.ip
-    end
-  end
-
   # --- Web (Devise) endpoints -------------------------------------------------
   # Paths may carry a locale prefix: /users/sign_in or /fr/users/sign_in.
   WEB_USERS_PATH = %r{\A(?:/(?:en|fr))?/users(?<rest>/[a-z_]+)?/?\z}
@@ -85,49 +60,20 @@ class Rack::Attack
   # Custom response for throttled requests
   self.throttled_responder = lambda do |request|
     match_data = request.env['rack.attack.match_data']
-    now = Time.current
+    retry_after = match_data[:period] - (Time.current.to_i % match_data[:period])
+    minutes = (retry_after / 60.0).ceil
 
-    headers = {
-      'Content-Type' => 'application/vnd.api+json',
-      'Retry-After' => (match_data[:period] - (now.to_i % match_data[:period])).to_s,
-      'X-RateLimit-Limit' => match_data[:limit].to_s,
-      'X-RateLimit-Remaining' => '0',
-      'X-RateLimit-Reset' => (now + (match_data[:period] - (now.to_i % match_data[:period]))).to_i.to_s
-    }
-
-    if request.path.start_with?('/api/')
-      body = {
-        errors: [{
-          status: '429',
-          title: 'Too Many Requests',
-          detail: "Rate limit exceeded. Retry after #{headers['Retry-After']} seconds."
-        }]
-      }.to_json
+    body = if request.path.start_with?('/fr') || request.env['HTTP_ACCEPT_LANGUAGE'].to_s.start_with?('fr')
+      "Trop de tentatives. Réessayez dans #{minutes} minute(s)."
     else
-      headers['Content-Type'] = 'text/plain; charset=utf-8'
-      minutes = (headers['Retry-After'].to_i / 60.0).ceil
-      body = if request.path.start_with?('/fr') || request.env['HTTP_ACCEPT_LANGUAGE'].to_s.start_with?('fr')
-        "Trop de tentatives. Réessayez dans #{minutes} minute(s)."
-      else
-        "Too many attempts. Please try again in #{minutes} minute(s)."
-      end
+      "Too many attempts. Please try again in #{minutes} minute(s)."
     end
 
-    [429, headers, [body]]
+    [429, { 'Content-Type' => 'text/plain; charset=utf-8', 'Retry-After' => retry_after.to_s }, [body]]
   end
 
-  # Custom response for blocked requests
-  self.blocklisted_responder = lambda do |request|
-    headers = { 'Content-Type' => 'application/vnd.api+json' }
-    body = {
-      errors: [{
-        status: '403',
-        title: 'Forbidden',
-        detail: 'Your request has been blocked.'
-      }]
-    }.to_json
-
-    [403, headers, [body]]
+  self.blocklisted_responder = lambda do |_request|
+    [403, { 'Content-Type' => 'text/plain; charset=utf-8' }, ['Your request has been blocked.']]
   end
 end
 
