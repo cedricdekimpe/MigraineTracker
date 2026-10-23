@@ -1,5 +1,5 @@
 <% if resource.errors.any? %>
-  <div class="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-left text-sm text-rose-700" role="alert">
+  <div class="rounded-lg bg-over-surface px-4 py-3 text-left text-sm text-over-text" role="alert">
     <p class="font-semibold">We could not save your changes:</p>
     <ul class="mt-2 list-disc space-y-1 pl-5">
       <% resource.errors.full_messages.each do |message| %>

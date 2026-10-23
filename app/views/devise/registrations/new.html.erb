@@ -31,7 +31,7 @@
       </div>
 
       <div class="flex items-start gap-3 text-sm text-fg-secondary">
-        <%= form.check_box :health_data_consent, { required: true, class: "mt-1 h-4 w-4 rounded border-line-control focus:ring-focus" }, "1", "0" %>
+        <%= form.check_box :health_data_consent, { required: true, class: "mt-1 h-6 w-6 rounded border-line-control focus:ring-focus" }, "1", "0" %>
         <label for="user_health_data_consent" class="block">
           <%= t('forms.health_consent_html', privacy: link_to(t('navigation.privacy'), privacy_path, class: "font-semibold text-link hover:text-link")).html_safe %>
         </label>

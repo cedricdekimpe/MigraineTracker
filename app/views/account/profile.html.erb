@@ -53,7 +53,7 @@
         <h2 class="text-lg font-semibold text-fg"><%= t('preferences.title') %></h2>
         <%= form_with model: current_user, scope: :user, url: account_preferences_path, method: :patch, data: { turbo: false }, class: "mt-4 space-y-4" do |form| %>
           <div class="flex items-start gap-3">
-            <%= form.check_box :track_cycle, class: "mt-1 h-4 w-4 rounded border-line-control text-link focus:ring-focus" %>
+            <%= form.check_box :track_cycle, class: "mt-1 h-6 w-6 rounded border-line-control text-link focus:ring-focus" %>
             <div>
               <%= form.label :track_cycle, t('preferences.track_cycle'), class: "text-sm font-medium text-fg-secondary" %>
               <%= render "shared/info", text: t('preferences.track_cycle_hint') %>

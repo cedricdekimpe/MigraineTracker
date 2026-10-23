@@ -13,7 +13,7 @@
   <% end %>
 
   <% unless @has_data %>
-    <section class="rounded-3xl border border-dashed border-line-control px-6 py-14 text-center">
+    <section class="rounded-2xl border border-dashed border-line-control px-6 py-14 text-center">
       <p class="font-display text-xl text-fg"><%= t("stats.empty_title") %></p>
       <p class="mx-auto mt-2 max-w-md text-sm text-fg-secondary"><%= t("stats.empty_hint") %></p>
       <%= link_to t("now.nav"), now_path, class: "mt-6 inline-flex rounded-full bg-crisis px-6 py-3 font-bold text-crisis-on hover:bg-crisis-hover" %>

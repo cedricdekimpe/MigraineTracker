@@ -7,18 +7,18 @@
     <p class="mt-2 text-sm text-fg-secondary"><%= t("urgent.intro") %></p>
   </header>
 
-  <section class="rounded-3xl border-2 border-red-300 bg-red-50 p-6" data-urgency="emergency">
-    <h2 class="text-xl font-semibold text-red-900"><%= t("urgent.emergency_title") %></h2>
-    <ul class="mt-3 space-y-2 text-sm text-red-900">
+  <section class="rounded-2xl border-2 border-red-300 bg-over-surface p-6" data-urgency="emergency">
+    <h2 class="text-xl font-semibold text-over-text"><%= t("urgent.emergency_title") %></h2>
+    <ul class="mt-3 space-y-2 text-sm text-over-text">
       <% t("urgent.emergency").each do |point| %>
         <li class="flex gap-2"><span aria-hidden="true">•</span><span><%= point %></span></li>
       <% end %>
     </ul>
   </section>
 
-  <section class="rounded-3xl border border-amber-300 bg-amber-50 p-6" data-urgency="soon">
-    <h2 class="text-xl font-semibold text-amber-900"><%= t("urgent.soon_title") %></h2>
-    <ul class="mt-3 space-y-2 text-sm text-amber-900">
+  <section class="rounded-2xl border border-amber-300 bg-advised-surface p-6" data-urgency="soon">
+    <h2 class="text-xl font-semibold text-advised-text"><%= t("urgent.soon_title") %></h2>
+    <ul class="mt-3 space-y-2 text-sm text-advised-text">
       <% t("urgent.soon").each do |point| %>
         <li class="flex gap-2"><span aria-hidden="true">•</span><span><%= point %></span></li>
       <% end %>

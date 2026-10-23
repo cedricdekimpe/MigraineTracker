@@ -151,8 +151,16 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[type=date][value='#{Date.current.iso8601}']"
     assert_select "input[name='episode[pain_kind]']", count: 3
     assert_select "input[name='episode[intensity]']", count: 10
-    assert_select "input[name='episode[medication_ids][]']", count: @user.medications.active.count
+    assert_select "input[name='episode[medication_ids][]']", count: @user.medications.active.where.not(kind: "preventive").count
+    assert_select "input[name='episode[medication_ids][]'][value='#{medications(:propranolol).id}']", count: 0 # preventives are periods, not doses
     assert_select "input[name='episode[trigger_ids][]']", count: @user.triggers.count
+  end
+
+  test "an old episode that has a preventive intake keeps it on edit" do
+    episode = episodes(:migraine_with_aura)
+    episode.medication_intakes.create!(medication: medications(:propranolol))
+    get edit_episode_path(id: episode.id)
+    assert_select "input[name='episode[medication_ids][]'][value='#{medications(:propranolol).id}'][checked]"
   end
 
   test "new form can be prefilled with a date" do

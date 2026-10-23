@@ -109,8 +109,10 @@ class EpisodesController < ApplicationController
 
   def load_form_collections
     # Archived medications stay selectable on episodes that already use them, so saving never drops history.
-    in_use = @episode&.persisted? ? @episode.medications.archived.to_a : []
-    @medications = current_user.medications.active.most_used_first.to_a + in_use
+    # Preventives are followed as treatment periods, not as doses of an attack: only shown on an old
+    # episode that already has one.
+    in_use = @episode&.persisted? ? @episode.medications.select { |medication| medication.archived? || medication.kind == "preventive" } : []
+    @medications = (current_user.medications.active.where.not(kind: "preventive").most_used_first.to_a + in_use).uniq
     @triggers = current_user.triggers.sort_by { |trigger| trigger.display_name.downcase }
     known = (@medications + current_user.medications.archived.to_a).map { |medication| medication.name.downcase }
     # The few most common ones only (three painkillers, three triptans); the rest is typed

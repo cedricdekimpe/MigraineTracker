@@ -20,7 +20,7 @@
             <% if date && !sheet_future?(date) %>
               <%= link_to number, new_episode_path(date: date.iso8601), title: t("sheet.add_on_day"),
                     class: "block rounded-lg py-0.5 hover:bg-surface #{'ring-2 ring-primary text-sheet-letter' if date == Date.current}" %>
-            <% else %>
+            <% elsif date %>
               <%= number %>
             <% end %>
           </th>
