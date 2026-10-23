@@ -566,6 +566,17 @@ fr:
     add_details: "Ajouter des détails"
     cancel: "Démarré par erreur ? Annuler"
     confirm_cancel: "Supprimer cet épisode ?"
+    guest:
+      hint: "Notez-le maintenant, sans compte. On s'occupe du reste ensuite."
+      have_account: "Vous avez déjà un compte ?"
+      invalid: "Choisissez un type et une intensité."
+      noted_title: "C'est noté"
+      noted_summary: "%{summary}, à %{time}."
+      keep_it: "Pour ne pas le perdre, créez un compte gratuit : cet épisode en sera la première entrée. Si vous avez déjà un compte, connectez-vous : il sera ajouté à votre journal. Tant que vous ne le faites pas, il reste uniquement dans ce navigateur."
+      create_account: "Créer un compte et le garder"
+      sign_in: "J'ai déjà un compte"
+      forget: "Ne pas le garder"
+      saved: "Votre épisode est enregistré. Il est en cours : dites-nous quand c'est passé."
     flash:
       finished: "Épisode enregistré (%{duration})."
       cancelled: "Épisode annulé."

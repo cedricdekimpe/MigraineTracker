@@ -1,0 +1,18 @@
+<% content_for :title, t("now.guest.noted_title") %>
+
+<section class="mx-auto w-full max-w-xl py-2 sm:py-6">
+  <h1 class="text-3xl font-semibold tracking-tight"><%= t("now.guest.noted_title") %></h1>
+  <p class="mt-2 text-ink-700">
+    <%= t("now.guest.noted_summary", summary: guest_episode_summary(@guest_episode), time: Time.zone.parse(@guest_episode["at"]).strftime("%H:%M")) %>
+  </p>
+  <p class="mt-4 text-sm leading-6 text-ink-600"><%= t("now.guest.keep_it") %></p>
+
+  <div class="mt-6 flex flex-col gap-3">
+    <%= link_to t("now.guest.create_account"), new_user_registration_path, class: "flex min-h-14 items-center justify-center rounded-2xl bg-accent-600 px-4 text-lg font-semibold text-white hover:bg-accent-700" %>
+    <%= link_to t("now.guest.sign_in"), new_user_session_path, class: "flex min-h-12 items-center justify-center rounded-2xl border border-ink-300 px-4 text-base font-medium text-ink-800 hover:border-ink-400" %>
+  </div>
+
+  <p class="mt-6 text-center text-sm">
+    <%= button_to t("now.guest.forget"), guest_episode_path, method: :delete, class: "cursor-pointer text-ink-500 underline hover:text-ink-800" %>
+  </p>
+</section>

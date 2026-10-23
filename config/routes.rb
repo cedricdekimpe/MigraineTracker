@@ -39,6 +39,9 @@ Rails.application.routes.draw do
     post "now/medication", to: "now#medication", as: :now_medication
     patch "now/finish", to: "now#finish", as: :now_finish
 
+    # Same thing before having an account; kept in the session until sign-in
+    resource :guest_episode, only: %i[show create destroy], path: "noted"
+
     resources :episodes, only: %i[index new create edit update destroy] do
       collection do
         get :yearly

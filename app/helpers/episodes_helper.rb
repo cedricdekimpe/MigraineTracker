@@ -26,6 +26,12 @@ module EpisodesHelper
     t("episodes.kinds.#{key}")
   end
 
+  # What a guest told us, worded like a saved episode: "Migraine, 7/10".
+  def guest_episode_summary(data)
+    episode = Episode.new(pain_kind: data["pain_kind"].presence, aura: data["aura"], intensity: data["intensity"])
+    [episode_kind_label(episode), (episode.intensity && "#{episode.intensity}/10")].compact.join(", ")
+  end
+
   # 135 -> "2 h 15", 45 -> "45 min"
   def duration_label(minutes)
     hours, rest = minutes.divmod(60)

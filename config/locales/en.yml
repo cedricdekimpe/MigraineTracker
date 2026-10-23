@@ -473,6 +473,17 @@ en:
     add_details: "Add details"
     cancel: "Started by mistake? Cancel"
     confirm_cancel: "Delete this episode?"
+    guest:
+      hint: "Note it now, no account needed. We'll sort out the rest afterwards."
+      have_account: "Already have an account?"
+      invalid: "Pick a type and an intensity."
+      noted_title: "Noted"
+      noted_summary: "%{summary}, at %{time}."
+      keep_it: "To keep it, create a free account: this episode becomes its first entry. If you already have one, sign in and it is added to your journal. Until then it only stays in this browser."
+      create_account: "Create an account and keep it"
+      sign_in: "I already have an account"
+      forget: "Don't keep it"
+      saved: "Your episode is saved. It is still going: tell us when it is over."
     flash:
       finished: "Episode saved (%{duration})."
       cancelled: "Episode cancelled."

@@ -1,6 +1,22 @@
 <% content_for :title, t('home.tagline') %>
 <% content_for :description, t('home.description') %>
 
+<% unless user_signed_in? %>
+  <%# First thing a visitor sees: log the crisis they are having, before anything is explained. %>
+  <section class="mx-auto w-full max-w-xl py-2 sm:py-6" aria-labelledby="crisis-title">
+    <h1 id="crisis-title" class="text-3xl font-semibold tracking-tight"><%= t("now.start_title") %></h1>
+    <p class="mt-1 text-sm text-ink-500"><%= t("now.guest.hint") %></p>
+
+    <%= render "now/form", url: guest_episode_path, default_pain_kind: "migraine" %>
+
+    <p class="mt-8 text-center text-sm text-ink-500">
+      <%= t("now.guest.have_account") %>
+      <%= link_to t("navigation.sign_in"), new_user_session_path, class: "font-medium text-ink-800 underline" %>
+    </p>
+  </section>
+
+  <hr class="mx-auto my-10 w-full max-w-xl border-ink-200">
+<% end %>
 <article class="mx-auto flex max-w-5xl flex-col gap-12" itemscope itemtype="https://schema.org/SoftwareApplication">
   <header class="text-center">
     <p class="text-sm font-semibold uppercase tracking-wide text-accent-600">Migraine Tracker</p>

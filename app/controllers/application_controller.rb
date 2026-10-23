@@ -10,6 +10,16 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 
+  # A crisis logged as a guest joins the account that just signed in (or was just created).
+  def after_sign_in_path_for(resource)
+    if GuestEpisode.claim(session, resource)
+      flash[:notice] = t("now.guest.saved")
+      now_path
+    else
+      super
+    end
+  end
+
   private
 
   # Scoped to the request: a bare `I18n.locale =` stays on the thread and leaks into the next request
