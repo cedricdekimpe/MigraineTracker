@@ -34,7 +34,9 @@
           <% days.each do |day| %>
             <% number = day.date.day %>
             <td class="<%= sheet_column_class(number, month) %> h-10 p-0 align-middle" data-day="<%= number %>" data-attribute="<%= row %>">
-              <% if day.any? %>
+              <% if row == :cycle %>
+                <%= period_toggle(day) unless sheet_future?(day.date) %>
+              <% elsif day.any? %>
                 <%= link_to history_episodes_path(date: day.date.iso8601), class: "flex h-10 items-center justify-center font-semibold text-accent-700 hover:bg-paper/60", title: l(day.date, format: :long) do %>
                   <%= sheet_cell(day, row) %>
                 <% end %>

@@ -116,10 +116,30 @@ class DataImporterTest < ActiveSupport::TestCase
   end
 
   test "casts string booleans and treats missing flags as false" do
-    import("episodes" => [episode_row("on_period" => "true", "aura" => nil)])
+    import("episodes" => [episode_row("aura" => "true")])
+    import("episodes" => [episode_row("occurred_on" => "2020-01-16", "aura" => nil)])
 
-    episode = @user.episodes.find_by!(occurred_on: "2020-01-15")
-    assert_equal [true, false], [episode.on_period, episode.aura]
+    assert_equal [true, false], [@user.episodes.find_by!(occurred_on: "2020-01-15").aura, @user.episodes.find_by!(occurred_on: "2020-01-16").aura]
+  end
+
+  test "imports period days, once, skipping the ones already there" do
+    @user.period_days.create!(date: "2020-01-02")
+    result = import("episodes" => [], "period_days" => ["2020-01-01", "2020-01-02", "2020-01-01"])
+
+    assert_equal 1, result.period_days
+    assert_equal %w[2020-01-01 2020-01-02], @user.period_days.where(date: "2020-01-01".."2020-01-31").order(:date).pluck(:date).map(&:iso8601)
+  end
+
+  test "an invalid period day aborts the whole import" do
+    assert_no_difference -> { @user.episodes.count } do
+      assert_raises(DataImporter::InvalidData) { import("episodes" => [episode_row], "period_days" => ["2020-02-30"]) }
+    end
+    assert_raises(DataImporter::InvalidData) { import("episodes" => [], "period_days" => "2020-01-01") }
+  end
+
+  test "backups of format 2 flagged the period on the episode: it becomes a period day" do
+    import("episodes" => [episode_row("on_period" => "true")])
+    assert @user.period_days.exists?(date: "2020-01-15")
   end
 
   test "never touches another user's data" do

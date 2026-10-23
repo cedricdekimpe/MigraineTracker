@@ -226,10 +226,12 @@ fr:
       invalid_structure: "Le fichier ne contient pas de données de sauvegarde valides."
       too_many: "Le fichier contient trop de %{what} (maximum %{max})."
       medications_label: "médicaments"
+      period_days_label: "jours de règles"
       episodes_label: "épisodes"
       triggers_label: "déclencheurs"
       medication_kind: "Médicament"
       trigger_kind: "Déclencheur"
+      period_day_kind: "Jour de règles"
       episode_kind: "Épisode"
       invalid_time: "heure invalide (format attendu : HH:MM)"
       invalid_row: "%{kind} n°%{index} : %{details}"
@@ -617,6 +619,9 @@ fr:
       history: "Historique détaillé"
       year: "Vue annuelle"
       report: "Rapport pour mon médecin (PDF)"
+    period:
+      mark: "Marquer le %{date} comme jour de règles"
+      unmark: "Retirer le jour de règles du %{date}"
     legend:
       title: "Légende"
       migraine: "Migraine"

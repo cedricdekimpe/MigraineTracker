@@ -7,9 +7,10 @@ class Sheet
   class Day
     attr_reader :date, :episodes
 
-    def initialize(date, episodes)
+    def initialize(date, episodes, period: false)
       @date = date
       @episodes = episodes
+      @period = period
     end
 
     def any?
@@ -37,8 +38,9 @@ class Sheet
       episodes.filter_map(&:intensity).max
     end
 
+    # A bleeding day, recorded for the day itself (it needs no headache).
     def cycle?
-      episodes.any?(&:on_period?)
+      @period
     end
 
     def triptan?
@@ -68,10 +70,11 @@ class Sheet
     @months = months
     range = months.first..months.last.end_of_month
     @episodes_by_date = user.episodes.includes(:medications).where(occurred_on: range).chronological.group_by(&:occurred_on)
+    @period_dates = user.period_days.between(range).pluck(:date).to_set
   end
 
   def day(date)
-    Day.new(date, @episodes_by_date.fetch(date, []))
+    Day.new(date, @episodes_by_date.fetch(date, []), period: @period_dates.include?(date))
   end
 
   def days_of(month)

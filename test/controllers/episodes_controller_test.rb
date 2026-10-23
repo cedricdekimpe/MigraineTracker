@@ -60,7 +60,7 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     assert_select "dt", text: "0", count: 0 # no cycle line in the legend
 
     @user.reload.update!(track_cycle: true)
-    day = episodes(:headache).occurred_on # on_period: true
+    day = period_days(:day_of_headache).date
     get episodes_path(month: day.strftime("%Y-%m"))
     assert_select "table td[data-day='#{day.day}'][data-attribute=cycle]", text: /0/
     assert_select "dt", text: "0"
@@ -170,11 +170,35 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
 
   test "cycle checkbox only appears with cycle tracking" do
     get new_episode_path
-    assert_select "input[name='episode[on_period]']", count: 0
+    assert_select "input[name='episode[period_day]']", count: 0
 
     @user.reload.update!(track_cycle: true)
     get new_episode_path
-    assert_select "input[name='episode[on_period]'][type=checkbox]"
+    assert_select "input[name='episode[period_day]'][type=checkbox]"
+  end
+
+  test "the period box edits the bleeding day of the episode's date" do
+    @user.update!(track_cycle: true)
+    date = Date.current - 3.days
+
+    assert_difference -> { @user.period_days.count }, 1 do
+      post episodes_path, params: { episode: { occurred_on: date, pain_kind: "migraine", intensity: 5, period_day: "1" } }
+    end
+    assert @user.period_days.exists?(date: date)
+
+    episode = @user.episodes.find_by!(occurred_on: date)
+    get edit_episode_path(id: episode.id)
+    assert_select "input[name='episode[period_day]'][type=checkbox][checked]"
+
+    patch episode_path(id: episode.id), params: { episode: { period_day: "0" } }
+    assert_not @user.period_days.exists?(date: date)
+  end
+
+  test "an episode saved without the period box leaves the bleeding days alone" do
+    @user.update!(track_cycle: true)
+    date = period_days(:day_of_headache).date
+    post episodes_path, params: { episode: { occurred_on: date, pain_kind: "headache", intensity: 3 } }
+    assert @user.period_days.exists?(date: date)
   end
 
   test "creates a minimal episode" do

@@ -39,6 +39,9 @@ Rails.application.routes.draw do
     post "now/medication", to: "now#medication", as: :now_medication
     patch "now/finish", to: "now#finish", as: :now_finish
 
+    # Bleeding days of the cycle row, one tap each
+    resources :period_days, only: %i[create destroy], param: :date, constraints: { date: /\d{4}-\d{2}-\d{2}/ }
+
     # Same thing before having an account; kept in the session until sign-in
     resource :guest_episode, only: %i[show create destroy], path: "noted"
 

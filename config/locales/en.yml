@@ -226,10 +226,12 @@ en:
       invalid_structure: "The file does not contain valid backup data."
       too_many: "The file contains too many %{what} (maximum %{max})."
       medications_label: "medications"
+      period_days_label: "period days"
       episodes_label: "episodes"
       triggers_label: "triggers"
       medication_kind: "Medication"
       trigger_kind: "Trigger"
+      period_day_kind: "Period day"
       episode_kind: "Episode"
       invalid_time: "invalid time (expected HH:MM)"
       invalid_row: "%{kind} #%{index}: %{details}"
@@ -524,6 +526,9 @@ en:
       history: "Detailed history"
       year: "Year view"
       report: "Report for my doctor (PDF)"
+    period:
+      mark: "Mark %{date} as a period day"
+      unmark: "Remove the period day of %{date}"
     legend:
       title: "Legend"
       migraine: "Migraine"

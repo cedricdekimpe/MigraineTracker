@@ -9,8 +9,8 @@ class SheetTest < ActiveSupport::TestCase
     @month = Date.new(2026, 10, 1)
   end
 
-  def episode(day, pain: "migraine", aura: false, intensity: 5, on_period: false, medications: [])
-    record = @user.episodes.create!(occurred_on: @month + (day - 1), pain_kind: pain, aura: aura, intensity: pain ? intensity : nil, on_period: on_period)
+  def episode(day, pain: "migraine", aura: false, intensity: 5, medications: [])
+    record = @user.episodes.create!(occurred_on: @month + (day - 1), pain_kind: pain, aura: aura, intensity: pain ? intensity : nil)
     medications.each { |medication| record.medication_intakes.create!(medication: medication) }
     record
   end
@@ -58,10 +58,12 @@ class SheetTest < ActiveSupport::TestCase
     assert_not day(7).aura_with_pain?
   end
 
-  test "cycle is shown if any episode of the day is on a period" do
-    episode(8, on_period: false)
-    episode(8, on_period: true)
+  test "the cycle row comes from the bleeding days, with or without a headache" do
+    episode(8)
+    @user.period_days.create!(date: @month + 7)
+    @user.period_days.create!(date: @month + 19)
     assert day(8).cycle?
+    assert day(20).cycle?
     assert_not day(1).cycle?
   end
 

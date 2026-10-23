@@ -7,8 +7,8 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
     @acute = @user.medications.create!(name: "Ibuprofen", kind: "acute")
   end
 
-  def episode(date, pain: "migraine", aura: false, intensity: 7, on_period: false, medications: [])
-    record = @user.episodes.create!(occurred_on: date, pain_kind: pain, aura: aura, intensity: pain ? intensity : nil, on_period: on_period)
+  def episode(date, pain: "migraine", aura: false, intensity: 7, medications: [])
+    record = @user.episodes.create!(occurred_on: date, pain_kind: pain, aura: aura, intensity: pain ? intensity : nil)
     medications.each { |medication| record.medication_intakes.create!(medication: medication) }
     record
   end
@@ -87,7 +87,8 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
   end
 
   test "the cycle row only appears when cycle tracking is on" do
-    episode(Date.new(2025, 1, 10), on_period: true)
+    episode(Date.new(2025, 1, 10))
+    @user.period_days.create!(date: Date.new(2025, 1, 10))
     assert_no_match(/Menstrual cycle/, text(reader, 2))
 
     @user.update!(track_cycle: true)

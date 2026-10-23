@@ -20,14 +20,20 @@
               <span class="inline-flex min-w-8 items-center justify-center rounded-full px-2 py-0.5 text-sm font-semibold <%= intensity_color_class(day.intensity) %>" data-attribute="intensity"><%= day.intensity %></span>
             <% end %>
             <span class="ml-auto flex items-center gap-3 text-base font-semibold text-accent-700">
-              <% if current_user.track_cycle? && day.cycle? %><span data-attribute="cycle" title="<%= t("sheet.legend.cycle") %>">0</span><% end %>
               <% if day.treatment? %><span data-attribute="treatment"><%= sheet_treatment(day) %></span><% end %>
             </span>
           <% elsif !future %>
             <span class="ml-auto text-lg text-ink-400" aria-label="<%= t("sheet.add_on_day") %>">+</span>
           <% end %>
         <% end %>
-        <%= future ? tag.div(content, class: row_class) : link_to(target, class: row_class) { content } %>
+        <% if current_user.track_cycle? && !future %>
+          <div class="flex items-stretch">
+            <%= link_to(target, class: "#{row_class} flex-1") { content } %>
+            <div class="flex w-12 shrink-0 items-stretch border-l border-ink-100"><%= period_toggle(day, size: "min-h-12", label: "0") %></div>
+          </div>
+        <% else %>
+          <%= future ? tag.div(content, class: row_class) : link_to(target, class: row_class) { content } %>
+        <% end %>
       </li>
     <% end %>
   </ol>

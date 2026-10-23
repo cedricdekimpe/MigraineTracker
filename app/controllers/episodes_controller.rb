@@ -27,6 +27,7 @@ class EpisodesController < ApplicationController
     episodes = episodes.where(occurred_on: @selected_date) if @selected_date
 
     @pagy, @episodes = pagy(episodes)
+    @period_dates = current_user.period_days.where(date: @episodes.map(&:occurred_on)).pluck(:date).to_set
   end
 
   def yearly
@@ -140,14 +141,14 @@ class EpisodesController < ApplicationController
 
   def episode_params
     params.require(:episode).permit(
-      :occurred_on, :started_time, :duration_minutes, :aura, :pain_kind, :intensity, :on_period, :notes,
+      :occurred_on, :started_time, :duration_minutes, :aura, :pain_kind, :intensity, :notes,
       medication_intakes_attributes: %i[id dose taken_time effect _destroy]
     )
   end
 
   # Form fields outside the Episode columns: chips (ids), free-text additions and suggestions.
   def entry_params
-    params.fetch(:episode, {}).permit(:new_medication_names, :new_trigger_names, :new_medication_kind, medication_ids: [], trigger_ids: [], suggested_medications: [])
+    params.fetch(:episode, {}).permit(:new_medication_names, :new_trigger_names, :new_medication_kind, :period_day, medication_ids: [], trigger_ids: [], suggested_medications: [])
   end
 
   def save_episode
@@ -159,10 +160,23 @@ class EpisodesController < ApplicationController
       sync_intakes(selected_medications(entry))
       saved = @episode.save
       @episode.triggers = selected_triggers(entry) if saved
+      sync_period_day(entry) if saved
       raise ActiveRecord::Rollback unless saved
     end
 
     saved
+  end
+
+  # The "period" box of the form edits the bleeding day of the episode's date (only when the form had it).
+  def sync_period_day(entry)
+    return unless current_user.track_cycle? && entry.key?(:period_day)
+
+    days = current_user.period_days
+    if ActiveModel::Type::Boolean.new.cast(entry[:period_day])
+      days.find_or_create_by!(date: @episode.occurred_on)
+    else
+      days.where(date: @episode.occurred_on).destroy_all
+    end
   end
 
   def selected_medications(entry)

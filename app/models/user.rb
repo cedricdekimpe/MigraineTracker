@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :episodes, dependent: :destroy
   has_many :medications, dependent: :destroy
   has_many :triggers, dependent: :destroy
+  has_many :period_days, dependent: :destroy
 
   after_create :seed_default_triggers
 

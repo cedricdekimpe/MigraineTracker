@@ -9,9 +9,10 @@ class DataImporter
   MAX_MEDICATIONS = 500
   MAX_TRIGGERS = 200
   MAX_EPISODES = 20_000
+  MAX_PERIOD_DAYS = 10_000
   TIME_FORMAT = /\A([01]\d|2[0-3]):[0-5]\d\z/
 
-  Result = Struct.new(:medications, :triggers, :episodes, keyword_init: true)
+  Result = Struct.new(:medications, :triggers, :episodes, :period_days, keyword_init: true)
 
   class InvalidData < StandardError; end
 
@@ -23,15 +24,17 @@ class DataImporter
   def call
     validate_shape!
 
-    result = Result.new(medications: 0, triggers: 0, episodes: 0)
+    result = Result.new(medications: 0, triggers: 0, episodes: 0, period_days: 0)
     ActiveRecord::Base.transaction do
       @medications = @user.medications.index_by { |medication| key(medication.name) }
       @triggers = @user.triggers.index_by { |trigger| key(trigger.name) }
+      @legacy_period_dates = []
       @seen = @user.episodes.map { |episode| signature(episode.occurred_on, episode.started_time&.strftime("%H:%M"), episode.pain_kind, episode.aura, episode.intensity, episode.duration_minutes) }.to_set
 
       list("medications").each_with_index { |row, index| import_medication_row(row, index, result) }
       list("triggers").each_with_index { |row, index| import_trigger_row(row, index, result) }
       list("episodes").each_with_index { |row, index| import_episode(row, index, result) }
+      import_period_days(result)
     end
     result
   end
@@ -46,13 +49,14 @@ class DataImporter
     raise InvalidData, t("invalid_structure") unless @data.is_a?(Hash)
     raise InvalidData, t("invalid_structure") unless @data["episodes"].is_a?(Array)
 
-    %w[medications triggers].each do |name|
+    %w[medications triggers period_days].each do |name|
       raise InvalidData, t("invalid_structure") unless @data[name].nil? || @data[name].is_a?(Array)
     end
 
     raise InvalidData, t("too_many", what: t("medications_label"), max: MAX_MEDICATIONS) if list("medications").size > MAX_MEDICATIONS
     raise InvalidData, t("too_many", what: t("triggers_label"), max: MAX_TRIGGERS) if list("triggers").size > MAX_TRIGGERS
     raise InvalidData, t("too_many", what: t("episodes_label"), max: MAX_EPISODES) if list("episodes").size > MAX_EPISODES
+    raise InvalidData, t("too_many", what: t("period_days_label"), max: MAX_PERIOD_DAYS) if list("period_days").size > MAX_PERIOD_DAYS
   end
 
   def import_medication_row(row, index, result)
@@ -67,12 +71,28 @@ class DataImporter
     find_or_create_trigger(name, result) { raise InvalidData, row_message("trigger_kind", index, t("invalid_name")) }
   end
 
+  def import_period_days(result)
+    dates = list("period_days").each_with_index.map do |value, index|
+      parse_date(value) || raise(InvalidData, row_message("period_day_kind", index, t("invalid_date")))
+    end
+    existing = @user.period_days.pluck(:date).to_set
+
+    (dates + @legacy_period_dates).uniq.each do |date|
+      next if existing.include?(date)
+
+      @user.period_days.create!(date: date)
+      result.period_days += 1
+    end
+  end
+
   def import_episode(row, index, result)
     fail_row = ->(details) { raise InvalidData, row_message("episode_kind", index, details) }
     fail_row.call(t("invalid_row_shape")) unless row.is_a?(Hash)
 
     occurred_on = parse_date(row["occurred_on"]) || fail_row.call(t("invalid_date"))
     started_time = parse_time(row["started_time"]) { fail_row.call(t("invalid_time")) }
+    # Backups of format 2 flagged the period on the episode; it is a day of its own now.
+    @legacy_period_dates << occurred_on if ActiveModel::Type::Boolean.new.cast(row["on_period"])
 
     episode = @user.episodes.new(
       occurred_on: occurred_on,
@@ -81,7 +101,6 @@ class DataImporter
       aura: ActiveModel::Type::Boolean.new.cast(row["aura"]) || false,
       pain_kind: row["pain_kind"],
       intensity: row["intensity"],
-      on_period: ActiveModel::Type::Boolean.new.cast(row["on_period"]) || false,
       notes: row["notes"].is_a?(String) ? row["notes"] : nil
     )
 

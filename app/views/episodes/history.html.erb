@@ -37,7 +37,7 @@
             </p>
             <p class="text-sm text-ink-700">
               <%= episode_kind_label(episode) %>
-              <% if episode.on_period? && current_user.track_cycle? %><span class="ml-2 text-rose-600">· <%= t("episodes.on_period") %></span><% end %>
+              <% if current_user.track_cycle? && @period_dates.include?(episode.occurred_on) %><span class="ml-2 text-rose-600">· <%= t("episodes.on_period") %></span><% end %>
             </p>
             <% if episode.medication_intakes.any? %>
               <p class="text-sm text-ink-600">

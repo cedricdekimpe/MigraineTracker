@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_190000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_200000) do
   create_table "episode_triggers", force: :cascade do |t|
     t.integer "episode_id", null: false
     t.integer "trigger_id", null: false
@@ -29,7 +29,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_190000) do
     t.boolean "aura", default: false, null: false
     t.string "pain_kind"
     t.integer "intensity"
-    t.boolean "on_period", default: false, null: false
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -66,6 +65,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_190000) do
     t.index ["user_id"], name: "index_medications_on_user_id"
   end
 
+  create_table "period_days", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.date "date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "date"], name: "index_period_days_on_user_id_and_date", unique: true
+    t.index ["user_id"], name: "index_period_days_on_user_id"
+  end
+
   create_table "triggers", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "name", null: false
@@ -98,5 +106,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_190000) do
   add_foreign_key "medication_intakes", "episodes"
   add_foreign_key "medication_intakes", "medications"
   add_foreign_key "medications", "users"
+  add_foreign_key "period_days", "users"
   add_foreign_key "triggers", "users"
 end

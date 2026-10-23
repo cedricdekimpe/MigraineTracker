@@ -121,8 +121,9 @@
 
       <% if current_user.track_cycle? %>
         <div class="flex items-center gap-3">
-          <%= form.check_box :on_period, class: "h-4 w-4 rounded border-ink-300 text-accent-600 focus:ring-accent-500" %>
-          <%= form.label :on_period, t("episodes.on_period"), class: "text-sm font-medium text-ink-700" %>
+          <%= hidden_field_tag "episode[period_day]", "0", id: nil %>
+          <%= check_box_tag "episode[period_day]", "1", current_user.period_days.exists?(date: episode.occurred_on), class: "h-4 w-4 rounded border-ink-300 text-accent-600 focus:ring-accent-500" %>
+          <%= label_tag "episode_period_day", t("episodes.on_period"), class: "text-sm font-medium text-ink-700" %>
         </div>
       <% end %>
 

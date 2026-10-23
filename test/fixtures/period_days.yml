@@ -1,0 +1,3 @@
+day_of_headache:
+  user: one
+  date: <%= Date.current - 10.days %>
