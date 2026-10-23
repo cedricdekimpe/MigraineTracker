@@ -186,6 +186,27 @@ class MonthlyOverviewTest < ActiveSupport::TestCase
     assert_equal :ok, overview.current.overuse_status
   end
 
+  test "moderate-to-severe days start at 4 out of 10 and ignore auras" do
+    @user.episodes.create!(occurred_on: Date.new(2026, 10, 1), pain_kind: "migraine", intensity: 3)
+    @user.episodes.create!(occurred_on: Date.new(2026, 10, 2), pain_kind: "migraine", intensity: 4)
+    @user.episodes.create!(occurred_on: Date.new(2026, 10, 3), pain_kind: "headache", intensity: 2)
+    @user.episodes.create!(occurred_on: Date.new(2026, 10, 3), pain_kind: "headache", intensity: 6) # same day: one day
+    @user.episodes.create!(occurred_on: Date.new(2026, 10, 4), aura: true)
+    assert_equal [3, 2], [overview.current.pain_days, overview.current.severe_days]
+  end
+
+  test "chronic pattern needs 15 headache days with 8 migraine days, and counts the months in a row" do
+    [Date.new(2026, 8, 1), Date.new(2026, 9, 1), Date.new(2026, 10, 1)].each do |month|
+      8.times { |i| episode(month + i) }
+      7.times { |i| episode(month + 8 + i, pain: "headache") }
+    end
+    assert overview.current.chronic_pattern?
+    assert_equal 3, overview.chronic_streak
+
+    @user.episodes.where(occurred_on: Date.new(2026, 9, 1)..Date.new(2026, 9, 30), pain_kind: "headache").destroy_all
+    assert_equal 1, overview.chronic_streak
+  end
+
   test "average of the last complete months excludes the current month" do
     episode(Date.new(2026, 10, 1)) # current month, ignored
     [Date.new(2026, 7, 1), Date.new(2026, 8, 1), Date.new(2026, 8, 2), Date.new(2026, 9, 1), Date.new(2026, 9, 2), Date.new(2026, 9, 3)].each { |date| episode(date) }

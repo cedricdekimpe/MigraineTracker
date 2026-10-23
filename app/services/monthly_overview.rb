@@ -3,6 +3,8 @@
 # Month-by-month figures in the unit neurologists use: days, not episodes.
 #
 # - migraine day: at least one migraine-type pain episode that day
+# - moderate-to-severe day: a pain day whose strongest episode reaches 4 out of 10 (there is no official
+#   cut-off on the 0-10 scale; 4 is the usual convention for "moderate")
 # - headache day: pain, but no migraine episode that day
 # - aura day: an aura without any pain that day
 # - acute / triptan days: days with an intake of an acute treatment (X) / a triptan (t)
@@ -23,6 +25,8 @@ class MonthlyOverview
   ACUTE_LIMIT = 15
   MIXED_LIMIT = 10
 
+  # Intensity from which a pain day is "moderate to severe"
+  SEVERE_FROM = 4
   TRIPTAN_ADVISED = 8
   COMBINATION_ADVISED = 8
   ACUTE_ADVISED = 10
@@ -32,9 +36,14 @@ class MonthlyOverview
   TRIPTAN_WEEK_ADVISED = 2
 
   Month = Struct.new(:month, :migraine_days, :headache_days, :aura_days, :triptan_days, :acute_days, :combination_days,
-                     :gepant_days, :non_triptan_days, :any_acute_days, :heavy_weeks, :streak, keyword_init: true) do
+                     :gepant_days, :non_triptan_days, :any_acute_days, :heavy_weeks, :streak, :severe_days, keyword_init: true) do
     def pain_days
       migraine_days + headache_days
+    end
+
+    # Chronic migraine (ICHD-3 1.3) asks for 15+ headache days with 8+ migraine days a month, for over 3 months.
+    def chronic_pattern?
+      pain_days >= 15 && migraine_days >= 8
     end
 
     def mixed?
@@ -76,6 +85,12 @@ class MonthlyOverview
     months.last
   end
 
+  # How many months in a row, up to the latest one, show the chronic migraine pattern (15+ headache
+  # days with 8+ migraine days). The month under way counts only once it already matches.
+  def chronic_streak
+    months.reverse.take_while(&:chronic_pattern?).size
+  end
+
   # Average days with pain over the `count` complete months before the current one, starting from the
   # first month with any record (months before the user started logging are not zeros). nil if none.
   def average_pain_days(count = 3)
@@ -92,7 +107,7 @@ class MonthlyOverview
 
   def build(first, last, count)
     range = first..last.end_of_month
-    episodes = @user.episodes.where(occurred_on: range).pluck(:occurred_on, :pain_kind, :aura)
+    episodes = @user.episodes.where(occurred_on: range).pluck(:occurred_on, :pain_kind, :aura, :intensity)
     # Weeks run Monday to Sunday and may start before the first month: load their days too.
     week_range = first.beginning_of_week..last.end_of_month.end_of_week
     all_intakes = MedicationIntake.joins(:medication, :episode)
@@ -112,6 +127,7 @@ class MonthlyOverview
         migraine_days: days.count { |_, rows| rows.any? { |_, pain, _| pain == "migraine" } },
         headache_days: days.count { |_, rows| rows.none? { |_, pain, _| pain == "migraine" } && rows.any? { |_, pain, _| pain == "headache" } },
         aura_days: days.count { |_, rows| rows.none? { |_, pain, _| pain.present? } && rows.any? { |_, _, aura| aura } },
+        severe_days: days.count { |_, rows| rows.any? { |_, pain, _, intensity| pain.present? && intensity.to_i >= SEVERE_FROM } },
         triptan_days: month_intakes.select { |_, kind| kind == "triptan" }.map(&:first).uniq.size,
         acute_days: month_intakes.select { |_, kind| kind == "acute" }.map(&:first).uniq.size,
         combination_days: month_intakes.select { |_, kind| kind == "combination" }.map(&:first).uniq.size,
