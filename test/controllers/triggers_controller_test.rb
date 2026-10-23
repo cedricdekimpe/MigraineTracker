@@ -54,4 +54,15 @@ class TriggersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "user@example.com", @user.email
     assert_not_equal "hacked", @user.health_data_consent_version
   end
+
+  test "the account pages offer a way to sign out, and it works" do
+    get account_profile_path
+    assert_select "form[action*='/users/sign_out'] button", text: /Sign out/
+
+    sign_in @user
+    delete destroy_user_session_path
+    follow_redirect!
+    get account_profile_path
+    assert_redirected_to new_user_session_path
+  end
 end

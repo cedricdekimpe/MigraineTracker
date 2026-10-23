@@ -31,4 +31,12 @@
     </svg>
     <%= t('account.nav.data') %>
   <% end %>
+
+  <%= button_to destroy_user_session_path, method: :delete, form: { class: "mt-4 border-t border-ink-200 pt-4" },
+        class: "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-ink-600 transition hover:bg-ink-100 hover:text-ink-900" do %>
+    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/>
+    </svg>
+    <%= t('navigation.sign_out') %>
+  <% end %>
 </nav>

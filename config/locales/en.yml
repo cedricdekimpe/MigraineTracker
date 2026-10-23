@@ -91,21 +91,50 @@ en:
     
   # Statistics
   stats:
-    title: "Migraine Statistics"
-    description: "Visual insights into your migraine patterns and medication usage"
-    total_migraines: "Total Migraines"
-    with_medication: "With Medication"
-    without_medication: "Without Medication"
-    over_time_title: "Migraines Over Time (Last 12 Months)"
-    day_of_week_title: "Migraines by Day of Week"
-    medication_usage_title: "Medication Usage"
-    no_medication_data: "No medication data available yet"
-    number_of_migraines: "Number of Migraines"
-    triggers_title: "Triggers"
-    triggers_description: "How often you ticked each trigger on an episode. It shows what comes up, not yet what causes it."
-    trigger_count: "%{count} of %{total} episodes (%{percent}%%)"
+    title: "Statistics"
+    description: "What your neurologist looks at: days, not episodes."
+    empty_title: "Nothing to show yet"
+    empty_hint: "Log a first episode and this page fills itself: days with pain, days with treatment, and how they evolve month after month."
+    this_month: "This month"
+    pain_days:
+      one: "day with pain"
+      other: "days with pain"
+    of_which_migraine:
+      zero: "no migraine"
+      one: "of which 1 migraine"
+      other: "of which %{count} migraine"
+    acute_days:
+      one: "day with acute treatment"
+      other: "days with acute treatment"
+    triptan_split: "%{triptan} with a triptan, %{acute} with another treatment"
+    average_label: "average, last 3 months"
+    average_hint: "days with pain per month"
+    no_average: "not enough complete months yet"
+    aura_days:
+      one: "Plus 1 day with an aura only."
+      other: "Plus %{count} days with an aura only."
+    overuse:
+      title: "Acute treatment days"
+      hint: "Taking acute treatment on too many days can itself cause headaches. The usual thresholds, counted per month and over more than 3 months: 10 days for triptans, 15 days for other painkillers, or 10 days when both are mixed."
+      triptan: "Triptans (t)"
+      acute: "Other acute treatments (X)"
+      days_of_limit: "%{days} of %{limit} days"
+      mixed: "Both kinds together: %{days} days (threshold %{limit})."
+      status_ok: "Below the thresholds this month."
+      status_watch: "Getting close to a threshold. Worth keeping an eye on."
+      status_over: "A threshold is reached this month. If it keeps happening, talk to your doctor. This is a reminder, not a diagnosis."
+    pain_chart_title: "Days with pain, month by month"
+    medication_chart_title: "Days with acute treatment, month by month"
+    legend_migraine: "Migraine days"
+    legend_headache: "Other headache days"
+    table_month: "Month"
+    threshold_label: "%{days} days"
+    triggers_title: "What you tick"
+    triggers_description: "How many episodes each trigger was ticked on. It shows what comes up, not what causes it."
+    trigger_count:
+      one: "1 episode of %{total}"
+      other: "%{count} episodes of %{total}"
     no_trigger_data: "No triggers ticked yet. Tick them when you log an episode and they appear here."
-    
   # Days of week
   days:
     monday: "Monday"

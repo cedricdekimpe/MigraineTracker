@@ -91,21 +91,50 @@ fr:
     
   # Statistics
   stats:
-    title: "Statistiques des migraines"
-    description: "Aperçus visuels de vos tendances de migraines et de l'utilisation des médicaments"
-    total_migraines: "Total des migraines"
-    with_medication: "Avec médicament"
-    without_medication: "Sans médicament"
-    over_time_title: "Migraines au fil du temps (12 derniers mois)"
-    day_of_week_title: "Migraines par jour de la semaine"
-    medication_usage_title: "Utilisation des médicaments"
-    no_medication_data: "Aucune donnée de médicament disponible pour le moment"
-    number_of_migraines: "Nombre de migraines"
-    triggers_title: "Déclencheurs"
-    triggers_description: "Combien de fois vous avez coché chaque déclencheur sur un épisode. Cela montre ce qui revient, pas encore ce qui cause."
-    trigger_count: "%{count} épisodes sur %{total} (%{percent} %%)"
+    title: "Statistiques"
+    description: "Ce que regarde votre neurologue : des jours, pas des épisodes."
+    empty_title: "Rien à montrer pour l'instant"
+    empty_hint: "Enregistrez un premier épisode et cette page se remplit : jours de douleur, jours de traitement, et leur évolution de mois en mois."
+    this_month: "Ce mois-ci"
+    pain_days:
+      one: "jour de douleur"
+      other: "jours de douleur"
+    of_which_migraine:
+      zero: "aucune migraine"
+      one: "dont 1 de migraine"
+      other: "dont %{count} de migraine"
+    acute_days:
+      one: "jour de traitement aigu"
+      other: "jours de traitement aigu"
+    triptan_split: "%{triptan} avec un triptan, %{acute} avec un autre traitement"
+    average_label: "moyenne des 3 derniers mois"
+    average_hint: "jours de douleur par mois"
+    no_average: "pas encore assez de mois complets"
+    aura_days:
+      one: "Plus 1 jour d'aura seule."
+      other: "Plus %{count} jours d'aura seule."
+    overuse:
+      title: "Jours de traitement aigu"
+      hint: "Prendre un traitement aigu trop de jours peut provoquer des maux de tête à son tour. Les seuils usuels, comptés par mois et sur plus de 3 mois : 10 jours pour les triptans, 15 jours pour les autres antidouleurs, ou 10 jours en les mélangeant."
+      triptan: "Triptans (t)"
+      acute: "Autres traitements aigus (X)"
+      days_of_limit: "%{days} jours sur %{limit}"
+      mixed: "Les deux ensemble : %{days} jours (seuil %{limit})."
+      status_ok: "Sous les seuils ce mois-ci."
+      status_watch: "Vous approchez d'un seuil. À surveiller."
+      status_over: "Un seuil est atteint ce mois-ci. Si cela se répète, parlez-en à votre médecin. C'est un rappel, pas un diagnostic."
+    pain_chart_title: "Jours de douleur, mois par mois"
+    medication_chart_title: "Jours de traitement aigu, mois par mois"
+    legend_migraine: "Jours de migraine"
+    legend_headache: "Autres jours de mal de tête"
+    table_month: "Mois"
+    threshold_label: "%{days} jours"
+    triggers_title: "Ce que vous cochez"
+    triggers_description: "Sur combien d'épisodes chaque déclencheur a été coché. Cela montre ce qui revient, pas ce qui cause."
+    trigger_count:
+      one: "1 épisode sur %{total}"
+      other: "%{count} épisodes sur %{total}"
     no_trigger_data: "Aucun déclencheur coché pour l'instant. Cochez-les en enregistrant un épisode et ils apparaîtront ici."
-    
   # Days of week
   days:
     monday: "Lundi"
