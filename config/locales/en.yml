@@ -435,6 +435,8 @@ en:
     track_cycle_hint: "Adds a \"during my period\" option to episodes and a row to the calendars."
 
   now:
+    short: "Headache now"
+    in_progress_short: "In progress"
     nav: "I have a headache now"
     in_progress: "Episode in progress"
     start_title: "I have a headache now"

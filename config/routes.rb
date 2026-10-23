@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Installable app (add to home screen); the manifest is rendered from app/views/pwa
+  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest, defaults: { format: :json }
+
   # Sitemap (no locale scope, but accessible from any locale)
   get 'sitemap.xml', to: 'sitemap#index', format: :xml, as: :sitemap
 

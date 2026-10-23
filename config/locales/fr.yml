@@ -528,6 +528,8 @@ fr:
     track_cycle_hint: "Ajoute une option « pendant mes règles » aux épisodes et une ligne aux calendriers."
 
   now:
+    short: "J'ai mal"
+    in_progress_short: "En cours"
     nav: "J'ai mal maintenant"
     in_progress: "Épisode en cours"
     start_title: "J'ai mal maintenant"

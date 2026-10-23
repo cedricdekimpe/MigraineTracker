@@ -1,3 +1,5 @@
-<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="256" cy="256" r="256" fill="red"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Migraine Tracker">
+  <rect x="7" y="9" width="14" height="46" rx="7" fill="#f0bb38"/>
+  <rect x="25" y="9" width="14" height="46" rx="7" fill="#de699b"/>
+  <rect x="43" y="9" width="14" height="46" rx="7" fill="#60b3d3"/>
 </svg>

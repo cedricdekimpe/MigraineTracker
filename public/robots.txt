@@ -2,13 +2,21 @@
 
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /api/
-Disallow: /account/
-Disallow: /migraines/
-Disallow: /stats/
-Disallow: /imports/
-Disallow: /exports/
+# Private pages (all of them sit behind a login). Paths carry an optional /en or /fr prefix.
+Disallow: /episodes
+Disallow: /*/episodes
+Disallow: /now
+Disallow: /*/now
+Disallow: /stats
+Disallow: /*/stats
+Disallow: /account
+Disallow: /*/account
+Disallow: /imports
+Disallow: /*/imports
+Disallow: /exports
+Disallow: /*/exports
+Disallow: /users/
+Disallow: /*/users/
 
 # Sitemap
 Sitemap: https://migraine-tracker.eu/sitemap.xml

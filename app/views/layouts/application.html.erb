@@ -58,12 +58,10 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
-    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="manifest" href="<%= pwa_manifest_path(format: :json) %>">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <%# Structured Data (JSON-LD) %>
     <script type="application/ld+json">
@@ -97,7 +95,7 @@
               <%= link_to t("navigation.migraine_log"), episodes_path, class: "rounded-xl px-3 py-2 font-medium text-ink-700 transition hover:bg-ink-100" %>
               <%= link_to t("navigation.statistics"), stats_path, class: "rounded-xl px-3 py-2 font-medium text-ink-700 transition hover:bg-ink-100" %>
               <%= link_to t("navigation.account"), account_path, class: "rounded-xl px-3 py-2 font-medium text-ink-700 transition hover:bg-ink-100" %>
-              <%= link_to (ongoing_episode ? t("now.in_progress") : t("now.nav")), now_path, class: "ml-2 rounded-xl bg-accent-600 px-4 py-2 font-semibold text-white transition hover:bg-accent-700" %>
+              <%= link_to (ongoing_episode ? t("now.in_progress") : t("now.nav")), now_path, class: "ml-2 rounded-xl bg-amber-400 px-4 py-2 font-bold text-ink-950 ring-1 ring-amber-600/30 transition hover:bg-amber-300" %>
             </div>
           <% else %>
             <%= link_to t("navigation.sign_in"), new_user_session_path, class: "rounded-xl px-3 py-2 font-medium text-ink-700 transition hover:bg-ink-100" %>
@@ -151,8 +149,13 @@
             <%= t("navigation.journal") %>
           <% end %>
 
-          <%= link_to now_path, class: "mx-3 -mt-6 flex h-16 w-16 flex-col items-center justify-center rounded-full border-4 border-paper bg-accent-600 text-white transition active:bg-accent-800", "aria-label": (ongoing_episode ? t("now.in_progress") : t("now.nav")) do %>
-            <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/></svg>
+          <%= link_to now_path, class: "mx-2 -mt-8 flex h-[4.5rem] items-center gap-2 rounded-full border-4 border-paper bg-amber-400 px-6 text-base font-bold text-ink-950 ring-1 ring-amber-600/30 transition active:bg-amber-500", "aria-label": (ongoing_episode ? t("now.in_progress") : t("now.nav")) do %>
+            <% if ongoing_episode %>
+              <span class="relative flex h-3 w-3" aria-hidden="true"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span><span class="relative inline-flex h-3 w-3 rounded-full bg-red-600"></span></span>
+            <% else %>
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/></svg>
+            <% end %>
+            <%= ongoing_episode ? t("now.in_progress_short") : t("now.short") %>
           <% end %>
 
           <%= link_to stats_path, class: "flex flex-col items-center gap-0.5 rounded-xl py-2 text-xs font-medium #{controller_name == 'stats' ? 'text-accent-700' : 'text-ink-600'}" do %>
