@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     get 'faq', to: 'pages#faq', as: :faq
     get 'privacy-policy', to: 'pages#privacy', as: :privacy
     get 'urgent', to: 'pages#urgent', as: :urgent
+    get 'numbers', to: 'pages#numbers', as: :numbers
     
     # Account settings pages
     get 'account', to: 'account#show', as: :account

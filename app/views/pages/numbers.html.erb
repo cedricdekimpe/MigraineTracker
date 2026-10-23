@@ -1,0 +1,17 @@
+<% content_for :title, t("numbers.title") %>
+
+<article class="mx-auto max-w-3xl space-y-8" data-numbers>
+  <header>
+    <h1 class="text-3xl font-bold text-ink-900"><%= t("numbers.title") %></h1>
+  </header>
+
+  <% t("numbers.sections").each do |key, section| %>
+    <section id="<%= key %>" class="scroll-mt-20">
+      <h2 class="text-xl font-semibold text-ink-900"><%= section[:title] %></h2>
+      <p class="mt-2 text-sm leading-6 text-ink-700"><%= section[:body] %></p>
+      <p class="mt-1 text-xs text-ink-500"><%= section[:source] %></p>
+    </section>
+  <% end %>
+
+  <p class="border-t border-ink-200 pt-4 text-xs text-ink-500"><%= t("stats.disclaimer") %></p>
+</article>

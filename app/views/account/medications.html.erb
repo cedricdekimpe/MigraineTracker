@@ -14,7 +14,6 @@
     <div class="rounded-2xl border border-ink-200 bg-paper p-8">
       <header class="mb-6">
         <h1 class="text-2xl font-semibold text-ink-900"><%= t('account.medications_title') %></h1>
-        <p class="mt-2 text-sm text-ink-500"><%= t('medications_page.description') %></p>
       </header>
 
       <div class="space-y-6">
@@ -49,7 +48,6 @@
         <% else %>
           <div class="rounded-lg border border-dashed border-ink-300 px-4 py-8 text-center">
             <p class="text-sm text-ink-500"><%= t('account.no_medications') %></p>
-            <p class="mt-1 text-xs text-ink-400"><%= t('account.no_medications_hint') %></p>
           </div>
         <% end %>
 
@@ -79,7 +77,6 @@
         <% if @archived_medications.any? %>
           <div class="border-t border-ink-200 pt-6">
             <h3 class="mb-1 text-sm font-medium text-ink-900"><%= t('medications_page.archived') %></h3>
-            <p class="mb-3 text-xs text-ink-500"><%= t('medications_page.archived_hint') %></p>
             <ul class="space-y-2">
               <% @archived_medications.each do |medication| %>
                 <li class="flex items-center justify-between rounded-xl border border-ink-200 px-4 py-2">

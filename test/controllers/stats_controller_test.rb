@@ -81,7 +81,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-overuse=ok]"
     assert_select "[data-meter=triptan] [role=meter][aria-valuenow='3'][aria-valuemax='10']"
     assert_select "[data-meter=triptan] .bg-accent-500"
-    assert_match(/Below the advised limits this month/, response.body)
+    assert_match(/Below the advised limits\./, response.body)
   end
 
   test "treatment meters warn near and at the thresholds" do
@@ -95,7 +95,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     visit_stats
     assert_select "[data-overuse=over]"
     assert_select "[data-meter=triptan] .bg-red-500"
-    assert_match(/It is a reminder, not a diagnosis/, response.body)
+    assert_match(/Threshold reached this month/, response.body)
   end
 
   test "a meter marks the advised limit and a heavy week is mentioned" do
@@ -158,7 +158,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     log(Date.new(2026, 10, 5))
     visit_stats
     assert_select "[data-daily-factors] a[href=?]", check_path
-    assert_select "[data-daily-factors]", text: /at least 30 days/
+    assert_select "[data-daily-factors]", text: /0\/30 days/
     assert_select "[data-triggers]", count: 0
   end
 
@@ -219,7 +219,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
   test "the chronic pattern is flagged" do
     (1..15).each { |i| log(Date.new(2026, 10, i), pain: i <= 8 ? "migraine" : "headache") }
     visit_stats
-    assert_select "[data-chronic]", text: /15 or more headache days/
+    assert_select "[data-chronic]", text: /Chronic migraine pattern/
   end
 
   test "the menstrual link only appears with cycle tracking" do

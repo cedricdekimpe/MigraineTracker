@@ -11,4 +11,8 @@ class PagesController < ApplicationController
 
   def urgent
   end
+
+  # "Understand my figures": signed-in only (the default), it explains the statistics.
+  def numbers
+  end
 end

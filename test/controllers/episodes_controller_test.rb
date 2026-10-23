@@ -118,8 +118,8 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     get episodes_path(month: episodes(:migraine_with_aura).occurred_on.strftime("%Y-%m"))
 
     assert_select "[data-month-summary]", text: /days with pain/
-    assert_select "section[aria-label=Legend] dt", text: "X"
-    assert_select "section[aria-label=Legend] dt", text: "t"
+    assert_select "details[data-legend] dt", text: "X"
+    assert_select "details[data-legend] dt", text: "t"
   end
 
   test "the journal is in French under /fr and uses the paper's wording" do
@@ -133,7 +133,7 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
 
   test "the journal links to the PDF report for the displayed year" do
     get episodes_path(month: "2025-06")
-    assert_select "a[href$='/episodes/yearly.pdf?year=2025']", text: /Report for my doctor/
+    assert_select "a[href$='/episodes/yearly.pdf?year=2025']", text: /Doctor report/
   end
 
   test "an unreadable month falls back to the current one" do

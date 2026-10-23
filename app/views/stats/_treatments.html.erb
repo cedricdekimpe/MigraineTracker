@@ -14,8 +14,7 @@
 
 <% if acute_rows.any? %>
   <section data-acute-efficacy>
-    <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.treatments.acute_title") %></h2>
-    <p class="mt-2 max-w-2xl text-sm text-ink-600"><%= t("stats.treatments.acute_hint") %></p>
+    <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.treatments.acute_title") %> <%= render "shared/info", text: t("stats.treatments.acute_hint"), more: numbers_path(anchor: "acute") %></h2>
     <div class="mt-4 overflow-x-auto rounded-2xl border border-ink-200 bg-paper">
       <table class="w-full text-left text-sm">
         <thead class="text-xs uppercase tracking-wide text-ink-500">
@@ -50,8 +49,7 @@
 
 <% if preventive_rows.any? %>
   <section data-preventives>
-    <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.treatments.preventive_title") %></h2>
-    <p class="mt-2 max-w-2xl text-sm text-ink-600"><%= t("stats.treatments.preventive_hint") %></p>
+    <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.treatments.preventive_title") %> <%= render "shared/info", text: t("stats.treatments.preventive_hint"), more: numbers_path(anchor: "preventive") %></h2>
     <ul class="mt-4 space-y-3">
       <% preventive_rows.each do |row| %>
         <% period = row.period %>
@@ -82,11 +80,10 @@
 
 <% if link %>
   <section data-menstrual>
-    <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.treatments.menstrual_title") %></h2>
+    <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.treatments.menstrual_title") %> <%= render "shared/info", text: t("stats.treatments.menstrual_hint"), more: numbers_path(anchor: "menstrual") %></h2>
     <p class="mt-2 text-sm text-ink-700">
       <%= t("stats.treatments.menstrual_summary", with_attack: link.with_attack, cycles: link.cycles) %>
       <%= t("stats.treatments.menstrual_pure") if link.pure? %>
     </p>
-    <p class="mt-1 text-xs text-ink-500"><%= link.cycles < 3 ? t("stats.treatments.menstrual_more_cycles") : t("stats.treatments.menstrual_hint") %></p>
   </section>
 <% end %>

@@ -3,8 +3,7 @@
 <% periods = medication.treatment_periods.chronological.to_a %>
 
 <div class="mt-4 border-t border-ink-100 pt-4" data-treatment-periods>
-  <h3 class="text-sm font-semibold text-ink-900"><%= t("treatment_periods.title") %></h3>
-  <p class="mt-1 text-xs text-ink-500"><%= t("treatment_periods.hint") %></p>
+  <h3 class="text-sm font-semibold text-ink-900"><%= t("treatment_periods.title") %> <%= render "shared/info", text: t("treatment_periods.hint") %></h3>
 
   <% if periods.empty? %>
     <p class="mt-3 text-sm text-ink-600"><%= t("treatment_periods.empty") %></p>

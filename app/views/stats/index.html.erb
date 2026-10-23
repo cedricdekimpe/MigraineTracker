@@ -2,15 +2,13 @@
 
 <div class="space-y-14">
   <header>
-    <h1 class="text-3xl font-semibold text-ink-900 sm:text-4xl"><%= t("stats.title") %></h1>
-    <p class="mt-2 max-w-xl text-ink-600"><%= t("stats.description") %></p>
+    <h1 class="text-3xl font-semibold text-ink-900 sm:text-4xl"><%= t("stats.title") %> <%= render "shared/info", text: t("stats.description"), more: numbers_path %></h1>
   </header>
 
   <% if @has_data %>
     <p>
       <%= link_to t("sheet.links.report"), yearly_episodes_path(year: Date.current.year, format: :pdf), data: { turbo: false },
             class: "inline-flex rounded-xl border border-accent-200 bg-accent-50 px-4 py-2 text-sm font-semibold text-accent-800 hover:bg-accent-100" %>
-      <span class="ml-2 text-sm text-ink-600"><%= t("sheet.report_hint") %></span>
     </p>
   <% end %>
 
@@ -51,8 +49,7 @@
 
     <%# --- Acute treatment days against the overuse thresholds --- %>
     <section data-overuse="<%= @month.overuse_status %>">
-      <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.overuse.title") %></h2>
-      <p class="mt-2 max-w-2xl text-sm text-ink-600"><%= t("stats.overuse.hint") %></p>
+      <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.overuse.title") %> <%= render "shared/info", text: t("stats.overuse.hint"), more: numbers_path(anchor: "limits") %></h2>
 
       <div class="mt-6 space-y-6">
         <% [[:triptan, @month.triptan_days, MonthlyOverview::TRIPTAN_LIMIT, MonthlyOverview::TRIPTAN_ADVISED], [:combination, @month.combination_days, MonthlyOverview::COMBINATION_LIMIT, MonthlyOverview::COMBINATION_ADVISED], [:acute, @month.acute_days, MonthlyOverview::ACUTE_LIMIT, MonthlyOverview::ACUTE_ADVISED]].each do |kind, days, limit, advised| %>
@@ -115,5 +112,7 @@
 
     <%# --- What gets ticked: a list of what comes up, not a verdict --- %>
     <%= render "stats/daily_factors", factors: @factors %>
+
+    <p class="border-t border-ink-200 pt-4 text-xs text-ink-500"><%= t("stats.disclaimer") %></p>
   <% end %>
 </div>

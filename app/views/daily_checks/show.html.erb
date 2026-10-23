@@ -3,8 +3,7 @@
 
 <section class="mx-auto w-full max-w-xl py-2 sm:py-6">
   <p class="text-sm text-ink-500"><%= l(@date, format: :long) %></p>
-  <h1 class="text-3xl font-semibold tracking-tight"><%= t("daily_check.title") %></h1>
-  <p class="mt-1 text-sm text-ink-600"><%= t("daily_check.hint") %></p>
+  <h1 class="text-3xl font-semibold tracking-tight"><%= t("daily_check.title") %> <%= render "shared/info", text: t("daily_check.premonitory") %></h1>
 
   <%= form_with model: @check, url: daily_check_path(date: @date.iso8601), method: :patch, scope: :daily_check, data: { turbo: false }, class: "mt-6 space-y-7" do |form| %>
     <% { sleep: DailyCheck::SLEEPS, stress: DailyCheck::STRESSES, caffeine: DailyCheck::CAFFEINES }.each do |field, values| %>
@@ -38,5 +37,4 @@
       <%= link_to t("daily_check.today"), daily_check_path(date: Date.current.iso8601), class: "underline" %>
     <% end %>
   </p>
-  <p class="mt-4 text-xs leading-5 text-ink-500"><%= t("daily_check.premonitory") %></p>
 </section>

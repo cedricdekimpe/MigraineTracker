@@ -1,0 +1,11 @@
+<%# A small "i" that unfolds an explanation in place. Everything that is not needed at a glance goes here.
+    locals: text (String), more (optional path to "Understand my figures", with an anchor) %>
+<details class="group relative inline-block align-middle" data-info>
+  <summary class="inline-flex h-5 w-5 cursor-pointer list-none items-center justify-center rounded-full border border-ink-300 text-xs font-semibold leading-none text-ink-500 hover:border-ink-500 hover:text-ink-800 [&::-webkit-details-marker]:hidden" aria-label="<%= t("info.label") %>" title="<%= t("info.label") %>">i</summary>
+  <div class="mt-2 max-w-md rounded-xl border border-ink-200 bg-paper p-3 text-sm font-normal normal-case leading-5 tracking-normal text-ink-700 shadow-sm sm:absolute sm:left-0 sm:z-10 sm:w-80">
+    <%= text %>
+    <% if local_assigns[:more] %>
+      <%= link_to t("info.more"), more, class: "mt-2 block text-xs font-medium text-accent-700 underline" %>
+    <% end %>
+  </div>
+</details>

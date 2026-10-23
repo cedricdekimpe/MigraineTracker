@@ -4,7 +4,6 @@
 <section class="space-y-6">
   <header class="flex flex-wrap items-end justify-between gap-4">
     <div>
-      <p class="text-sm text-ink-500"><%= t("sheet.eyebrow") %></p>
       <h1 class="text-3xl font-semibold text-ink-900 sm:text-4xl">
         <span class="md:hidden"><%= l(@month, format: :month_year) %></span>
         <span class="hidden md:inline"><%= sheet_title(@quarter) %></span>
@@ -30,7 +29,6 @@
         class: "flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-sm #{todays_check ? 'border-ink-200 bg-paper text-ink-600' : 'border-accent-300 bg-accent-50 text-accent-900'} hover:border-accent-400" do %>
     <span>
       <span class="font-semibold"><%= todays_check ? t("daily_check.card.done") : t("daily_check.card.todo") %></span>
-      <% unless todays_check %><span class="block text-xs text-accent-800"><%= t("daily_check.card.todo_hint") %></span><% end %>
     </span>
     <span class="font-medium underline"><%= todays_check ? t("daily_check.card.edit") : "→" %></span>
   <% end %>

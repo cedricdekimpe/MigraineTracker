@@ -2,10 +2,13 @@ require "test_helper"
 
 class WebRateLimitingTest < ActionDispatch::IntegrationTest
   setup do
+    # Counters live in one-minute windows: stay inside one so a test cannot straddle two of them
+    travel_to Time.zone.local(2026, 1, 1, 12, 0, 1)
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
   end
 
   teardown do
+    travel_back
     Rack::Attack.cache.store = Rails.cache
   end
 

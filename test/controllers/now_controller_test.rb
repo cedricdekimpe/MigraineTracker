@@ -364,7 +364,7 @@ class NowControllerTest < ActionDispatch::IntegrationTest
 
   test "signed-in pages carry the phone shortcut and it turns into 'in progress'" do
     get episodes_path
-    assert_select "a[href='#{now_path}']", text: /I have a headache now/
+    assert_select "a[href='#{now_path}']", text: /I have a headache/
 
     post now_path, params: { pain_kind: "migraine", intensity: "6" }
     sign_in @user

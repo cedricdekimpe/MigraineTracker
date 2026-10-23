@@ -56,9 +56,6 @@
       <% end %>
     <% end %>
     <% if @medications.empty? %>
-      <p class="mb-3 text-sm text-ink-500"><%= t("now.no_medication") %></p>
-    <% end %>
-    <% if @medications.empty? %>
       <%= form_with url: now_medication_path, method: :post, data: { turbo: false }, class: "mb-3 flex flex-wrap gap-3" do %>
         <% @suggested_medications.each do |name| %>
           <%= button_tag name, type: "submit", name: "name", value: name,

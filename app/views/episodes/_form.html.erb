@@ -32,7 +32,6 @@
         <%= form.check_box :aura, class: "peer sr-only" %>
         <span class="<%= chip %>"><%= t("episodes.aura") %></span>
       </label>
-      <p class="mt-1 text-xs text-ink-500"><%= t("episodes.aura_hint") %></p>
     </div>
   </fieldset>
 
@@ -60,9 +59,6 @@
           <span class="<%= chip %>"><%= medication.name %></span>
         </label>
       <% end %>
-      <% if medications.empty? %>
-        <p class="text-sm text-ink-500"><%= t("episodes.no_medication_yet") %></p>
-      <% end %>
     </div>
     <% if suggested_medications.any? %>
       <div class="space-y-2">
@@ -82,7 +78,6 @@
         <%= text_field_tag "episode[new_medication_names]", params.dig(:episode, :new_medication_names), placeholder: t("episodes.add_medication"), "aria-label": t("episodes.add_medication"), class: "#{input_class} sm:flex-1" %>
         <%= select_tag "episode[new_medication_kind]", options_for_select(%w[acute combination triptan gepant other].map { |kind| [t("medications_page.kinds.#{kind}"), kind] }, params.dig(:episode, :new_medication_kind)), "aria-label": t("medications_page.kind"), class: "#{input_class} sm:w-72" %>
       </div>
-      <p class="mt-1 text-xs text-ink-500"><%= t("episodes.add_medication_hint") %></p>
     </div>
   </fieldset>
 
@@ -101,7 +96,6 @@
     </div>
     <div>
       <%= text_field_tag "episode[new_trigger_names]", params.dig(:episode, :new_trigger_names), placeholder: t("episodes.add_trigger"), "aria-label": t("episodes.add_trigger"), class: input_class %>
-      <p class="mt-1 text-xs text-ink-500"><%= t("episodes.add_trigger_hint") %></p>
     </div>
   </fieldset>
 

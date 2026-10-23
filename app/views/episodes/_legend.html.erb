@@ -1,7 +1,7 @@
 <%# The legend of the paper calendar %>
-<section class="rounded-2xl border border-ink-200 bg-paper p-4 text-sm text-ink-700" aria-label="<%= t("sheet.legend.title") %>">
-  <h2 class="mb-2 text-base font-semibold text-ink-900"><%= t("sheet.legend.title") %></h2>
-  <dl class="grid gap-x-8 gap-y-1 sm:grid-cols-2">
+<details class="rounded-2xl border border-ink-200 bg-paper p-4 text-sm text-ink-700" data-legend>
+  <summary class="cursor-pointer text-base font-semibold text-ink-900"><%= t("sheet.legend.title") %></summary>
+  <dl class="mt-2 grid gap-x-8 gap-y-1 sm:grid-cols-2">
     <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">M</dt><dd><%= t("sheet.legend.migraine") %></dd></div>
     <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">T</dt><dd><%= t("sheet.legend.headache") %></dd></div>
     <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">A</dt><dd><%= t("sheet.legend.aura") %></dd></div>
@@ -12,4 +12,4 @@
     <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">X</dt><dd><%= t("sheet.legend.acute") %></dd></div>
     <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">t</dt><dd><%= t("sheet.legend.triptan") %></dd></div>
   </dl>
-</section>
+</details>

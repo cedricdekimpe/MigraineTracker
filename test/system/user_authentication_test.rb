@@ -11,7 +11,7 @@ class UserAuthenticationTest < ApplicationSystemTestCase
     click_button "Create account"
 
     assert_text "Welcome! You have signed up successfully."
-    assert_selector "a[href$='/now']", text: "I have a headache now", match: :first
+    assert_selector "a[href$='/now']", text: "I have a headache", match: :first
 
     visit account_profile_path
     click_button "Sign out"
@@ -23,6 +23,6 @@ class UserAuthenticationTest < ApplicationSystemTestCase
     click_button "Sign in"
 
     assert_text "Signed in successfully."
-    assert_selector "a[href$='/now']", text: "I have a headache now", match: :first
+    assert_selector "a[href$='/now']", text: "I have a headache", match: :first
   end
 end
