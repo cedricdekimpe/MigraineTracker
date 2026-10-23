@@ -8,6 +8,10 @@
     · <%= duration_label([((Time.current - @episode.started_at) / 60).round, 1].max) %>
   </p>
 
+  <% if @episode.long_attack? %>
+    <div class="mt-4"><%= render "episodes/long_attack_note" %></div>
+  <% end %>
+
   <% if @episode.pain? %>
     <div class="mt-6">
       <h2 class="mb-3 text-lg font-medium"><%= t("now.intensity_now") %></h2>

@@ -44,6 +44,20 @@ class EpisodeTest < ActiveSupport::TestCase
     assert_not build(pain_kind: "strong").valid?
   end
 
+  test "an attack can last up to a week and is flagged beyond 72 hours" do
+    assert build(duration_minutes: 7 * 24 * 60).valid?
+    assert_not build(duration_minutes: 7 * 24 * 60 + 1).valid?
+    assert_not build(duration_minutes: 72 * 60).long_attack?
+    assert build(duration_minutes: 72 * 60 + 1).long_attack?
+  end
+
+  test "a running attack is long once it passes 72 hours" do
+    now = Time.zone.local(2026, 10, 22, 12, 0)
+    running = Episode.new(occurred_on: Date.new(2026, 10, 20), started_time: "08:00", ongoing: true)
+    assert_not running.long_attack?(now: now)
+    assert running.long_attack?(now: now + 1.day)
+  end
+
   test "duration is optional but bounded" do
     assert build(duration_minutes: nil).valid?
     assert build(duration_minutes: 90).valid?
@@ -110,7 +124,7 @@ class EpisodeTest < ActiveSupport::TestCase
     user = users(:one)
     open_one = user.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 4, ongoing: true)
     user.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 4)
-    user.episodes.create!(occurred_on: Date.current - 4, pain_kind: "migraine", intensity: 4, ongoing: true)
+    user.episodes.create!(occurred_on: Date.current - 8, pain_kind: "migraine", intensity: 4, ongoing: true)
 
     assert_equal [open_one], user.episodes.ongoing.to_a
   end

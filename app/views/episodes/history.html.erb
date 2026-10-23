@@ -39,6 +39,7 @@
               <%= episode_kind_label(episode) %>
               <% if current_user.track_cycle? && @period_dates.include?(episode.occurred_on) %><span class="ml-2 text-rose-600">· <%= t("episodes.on_period") %></span><% end %>
             </p>
+            <%= render "episodes/long_attack_note" if episode.long_attack? %>
             <% if episode.medication_intakes.any? %>
               <p class="text-sm text-ink-600">
                 <%= episode.medication_intakes.map { |intake| [intake.medication.name, intake.dose].compact_blank.join(" ") }.to_sentence %>

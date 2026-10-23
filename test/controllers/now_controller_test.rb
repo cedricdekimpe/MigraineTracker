@@ -196,6 +196,18 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     assert_equal medications(:ibuprofen), ongoing.medication_intakes.last.medication
   end
 
+  test "an attack running for more than 72 hours shows the doctor note" do
+    @user.episodes.create!(occurred_on: Date.current - 4, started_time: "08:00", pain_kind: "migraine", intensity: 6, ongoing: true)
+    get now_path
+    assert_select "[data-long-attack]"
+  end
+
+  test "a fresh attack shows no note" do
+    @user.episodes.create!(occurred_on: Date.current, started_time: "00:01", pain_kind: "migraine", intensity: 6, ongoing: true)
+    get now_path
+    assert_select "[data-long-attack]", count: 0
+  end
+
   test "the same medication can be taken twice" do
     post now_path, params: { pain_kind: "migraine", intensity: "6" }
     2.times do
@@ -262,7 +274,7 @@ class NowControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "an episode forgotten for days is not shown as ongoing" do
-    @user.episodes.create!(occurred_on: Date.current - 5, pain_kind: "migraine", intensity: 5, started_time: "10:00", ongoing: true)
+    @user.episodes.create!(occurred_on: Date.current - 9, pain_kind: "migraine", intensity: 5, started_time: "10:00", ongoing: true)
     get now_path
 
     assert_select "button[name=aura_only]"
