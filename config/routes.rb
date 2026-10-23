@@ -38,6 +38,8 @@ Rails.application.routes.draw do
     patch "now/intensity", to: "now#intensity", as: :now_intensity
     post "now/medication", to: "now#medication", as: :now_medication
     patch "now/finish", to: "now#finish", as: :now_finish
+    get "now/effects/:episode_id", to: "now#effects", as: :now_effects
+    patch "now/intakes/:id/effect", to: "now#effect", as: :now_intake_effect
 
     # Bleeding days of the cycle row, one tap each
     resources :period_days, only: %i[create destroy], param: :date, constraints: { date: /\d{4}-\d{2}-\d{2}/ }

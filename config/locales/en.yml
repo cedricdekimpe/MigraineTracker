@@ -496,6 +496,14 @@ en:
     add_details: "Add details"
     cancel: "Started by mistake? Cancel"
     confirm_cancel: "Delete this episode?"
+    effects:
+      title: "How did they work?"
+      hint: "One answer per medication taken. It is what tells you, after a few attacks, which one suits you."
+      none: "No effect"
+      partial: "Partly relieved"
+      good: "Relieved, little or no pain left"
+      done: "Done"
+      later: "You can also fill it in later by editing the episode."
     kind_question: "What kind of medication is \"%{name}\"? It decides how it is counted."
     no_medication: "No medication saved yet. Tap a common one or type a name."
     guest:

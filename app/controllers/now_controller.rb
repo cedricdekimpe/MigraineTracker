@@ -66,7 +66,27 @@ class NowController < ApplicationController
   def finish
     minutes = ((Time.current - @episode.started_at) / 60).round.clamp(1, Episode::MAX_DURATION_MINUTES)
     @episode.update!(ongoing: false, duration_minutes: minutes)
-    redirect_to episodes_path(month: @episode.occurred_on.strftime("%Y-%m")), notice: t("now.flash.finished", duration: helpers.duration_label(minutes))
+    notice = t("now.flash.finished", duration: helpers.duration_label(minutes))
+
+    # Treatment taken: ask how it worked while it is fresh, the one figure that tells whether it suits
+    if @episode.medication_intakes.any?
+      redirect_to now_effects_path(episode_id: @episode.id), notice: notice
+    else
+      redirect_to episodes_path(month: @episode.occurred_on.strftime("%Y-%m")), notice: notice
+    end
+  end
+
+  # "How did it work?": one tap per medication taken during the episode that was just closed.
+  def effects
+    @episode = current_user.episodes.includes(medication_intakes: :medication).find(params[:episode_id])
+    @intakes = @episode.medication_intakes.reject { |intake| intake.medication.kind.in?(%w[preventive other]) }
+    redirect_to episodes_path(month: @episode.occurred_on.strftime("%Y-%m")) if @intakes.empty?
+  end
+
+  def effect
+    intake = MedicationIntake.joins(:episode).where(episodes: { user_id: current_user.id }).find(params[:id])
+    intake.update(effect: params[:effect].presence_in(MedicationIntake::EFFECTS))
+    redirect_to now_effects_path(episode_id: intake.episode_id)
   end
 
   def cancel

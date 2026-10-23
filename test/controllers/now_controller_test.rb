@@ -254,6 +254,54 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, @user.episodes.order(:created_at).last.duration_minutes
   end
 
+  test "finishing an episode with treatment asks how it worked" do
+    episode = @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", pain_kind: "migraine", intensity: 6, ongoing: true)
+    intake = episode.medication_intakes.create!(medication: medications(:ibuprofen), dose: "400 mg", taken_time: "10:05")
+
+    patch now_finish_path
+    assert_redirected_to now_effects_path(episode_id: episode.id)
+    follow_redirect!
+    assert_select "li[data-intake='#{intake.id}'] button[name=effect]", 3
+    assert_match(/400 mg/, response.body)
+  end
+
+  test "an episode without treatment goes straight back to the journal" do
+    episode = @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", pain_kind: "migraine", intensity: 6, ongoing: true)
+    patch now_finish_path
+    assert_redirected_to episodes_path(month: episode.occurred_on.strftime("%Y-%m"))
+  end
+
+  test "one tap records the effect of a medication, and can be changed" do
+    episode = @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", pain_kind: "migraine", intensity: 6)
+    intake = episode.medication_intakes.create!(medication: medications(:ibuprofen))
+
+    patch now_intake_effect_path(id: intake.id), params: { effect: "partial" }
+    assert_redirected_to now_effects_path(episode_id: episode.id)
+    assert_equal "partial", intake.reload.effect
+
+    patch now_intake_effect_path(id: intake.id), params: { effect: "good" }
+    assert_equal "good", intake.reload.effect
+    patch now_intake_effect_path(id: intake.id), params: { effect: "nonsense" }
+    assert_nil intake.reload.effect
+  end
+
+  test "the effect of another user's intake cannot be touched" do
+    other = users(:two)
+    medication = other.medications.create!(name: "Mine", kind: "acute")
+    intake = other.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 5).medication_intakes.create!(medication: medication)
+
+    patch now_intake_effect_path(id: intake.id), params: { effect: "good" }
+    assert_response :not_found
+    assert_nil intake.reload.effect
+  end
+
+  test "the effects screen skips medications that are not treatments of the attack" do
+    episode = @user.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 6)
+    episode.medication_intakes.create!(medication: users(:one).medications.create!(name: "Metoclopramide", kind: "other"))
+    get now_effects_path(episode_id: episode.id)
+    assert_redirected_to episodes_path(month: episode.occurred_on.strftime("%Y-%m"))
+  end
+
   test "cancel deletes an episode started by mistake" do
     post now_path, params: { pain_kind: "migraine", intensity: "6" }
     sign_in @user

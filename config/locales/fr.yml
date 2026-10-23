@@ -595,6 +595,14 @@ fr:
     add_details: "Ajouter des détails"
     cancel: "Démarré par erreur ? Annuler"
     confirm_cancel: "Supprimer cet épisode ?"
+    effects:
+      title: "Comment ont-ils agi ?"
+      hint: "Une réponse par médicament pris. C'est ce qui permet de savoir, au bout de quelques crises, lequel vous convient."
+      none: "Aucun effet"
+      partial: "Soulagé en partie"
+      good: "Soulagé, plus ou presque plus de douleur"
+      done: "Terminé"
+      later: "Vous pouvez aussi le renseigner plus tard, en modifiant l'épisode."
     kind_question: "Quel type de médicament est « %{name} » ? Cela décide comment il est compté."
     no_medication: "Aucun médicament enregistré. Touchez-en un courant ou tapez un nom."
     guest:
