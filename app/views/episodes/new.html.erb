@@ -3,7 +3,6 @@
 <section class="mx-auto w-full max-w-2xl rounded-2xl border border-line bg-surface p-8">
   <header class="mb-6">
     <h1 class="text-2xl font-semibold text-fg"><%= t("episodes.log_title") %></h1>
-    <p class="mt-2 text-sm text-fg-muted"><%= t("episodes.log_description") %></p>
   </header>
 
   <%= render "form", episode: @episode, medications: @medications, triggers: @triggers, suggested_medications: @suggested_medications,

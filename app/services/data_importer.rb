@@ -28,7 +28,11 @@ class DataImporter
     result = Result.new(medications: 0, triggers: 0, episodes: 0, period_days: 0, treatment_periods: 0, daily_checks: 0)
     ActiveRecord::Base.transaction do
       @medications = @user.medications.index_by { |medication| key(medication.name) }
-      @triggers = @user.triggers.index_by { |trigger| key(trigger.name) }
+      # A default trigger answers to its stored name and to its name in every language
+      @triggers = @user.triggers.each_with_object({}) do |trigger, index|
+        index[key(trigger.name)] = trigger
+        I18n.available_locales.each { |locale| index[key(I18n.t("triggers.defaults.#{trigger.key}", locale: locale))] ||= trigger } if trigger.key
+      end
       @legacy_period_dates = []
       @seen = @user.episodes.map { |episode| signature(episode.occurred_on, episode.started_time&.strftime("%H:%M"), episode.pain_kind, episode.aura, episode.intensity, episode.duration_minutes) }.to_set
 

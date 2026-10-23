@@ -111,9 +111,10 @@ class EpisodesController < ApplicationController
     # Archived medications stay selectable on episodes that already use them, so saving never drops history.
     in_use = @episode&.persisted? ? @episode.medications.archived.to_a : []
     @medications = current_user.medications.active.most_used_first.to_a + in_use
-    @triggers = current_user.triggers.alphabetical
+    @triggers = current_user.triggers.sort_by { |trigger| trigger.display_name.downcase }
     known = (@medications + current_user.medications.archived.to_a).map { |medication| medication.name.downcase }
-    suggestions = Medication.suggestions.values_at("acute", "triptan").flatten
+    # The few most common ones only (three painkillers, three triptans); the rest is typed
+    suggestions = Medication.suggestions["acute"].first(3) + Medication.suggestions["triptan"].first(3)
     @suggested_medications = suggestions.reject { |name| known.include?(name.downcase) }
   end
 
@@ -206,7 +207,10 @@ class EpisodesController < ApplicationController
   def selected_triggers(entry)
     chosen = current_user.triggers.where(id: Array(entry[:trigger_ids])).to_a
     created = split_names(entry[:new_trigger_names]).filter_map do |name|
-      current_user.triggers.find_by("lower(name) = ?", name.downcase) || current_user.triggers.create(name: name)
+      default_key = Trigger.default_key_for(name)
+      current_user.triggers.find_by("lower(name) = ?", name.downcase) ||
+        (default_key && current_user.triggers.find_by(key: default_key)) ||
+        current_user.triggers.create(name: name, key: default_key)
     end
     (chosen + created.select(&:persisted?)).uniq
   end

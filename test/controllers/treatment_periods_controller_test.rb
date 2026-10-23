@@ -17,7 +17,7 @@ class TreatmentPeriodsControllerTest < ActionDispatch::IntegrationTest
     assert_difference -> { @medication.treatment_periods.count }, 1 do
       post medication_treatment_periods_path(medication_id: @medication.id), params: params_for(dose: "16 mg")
     end
-    assert_redirected_to account_medications_path(anchor: "medication-#{@medication.id}")
+    assert_redirected_to account_medications_path(open: @medication.id, anchor: "medication-#{@medication.id}")
     assert_equal "16 mg", @medication.treatment_periods.first.dose
     assert_equal @user, @medication.treatment_periods.first.user
   end

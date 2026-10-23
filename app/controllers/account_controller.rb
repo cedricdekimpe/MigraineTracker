@@ -20,7 +20,7 @@ class AccountController < ApplicationController
   end
 
   def triggers
-    @triggers = current_user.triggers.alphabetical
+    @triggers = current_user.triggers.sort_by { |trigger| trigger.display_name.downcase }
   end
 
   def update_preferences

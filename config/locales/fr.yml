@@ -586,6 +586,8 @@ fr:
       gepant: "Gépant ou ditan (X)"
       preventive: "Traitement de fond"
       other: "Autre, non compté (ex. anti-nausée)"
+    edit: "Modifier"
+    choose: "Choisir parmi les médicaments courants"
     default_dose: "Dose habituelle"
     remove: "Retirer"
     confirm_remove: "Retirer %{name} ? S'il a été utilisé dans des épisodes passés, il est archivé et non effacé."
@@ -648,6 +650,7 @@ fr:
     empty: "Aucune période."
     started_on: "Début"
     ended_on: "Fin"
+    since: "en cours depuis le %{date}"
     ongoing: "en cours"
     dose: "Dose"
     stop_reason: "Raison de l'arrêt"
@@ -673,6 +676,10 @@ fr:
     saved: "Bilan enregistré."
     yesterday: "Remplir celui d'hier"
     today: "Remplir celui d'aujourd'hui"
+    period:
+      question: "Règles ce jour-là ?"
+      "yes": "Oui"
+      "no": "Non"
     skipped_meal: "J'ai sauté un repas"
     sleep:
       question: "Comment était la nuit ?"

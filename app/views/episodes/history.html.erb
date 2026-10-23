@@ -46,8 +46,8 @@
             <% end %>
             <% if episode.triggers.any? %>
               <p class="flex flex-wrap gap-1.5 pt-1">
-                <% episode.triggers.sort_by(&:name).each do |trigger| %>
-                  <span class="rounded-full bg-surface-soft px-2.5 py-0.5 text-xs text-fg-secondary"><%= trigger.name %></span>
+                <% episode.triggers.sort_by(&:display_name).each do |trigger| %>
+                  <span class="rounded-full bg-surface-soft px-2.5 py-0.5 text-xs text-fg-secondary"><%= trigger.display_name %></span>
                 <% end %>
               </p>
             <% end %>

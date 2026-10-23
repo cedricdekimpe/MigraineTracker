@@ -2,14 +2,15 @@
 
 <div class="mx-auto flex w-full max-w-5xl flex-col gap-6 lg:flex-row">
   <aside class="lg:w-64 lg:shrink-0">
-    <div class="rounded-2xl border border-line bg-surface p-4">
-      <h2 class="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-fg-muted"><%= t('account.settings') %></h2>
+    <%# Phones: a row of tabs above the page; wide screens: the sidebar card %>
+    <div class="lg:rounded-2xl lg:border lg:border-line lg:bg-surface lg:p-4">
+      <h2 class="mb-4 hidden px-3 text-xs font-semibold uppercase tracking-wider text-fg-muted lg:block"><%= t('account.settings') %></h2>
       <%= render 'account/navigation' %>
     </div>
   </aside>
 
   <main class="flex-1">
-    <div class="rounded-2xl border border-line bg-surface p-8">
+    <div class="rounded-2xl border border-line bg-surface p-5 sm:p-8">
       <header class="mb-6">
         <h1 class="text-2xl font-semibold text-fg"><%= t('triggers_page.title') %></h1>
       </header>
@@ -17,9 +18,9 @@
       <ul class="space-y-3">
         <% @triggers.each do |trigger| %>
           <li class="flex items-center justify-between rounded-xl border border-line px-4 py-3">
-            <span class="text-sm font-medium text-fg"><%= trigger.name %></span>
+            <span class="text-sm font-medium text-fg"><%= trigger.display_name %></span>
             <%= button_to t('common.delete'), trigger_path(trigger), method: :delete,
-                  data: { turbo_confirm: t('triggers_page.confirm_delete', name: trigger.name) },
+                  data: { turbo_confirm: t('triggers_page.confirm_delete', name: trigger.display_name) },
                   class: "rounded-lg border border-line-control bg-surface px-3 py-1.5 text-sm font-medium text-fg-secondary transition hover:border-rose-300 hover:text-rose-600" %>
           </li>
         <% end %>

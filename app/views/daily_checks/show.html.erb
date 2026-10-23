@@ -27,6 +27,21 @@
       </fieldset>
     <% end %>
 
+    <% if current_user.track_cycle? %>
+      <% on_period = current_user.period_days.exists?(date: @date) %>
+      <fieldset data-question="period">
+        <legend class="mb-2 text-lg font-medium"><%= t("daily_check.period.question") %></legend>
+        <div class="grid grid-cols-2 gap-2">
+          <% [["yes", on_period], ["no", false]].each do |value, checked| %>
+            <label>
+              <%= radio_button_tag "period", value, checked, class: "peer sr-only" %>
+              <span class="<%= chip %>"><%= t("daily_check.period.#{value}") %></span>
+            </label>
+          <% end %>
+        </div>
+      </fieldset>
+    <% end %>
+
     <%= form.submit t("daily_check.save"), class: "flex min-h-14 w-full cursor-pointer items-center justify-center rounded-2xl bg-primary text-lg font-semibold text-primary-on hover:bg-primary-hover" %>
   <% end %>
 

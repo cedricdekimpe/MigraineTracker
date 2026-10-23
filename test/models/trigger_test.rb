@@ -21,4 +21,30 @@ class TriggerTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "default triggers keep their key and show in the language of the interface" do
+    user = I18n.with_locale(:en) { User.create!({ email: "en@example.com", password: "password123" }.merge(consent_attrs)) }
+    sleep_trigger = user.triggers.find_by!(key: "lack_of_sleep")
+    assert_equal "Lack of sleep", sleep_trigger.name
+    I18n.with_locale(:fr) { assert_equal "Manque de sommeil", sleep_trigger.display_name }
+  end
+
+  test "a typed name is matched to the default it stands for, in any language" do
+    assert_equal "lack_of_sleep", Trigger.default_key_for(" manque de SOMMEIL ")
+    assert_equal "lack_of_sleep", Trigger.default_key_for("Lack of sleep")
+    assert_nil Trigger.default_key_for("Chocolate")
+  end
+
+  test "the same default cannot be added twice under another language" do
+    user = I18n.with_locale(:en) { User.create!({ email: "en2@example.com", password: "password123" }.merge(consent_attrs)) }
+    duplicate = user.triggers.new(name: "Manque de sommeil")
+    assert_not duplicate.valid?
+    assert user.triggers.new(name: "Chocolat").valid?
+  end
+
+  test "a trigger of one's own keeps its own word" do
+    own = users(:two).triggers.create!(name: "Chocolate")
+    assert_nil own.key
+    I18n.with_locale(:fr) { assert_equal "Chocolate", own.display_name }
+  end
 end

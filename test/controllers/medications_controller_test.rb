@@ -20,6 +20,15 @@ class MedicationsControllerTest < ActionDispatch::IntegrationTest
     assert_select "button", text: "Ibuprofen", count: 0
   end
 
+  test "each medication is a compact row whose edit form is folded, open after its own update" do
+    get account_medications_path
+    assert_select "li[data-medication-row] details[data-medication-edit]:not([open]) form", minimum: 1
+    assert_select "details[data-suggestions]:not([open])"
+
+    get account_medications_path(open: medications(:ibuprofen).id)
+    assert_select "li#medication-#{medications(:ibuprofen).id} details[data-medication-edit][open]"
+  end
+
   test "create adds a medication with kind and dose" do
     assert_difference "@user.medications.count", 1 do
       post medications_path, params: { medication: { name: "Sumatriptan", kind: "acute", default_dose: "50 mg" } }

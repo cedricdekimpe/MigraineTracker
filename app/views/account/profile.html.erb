@@ -3,15 +3,16 @@
 <div class="mx-auto flex w-full max-w-5xl flex-col gap-6 lg:flex-row">
   <%# Sidebar Navigation %>
   <aside class="lg:w-64 lg:shrink-0">
-    <div class="rounded-2xl border border-line bg-surface p-4">
-      <h2 class="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-fg-muted"><%= t('account.settings') %></h2>
+    <%# Phones: a row of tabs above the page; wide screens: the sidebar card %>
+    <div class="lg:rounded-2xl lg:border lg:border-line lg:bg-surface lg:p-4">
+      <h2 class="mb-4 hidden px-3 text-xs font-semibold uppercase tracking-wider text-fg-muted lg:block"><%= t('account.settings') %></h2>
       <%= render 'account/navigation' %>
     </div>
   </aside>
 
   <%# Main Content %>
   <main class="flex-1">
-    <div class="rounded-2xl border border-line bg-surface p-8">
+    <div class="rounded-2xl border border-line bg-surface p-5 sm:p-8">
       <header class="mb-6">
         <h1 class="text-2xl font-semibold text-fg"><%= t('account.account_info') %></h1>
       </header>

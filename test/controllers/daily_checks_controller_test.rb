@@ -77,4 +77,29 @@ class DailyChecksControllerTest < ActionDispatch::IntegrationTest
     get episodes_path
     assert_select "a[data-daily-check-card=done]"
   end
+
+  test "with cycle tracking, the check-in also asks about the period and records the day" do
+    get daily_check_path(date: @today.iso8601)
+    assert_select "fieldset[data-question=period]", count: 0
+
+    @user.update!(track_cycle: true)
+    get daily_check_path(date: @today.iso8601)
+    assert_select "fieldset[data-question=period] input[type=radio][name=period]", 2
+
+    patch daily_check_path(date: @today.iso8601), params: { daily_check: { sleep: "good" }, period: "yes" }
+    assert @user.period_days.exists?(date: @today)
+
+    get daily_check_path(date: @today.iso8601)
+    assert_select "input[name=period][value=yes][checked]"
+
+    patch daily_check_path(date: @today.iso8601), params: { daily_check: { sleep: "good" }, period: "no" }
+    assert_not @user.period_days.exists?(date: @today)
+  end
+
+  test "an unanswered period question changes nothing" do
+    @user.update!(track_cycle: true)
+    @user.period_days.create!(date: @today)
+    patch daily_check_path(date: @today.iso8601), params: { daily_check: { sleep: "good" } }
+    assert @user.period_days.exists?(date: @today)
+  end
 end

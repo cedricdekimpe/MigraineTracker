@@ -487,6 +487,8 @@ en:
       gepant: "Gepant or ditan (X)"
       preventive: "Preventive"
       other: "Other, not counted (e.g. anti-nausea)"
+    edit: "Edit"
+    choose: "Choose from common medications"
     default_dose: "Usual dose"
     remove: "Remove"
     confirm_remove: "Remove %{name}? If it was used in past episodes it is archived, not erased."
@@ -549,6 +551,7 @@ en:
     empty: "No period."
     started_on: "Start"
     ended_on: "End"
+    since: "ongoing since %{date}"
     ongoing: "ongoing"
     dose: "Dose"
     stop_reason: "Reason for stopping"
@@ -574,6 +577,10 @@ en:
     saved: "Check-in saved."
     yesterday: "Fill in yesterday's"
     today: "Fill in today's"
+    period:
+      question: "Period that day?"
+      "yes": "Yes"
+      "no": "No"
     skipped_meal: "I skipped a meal"
     sleep:
       question: "How was the night?"

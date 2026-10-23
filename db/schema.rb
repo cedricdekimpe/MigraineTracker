@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_220000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_230000) do
   create_table "daily_checks", force: :cascade do |t|
     t.integer "user_id", null: false
     t.date "date", null: false
@@ -106,7 +106,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_220000) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "key"
     t.index "user_id, lower(name)", name: "index_triggers_on_user_id_and_lower_name", unique: true
+    t.index ["user_id", "key"], name: "index_triggers_on_user_id_and_key", unique: true, where: "key IS NOT NULL"
     t.index ["user_id"], name: "index_triggers_on_user_id"
   end
 

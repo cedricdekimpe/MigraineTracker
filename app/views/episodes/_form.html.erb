@@ -1,6 +1,7 @@
 <%# Shared by new and edit. Pain, intensity, medication and triggers are one-tap chips; the rest is optional. %>
 <%
-  chip = "inline-flex cursor-pointer items-center rounded-full border border-line-control bg-surface px-4 py-2 text-sm font-medium text-fg-secondary transition hover:border-accent-400 peer-checked:border-accent-600 peer-checked:bg-primary peer-checked:text-primary-on peer-focus-visible:ring-2 peer-focus-visible:ring-focus"
+  tile = "flex min-h-12 cursor-pointer items-center justify-center rounded-2xl border border-line-control bg-surface-soft px-3 text-center text-base font-medium text-fg transition peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-on peer-focus-visible:ring-2 peer-focus-visible:ring-focus"
+  chip = "inline-flex min-h-11 cursor-pointer items-center rounded-full border border-line-control bg-surface px-4 py-2 text-sm font-medium text-fg-secondary transition hover:border-accent-400 peer-checked:border-accent-600 peer-checked:bg-primary peer-checked:text-primary-on peer-focus-visible:ring-2 peer-focus-visible:ring-focus"
   input_class = "block w-full rounded-lg border border-line-control px-3 py-2 text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus"
   selected_medication_ids = episode.medication_intakes.reject(&:marked_for_destruction?).map(&:medication_id)
   selected_trigger_ids = episode.trigger_ids
@@ -19,20 +20,18 @@
 
   <fieldset class="space-y-3">
     <legend class="text-sm font-medium text-fg-secondary"><%= t("episodes.pain") %></legend>
-    <div class="flex flex-wrap gap-2">
+    <div class="grid grid-cols-3 gap-2">
       <% [["", t("episodes.pain_none")], ["migraine", t("episodes.pain_migraine")], ["headache", t("episodes.pain_headache")]].each do |value, label| %>
         <label>
           <%= form.radio_button :pain_kind, value, checked: episode.pain_kind.to_s == value, class: "peer sr-only" %>
-          <span class="<%= chip %>"><%= label %></span>
+          <span class="<%= tile %>"><%= label %></span>
         </label>
       <% end %>
     </div>
-    <div>
-      <label>
-        <%= form.check_box :aura, class: "peer sr-only" %>
-        <span class="<%= chip %>"><%= t("episodes.aura") %></span>
-      </label>
-    </div>
+    <label class="block">
+      <%= form.check_box :aura, class: "peer sr-only" %>
+      <span class="<%= tile %>"><%= t("episodes.aura") %></span>
+    </label>
   </fieldset>
 
   <fieldset class="space-y-3">
@@ -90,7 +89,7 @@
       <% triggers.each do |trigger| %>
         <label>
           <%= check_box_tag "episode[trigger_ids][]", trigger.id, selected_trigger_ids.include?(trigger.id), id: "episode_trigger_#{trigger.id}", class: "peer sr-only" %>
-          <span class="<%= chip %>"><%= trigger.name %></span>
+          <span class="<%= chip %>"><%= trigger.display_name %></span>
         </label>
       <% end %>
     </div>

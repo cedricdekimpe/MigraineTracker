@@ -15,7 +15,7 @@ class MedicationsController < ApplicationController
     if @medication.update(medication_params)
       redirect_to account_medications_path, notice: t("flash.medication_updated")
     else
-      redirect_to account_medications_path, alert: @medication.errors.full_messages.to_sentence
+      redirect_to account_medications_path(open: @medication.id, anchor: "medication-#{@medication.id}"), alert: @medication.errors.full_messages.to_sentence
     end
   end
 

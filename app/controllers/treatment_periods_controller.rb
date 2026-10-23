@@ -36,6 +36,6 @@ class TreatmentPeriodsController < ApplicationController
   end
 
   def periods_location
-    account_medications_path(anchor: "medication-#{@medication.id}")
+    account_medications_path(open: @medication.id, anchor: "medication-#{@medication.id}")
   end
 end
