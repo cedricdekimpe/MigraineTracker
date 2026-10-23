@@ -133,7 +133,8 @@
           <p class="mt-2 text-sm text-fg-secondary">
             <%= t('account.data_to_delete') %>
             <strong><%= t('account.migraines_count', count: current_user.episodes.count) %></strong>,
-            <strong><%= t('account.medications_count', count: current_user.medications.count) %></strong>
+            <strong><%= t('account.medications_count', count: current_user.medications.count) %></strong>,
+            <%= t('account.rest_of_journal') %>
           </p>
         </div>
         <button type="button" 
@@ -168,6 +169,7 @@
         <ul class="mt-2 list-inside list-disc text-sm text-red-700">
           <li><%= t('account.migraines_count', count: current_user.episodes.count) %></li>
           <li><%= t('account.medications_count', count: current_user.medications.count) %></li>
+          <li><%= t('account.rest_of_journal') %></li>
           <li><%= t('account.delete_modal_account_info') %></li>
         </ul>
       </div>

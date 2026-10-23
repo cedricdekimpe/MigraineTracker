@@ -61,4 +61,38 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "article p", maximum: 4
     assert_no_match(/Prêt à commencer le suivi/, response.body)
   end
+
+  test "the privacy policy describes the data the app really keeps, in both languages" do
+    get privacy_path(locale: :fr)
+    assert_response :success
+    %w[data technical purpose retention sharing rights contact].each { |section| assert_select "section##{section} h2" }
+    %w[bilans règles périodes cookie Hetzner article].each { |word| assert_match(/#{word}/i, response.body) }
+    assert_no_match(/API|Solid Queue|Remplacez/, response.body)
+
+    get privacy_path(locale: :en)
+    assert_match(/daily check-ins/, response.body)
+    assert_no_match(/API|Solid Queue/, response.body)
+  end
+
+  test "the FAQ answers the current features and its structured data matches the questions" do
+    get faq_path(locale: :fr)
+    assert_response :success
+    assert_select "[data-faq-section]", 3
+    assert_select "[data-faq] details", 12
+    assert_match(/J&#39;ai mal|J'ai mal/, response.body)
+    assert_no_match(/Nouvelle entrée|jour de la semaine|Enregistrer la migraine/, response.body)
+    assert_select "a[href=?]", privacy_path(locale: :fr, anchor: "contact")
+    assert_select "a[href=?]", urgent_path(locale: :fr)
+
+    data = JSON.parse(css_select("script[type='application/ld+json']").last.text)
+    assert_equal "FAQPage", data["@type"]
+    assert_equal 12, data["mainEntity"].size
+    assert_equal "Comment noter une crise ?", data["mainEntity"].first["name"]
+  end
+
+  test "the consent asked at sign-up covers the whole journal" do
+    get new_user_registration_path(locale: :fr)
+    assert_match(/bilans du jour/, response.body)
+    assert_equal "2026-10-23", User::HEALTH_DATA_CONSENT_VERSION
+  end
 end

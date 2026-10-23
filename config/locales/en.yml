@@ -233,8 +233,8 @@ en:
     delete_my_account: "Delete My Account"
     data_to_delete: "This will permanently delete:"
     migraines_count:
-      one: "%{count} migraine entry"
-      other: "%{count} migraine entries"
+      one: "%{count} episode"
+      other: "%{count} episodes"
     medications_count:
       one: "%{count} medication"
       other: "%{count} medications"
@@ -243,6 +243,7 @@ en:
     delete_modal_description: "This action cannot be undone. All your data will be permanently removed from our servers."
     delete_modal_warning: "The following data will be permanently deleted:"
     delete_modal_account_info: "Your account and all personal information"
+    rest_of_journal: "and the rest of your journal (treatment periods, triggers, period days, daily check-ins)"
     delete_modal_type_phrase: "Type the following phrase to confirm:"
     delete_modal_password: "Enter your password to confirm"
     delete_account_permanently: "Delete Account Permanently"
@@ -318,81 +319,9 @@ en:
       short: "%b %d"
       month_year: "%B %Y"
 
-  # FAQ
-  faq:
-    title: "Frequently Asked Questions"
-    subtitle: "Find answers to common questions about Migraine Tracker"
-    privacy_section: "Privacy & Data"
-    data_storage_question: "How is my data stored?"
-    data_storage_answer: "Your data is stored securely in our database. We use industry-standard encryption and security practices to protect your information. Your migraine logs, medications, and personal details are only accessible to you."
-    gdpr_question: "Is Migraine Tracker GDPR compliant?"
-    gdpr_answer_html: "Yes! We are fully GDPR compliant. You have complete control over your data:<br><br>• <strong>Right to access:</strong> Export all your data anytime from Account Settings<br>• <strong>Right to erasure:</strong> Delete your account and all associated data permanently<br>• <strong>Right to portability:</strong> Download your data in JSON format<br>• <strong>Data minimization:</strong> We only collect data necessary for the app to function"
-    data_sharing_question: "Do you share my data with third parties?"
-    data_sharing_answer: "No, we never sell or share your personal health data with third parties. Your migraine information is yours alone. We do not use your data for advertising or marketing purposes."
-    account_section: "Account Management"
-    delete_account_question: "How do I delete my account?"
-    delete_account_answer_html: "You can delete your account from the Account Settings page. Scroll to the \"Danger Zone\" section and click \"Delete My Account\". You will need to:<br><br>1. Type the confirmation phrase exactly as shown<br>2. Enter your password<br><br>This action is permanent and will delete all your migraines, medications, and account information. We recommend exporting your data first if you want to keep a copy."
-    export_data_question: "How do I export my data?"
-    export_data_answer: "Go to Account Settings and find the \"Data Management\" section. Click \"Export All Data\" to download a JSON file containing all your migraines and medications. This file can be used for backups or to import your data later."
-    import_data_question: "Can I import data from a backup?"
-    import_data_answer: "Yes! In Account Settings under \"Data Management\", click \"Import from File\" and select a previously exported JSON file. Duplicate entries (based on date) will be skipped automatically to prevent data duplication."
-    usage_section: "Using the App"
-    track_migraine_question: "How do I track a migraine?"
-    track_migraine_answer: "Click \"New entry\" from the Migraine Log page or use the calendar view to select a date. Fill in the details including the nature of the headache, intensity (0-10), whether you were on your menstrual cycle, and any medication taken. Click \"Save migraine\" to log the entry."
-    medications_question: "How do I manage my medications?"
-    medications_answer: "Go to Account Settings to find the \"My Medications\" section. Here you can add new medications by typing the name and clicking \"Add\". To remove a medication, click the \"Delete\" button next to it. Your medication list appears as options when logging migraines."
-    statistics_question: "What do the statistics show?"
-    statistics_answer: "The Statistics page shows visual insights including: total migraine count, migraines with/without medication, a 12-month trend chart, distribution by day of the week, and medication usage breakdown. These help you identify patterns and discuss trends with your healthcare provider."
-    contact_title: "Still have questions?"
-    contact_text: "If you couldn't find the answer you're looking for, feel free to reach out to us. We're here to help!"
-    go_to_data_settings: "Go to Data Settings"
-    disclaimer_title: "Medical disclaimer"
-    disclaimer_text: "Migraine Tracker is a personal log. It does not diagnose conditions, give treatment instructions, or replace medical advice."
-
-  privacy:
-    title: "Privacy Policy"
-    description: "Learn what data we collect, why we process it, and how to exercise your rights as a user."
-    intro: "Migraine Tracker only stores the information you enter explicitly to help you keep track of migraine episodes, medications, and patterns over time."
-    data_title: "Personal data we collect"
-    data_description: "Your migraine history is collected directly and intentionally when you log episodes or medications."
-    data_points:
-      - "Timestamped migraine occurrences with intensity, nature, on-period flag, and associated medication."
-      - "Medication names you provide so the same treatments can be reused when logging new entries."
-      - "Account email and securely hashed password for authentication and password recovery."
-    purpose_title: "Why we process this data"
-    purpose_points:
-      - "To give you a historical log of migraine occurrences with intensity and medication context."
-      - "To allow exports/imports so you keep control of your records."
-      - "To send transactional emails (account creation and password recovery) tied to your health profile."
-    retention_title: "Retention and backups"
-    retention_description: "We keep the data only as long as your account exists and handle logs/backups with minimal retention."
-    retention_points:
-      - "Application logs with request metadata are retained for 30 days before rotation."
-      - "Solid Queue job histories and failures are pruned on a 30-day schedule."
-      - "Exported JSON files are streamed directly to you and never stored persistently."
-    rights_title: "Your GDPR rights"
-    rights_description: "You control everything that pertains to your health data."
-    rights_points:
-      - "Access: export a complete JSON copy anytime from the Data Management page."
-      - "Rectification: edit migraines or medications directly in the app or via API."
-      - "Erasure: delete your account and every record linked to it in one action."
-      - "Portability: download backups and import them into another service if desired."
-    contact_title: "Contact and controller information"
-    contact_description: "Fill in the placeholders below with your actual controller details before publishing."
-    contact_email_label: "Controller email"
-    contact_email: "[privacy@migraine-tracker.eu]"
-    contact_address_label: "Controller address"
-    contact_address: "[Street, City, Country]"
-    hosting_title: "Hosting"
-    hosting_description: "Data resides on the Kamal-deployed container running in an EU region; persistent volumes stay within the controller's infrastructure."
-
   forms:
-    health_consent_html: "I consent to the storage and processing of my health data (migraine episodes and medications) so Migraine Tracker can provide the service. Read the %{privacy} for details."
+    health_consent_html: "I consent to the storage and processing of my health data (migraine journal, treatments, daily check-ins and, if I turn it on, my cycle) so Migraine Tracker can provide the service. Read the %{privacy} for details."
 
-    # Devise custom messages
-    devise:
-      registrations:
-        password_invalid: "Incorrect password. Please try again."
 
   triggers:
     defaults:
@@ -660,6 +589,119 @@ en:
         title: "Everyday factors"
         body: "The daily check-in compares the share of days with pain after a day with a factor (poor night, high stress, stress dropping, skipped meal, a lot of caffeine) with the share after the other days, the same day, the next day and 2 days later. Nothing is shown before 30 days of check-ins, and a factor is only flagged from 8 days concerned and a 15-point gap. It is a link in your journal, not proof of cause. The early signs of an attack (tiredness, craving sweets, a stiff neck) look like triggers: do not note them in the check-in."
         source: "Diary studies of people with migraine: Peris 2017; Lipton 2014; Bertisch 2020; Mostofsky 2019."
+
+  privacy:
+    title: "Privacy policy"
+    description: "What Migraine Tracker keeps, why, for how long, with whom, and your rights."
+    updated: "Last updated: 23 October 2026"
+    intro: "Migraine Tracker keeps only what you write in it. There is no advertising, no tracking, and no script, font or analytics tool loaded from another site."
+    sections:
+      data:
+        title: "The data kept"
+        points:
+          - "Your account: email address, hashed password (never readable), date and version of your consent."
+          - "Your journal: for each episode, the date, the start time and duration if you note them, the type of pain, the aura, the intensity, the medications taken (dose, time, effect), the triggers ticked and your notes."
+          - "Your medications (name, type, usual dose) and the periods of your preventive treatments (start, end, dose, reason for stopping)."
+          - "Your daily check-ins (sleep, stress, skipped meal, caffeine) and, if you turn on cycle tracking, your period days."
+          - "Without an account: an attack noted from the home page stays in an encrypted cookie in your browser. It only reaches the server if you create an account or sign in, and disappears if you choose \"Don't keep it\" or close the browser."
+      technical:
+        title: "Cookies and technical data"
+        points:
+          - "A session cookie, needed to stay signed in; if you tick \"Remember me\", a second cookie that lasts two weeks. No analytics or advertising cookie."
+          - "Your theme choice (Auto, Paper, Night) stays in your browser."
+          - "To block attacks on passwords, the IP address and email address of sign-in attempts are counted for one hour at most."
+          - "The server's technical logs record the pages requested and the IP address; your health data is filtered out of them."
+      purpose:
+        title: "Why, and on what basis"
+        points:
+          - "To keep your journal, compute your statistics and produce the PDF report for your doctor."
+          - "To let you export and import your data."
+          - "To email you only to reset your password: no newsletter, no advertising."
+          - "Legal basis: your explicit consent when creating the account, required for health data (GDPR, article 9(2)(a)). You can withdraw it at any time by deleting your account."
+      retention:
+        title: "How long it is kept"
+        points:
+          - "Your data stays as long as your account exists; deleting it erases them from the database at once."
+          - "Export files are sent straight to you and not kept on the server."
+          - "Anti-abuse counters disappear after one hour at most."
+      sharing:
+        title: "Sharing and security"
+        points:
+          - "Your data is not sold, shared or used for advertising."
+          - "The service runs on a server rented from Hetzner Online, in the European Union. The host stores the data on our behalf; no other service has access to it."
+          - "Data travels encrypted (HTTPS). In the database it is protected by access to the server; it is not yet encrypted field by field."
+      rights:
+        title: "Your rights"
+        points:
+          - "Access and portability: Account › Data management › \"Export all data\", a complete JSON file, at any time."
+          - "Rectification: edit any episode, medication, period or check-in in the app."
+          - "Erasure and withdrawal of consent: Account › Data management › \"Delete my account\" erases everything, permanently."
+          - "For any other request (objection, restriction, question): write to the address below."
+          - "Complaint: the Data Protection Authority in Belgium (dataprotectionauthority.be), or the authority of your country."
+    contact_title: "Contact and data controller"
+    contact_email_label: "Email"
+    contact_email: "[privacy@migraine-tracker.eu]"
+    contact_address_label: "Controller"
+    contact_address: "[Name, city, country]"
+
+  faq:
+    title: "Frequently asked questions"
+    subtitle: "Using Migraine Tracker, managing your data, protecting your privacy."
+    disclaimer_title: "If in doubt"
+    disclaimer_text: "An unusual headache may need quick medical advice."
+    sections:
+      usage: "Using the app"
+      account: "Your account and your data"
+      privacy: "Privacy"
+    items:
+      track_crisis:
+        question: "How do I log an attack?"
+        answer: "Tap \"I have a headache\" (at the bottom on a phone, at the top on a computer), pick the type, then the intensity: the attack starts. Add medications as you take them, tap \"It's over\", then say how they worked. A past attack is logged with \"Past episode\" or by tapping the day in the journal."
+      guest:
+        question: "Can I log an attack without an account?"
+        answer: "Yes, from the home page. It stays in your browser; create an account or sign in afterwards to keep it."
+      daily_check:
+        question: "What is the daily check-in for?"
+        answer: "Three questions (sleep, stress, meals and caffeine), even on days without an attack, and your period if you track it. After 30 days, the statistics compare the days that follow a factor with the other days: it is a link in your journal, not proof of the cause."
+      medications:
+        question: "How do I manage my medications?"
+        answer: "Account › Medications. Add a medication, or pick it from the common ones, with its type: it decides how its days are counted. \"Edit\" changes the name, type or dose, or removes it (it is archived if already used). For a preventive treatment, record its periods: start, end and reason for stopping."
+      statistics:
+        question: "What do the statistics show?"
+        answer: "The month's pain and treatment days, the treatment limits to watch, the effect of each acute treatment, the before and after of your preventive treatments, the link with your period if you track it, and what comes before your attacks according to your check-ins."
+      report:
+        question: "How do I prepare my appointment?"
+        answer: "The \"Doctor report (PDF)\" link, in the journal or the statistics, produces the year: a summary page, an indicators page and your calendar sheets, like your neurologist's."
+      export:
+        question: "How do I export my data?"
+        answer: "Account › Data management › \"Export all data\" downloads a JSON file with your whole journal: episodes, medications and treatment periods, triggers, period days and daily check-ins."
+      import:
+        question: "Can I import a backup?"
+        answer: "Yes, in the same place, with \"Import from file\". What is already there (same episode, same period day, same check-in) is skipped. If the file contains an error, nothing is imported."
+      delete:
+        question: "How do I delete my account?"
+        answer: "Account › Data management › \"Delete my account\". Type the confirmation phrase and your password. Everything is erased permanently: export first if you want to keep a copy."
+      storage:
+        question: "Where is my data and who can see it?"
+        answer: "On a server in the European Union, visible only to you from your account. It travels encrypted (HTTPS) and your password is hashed. No script, font or analytics tool from another site is loaded."
+      sharing:
+        question: "Do you share my data?"
+        answer: "No. It is not sold, shared or used for advertising. Only the server's host stores it on our behalf."
+      rights:
+        question: "What are my rights?"
+        answer: "Export your data, correct it in the app and delete your account, at any time and without writing to us. The details and the contact are in the privacy policy."
+    links:
+      data: "Data management"
+      numbers: "Understand my figures"
+      privacy: "Privacy policy"
+      urgent: "When to seek urgent care"
+    contact_title: "Still have a question?"
+    contact_text: "Write to the address given in the privacy policy."
+
+  # Custom Devise messages
+  devise:
+    registrations:
+      password_invalid: "Incorrect password. Please try again."
 
   theme:
     label: "Appearance"

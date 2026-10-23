@@ -2,213 +2,61 @@
 <% content_for :description, t('faq.subtitle') %>
 
 <%
-  # Prepare FAQ structured data for GEO
-  faq_items = [
-    { question: t('faq.data_storage_question'), answer: strip_tags(t('faq.data_storage_answer')) },
-    { question: t('faq.gdpr_question'), answer: strip_tags(t('faq.gdpr_answer_html')) },
-    { question: t('faq.data_sharing_question'), answer: strip_tags(t('faq.data_sharing_answer')) },
-    { question: t('faq.delete_account_question'), answer: strip_tags(t('faq.delete_account_answer_html')) },
-    { question: t('faq.export_data_question'), answer: strip_tags(t('faq.export_data_answer')) },
-    { question: t('faq.import_data_question'), answer: strip_tags(t('faq.import_data_answer')) },
-    { question: t('faq.track_migraine_question'), answer: strip_tags(t('faq.track_migraine_answer')) },
-    { question: t('faq.medications_question'), answer: strip_tags(t('faq.medications_answer')) },
-    { question: t('faq.statistics_question'), answer: strip_tags(t('faq.statistics_answer')) }
-  ]
+  # Questions by section, with the page each answer points to when there is one
+  sections = {
+    usage: %w[track_crisis guest daily_check medications statistics report],
+    account: %w[export import delete],
+    privacy: %w[storage sharing rights]
+  }
+  links = {
+    "statistics" => [:numbers, numbers_path], "export" => [:data, account_data_path], "import" => [:data, account_data_path],
+    "delete" => [:data, account_data_path], "storage" => [:privacy, privacy_path], "sharing" => [:privacy, privacy_path],
+    "rights" => [:privacy, privacy_path]
+  }
+  faq_items = sections.values.flatten.map { |key| { question: t("faq.items.#{key}.question"), answer: t("faq.items.#{key}.answer") } }
 %>
 
-<div class="mx-auto max-w-3xl">
-  <header class="mb-8">
+<div class="mx-auto max-w-3xl space-y-6" data-faq>
+  <header>
     <h1 class="text-3xl font-bold text-fg"><%= t('faq.title') %></h1>
     <p class="mt-2 text-fg-secondary"><%= t('faq.subtitle') %></p>
   </header>
 
-  <div class="rounded-2xl border border-line bg-page p-6 text-sm text-fg-secondary">
-    <p class="font-semibold text-fg"><%= t('faq.disclaimer_title') %></p>
+  <% sections.each do |section, keys| %>
+    <section class="rounded-2xl border border-line bg-surface p-5 sm:p-6" data-faq-section="<%= section %>">
+      <h2 class="mb-4 text-xl font-semibold text-fg"><%= t("faq.sections.#{section}") %></h2>
+      <div class="space-y-3">
+        <% keys.each do |key| %>
+          <details class="group rounded-xl border border-line bg-page" id="<%= key.dasherize %>">
+            <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-medium text-fg [&::-webkit-details-marker]:hidden">
+              <%= t("faq.items.#{key}.question") %>
+              <span class="text-fg-muted transition group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <div class="space-y-2 px-4 pb-4 text-sm leading-6 text-fg-secondary">
+              <p><%= t("faq.items.#{key}.answer") %></p>
+              <% if (link = links[key]) %>
+                <p><%= link_to t("faq.links.#{link.first}"), link.last, class: "font-medium text-link underline" %></p>
+              <% end %>
+            </div>
+          </details>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <section class="rounded-2xl border border-line bg-surface p-5 text-sm text-fg-secondary sm:p-6">
+    <h2 class="text-base font-semibold text-fg"><%= t('faq.disclaimer_title') %></h2>
     <p class="mt-1"><%= t('faq.disclaimer_text') %></p>
-  </div>
+    <p class="mt-2"><%= link_to t('faq.links.urgent'), urgent_path, class: "font-medium text-link underline" %></p>
+  </section>
 
-  <div class="space-y-6">
-    <!-- Privacy & Data Section -->
-    <section class="rounded-2xl border border-line bg-surface p-6">
-      <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-fg">
-        <svg class="h-5 w-5 text-link" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-        <%= t('faq.privacy_section') %>
-      </h2>
-
-      <div class="space-y-4">
-        <details class="group rounded-xl border border-line bg-page">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
-            <%= t('faq.data_storage_question') %>
-            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </summary>
-          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
-            <%= t('faq.data_storage_answer') %>
-          </div>
-        </details>
-
-        <details class="group rounded-xl border border-line bg-page">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
-            <%= t('faq.gdpr_question') %>
-            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </summary>
-          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
-            <%= t('faq.gdpr_answer_html') %>
-          </div>
-        </details>
-
-        <details class="group rounded-xl border border-line bg-page">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
-            <%= t('faq.data_sharing_question') %>
-            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </summary>
-          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
-            <%= t('faq.data_sharing_answer') %>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- Account Management Section -->
-    <section class="rounded-2xl border border-line bg-surface p-6">
-      <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-fg">
-        <svg class="h-5 w-5 text-link" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-        </svg>
-        <%= t('faq.account_section') %>
-      </h2>
-
-      <div class="space-y-4">
-        <details class="group rounded-xl border border-line bg-page">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
-            <%= t('faq.delete_account_question') %>
-            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </summary>
-          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
-            <p><%= t('faq.delete_account_answer_html') %></p>
-            <% if user_signed_in? %>
-              <p class="mt-3">
-                <%= link_to t('faq.go_to_data_settings'), account_data_path, class: "inline-flex items-center gap-1 font-medium text-link hover:text-link" %>
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-              </p>
-            <% end %>
-          </div>
-        </details>
-
-        <details class="group rounded-xl border border-line bg-page">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
-            <%= t('faq.export_data_question') %>
-            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </summary>
-          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
-            <p><%= t('faq.export_data_answer') %></p>
-            <% if user_signed_in? %>
-              <p class="mt-3">
-                <%= link_to t('faq.go_to_data_settings'), account_data_path, class: "inline-flex items-center gap-1 font-medium text-link hover:text-link" %>
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-              </p>
-            <% end %>
-          </div>
-        </details>
-
-        <details class="group rounded-xl border border-line bg-page">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
-            <%= t('faq.import_data_question') %>
-            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </summary>
-          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
-            <p><%= t('faq.import_data_answer') %></p>
-            <% if user_signed_in? %>
-              <p class="mt-3">
-                <%= link_to t('faq.go_to_data_settings'), account_data_path, class: "inline-flex items-center gap-1 font-medium text-link hover:text-link" %>
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-              </p>
-            <% end %>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- Using the App Section -->
-    <section class="rounded-2xl border border-line bg-surface p-6">
-      <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-fg">
-        <svg class="h-5 w-5 text-link" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-        </svg>
-        <%= t('faq.usage_section') %>
-      </h2>
-
-      <div class="space-y-4">
-        <details class="group rounded-xl border border-line bg-page">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
-            <%= t('faq.track_migraine_question') %>
-            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </summary>
-          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
-            <%= t('faq.track_migraine_answer') %>
-          </div>
-        </details>
-
-        <details class="group rounded-xl border border-line bg-page">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
-            <%= t('faq.medications_question') %>
-            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </summary>
-          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
-            <%= t('faq.medications_answer') %>
-          </div>
-        </details>
-
-        <details class="group rounded-xl border border-line bg-page">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
-            <%= t('faq.statistics_question') %>
-            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </summary>
-          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
-            <%= t('faq.statistics_answer') %>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="rounded-2xl border border-accent-200 bg-accent-50 p-6">
-      <h2 class="mb-2 text-lg font-semibold text-accent-900"><%= t('faq.contact_title') %></h2>
-      <p class="text-sm text-accent-800"><%= t('faq.contact_text') %></p>
-    </section>
-  </div>
-
-  <div class="mt-8 text-center">
-    <%= link_to t('common.back'), root_path, class: "inline-flex items-center gap-2 text-sm font-medium text-fg-secondary hover:text-fg" %>
-  </div>
+  <section class="rounded-2xl border border-line bg-surface p-5 text-sm text-fg-secondary sm:p-6">
+    <h2 class="text-base font-semibold text-fg"><%= t('faq.contact_title') %></h2>
+    <p class="mt-1"><%= t('faq.contact_text') %> <%= link_to t('faq.links.privacy'), privacy_path(anchor: "contact"), class: "font-medium text-link underline" %></p>
+  </section>
 </div>
 
-<%# FAQPage Structured Data for GEO %>
+<%# FAQPage structured data, built from the same questions %>
 <script type="application/ld+json">
-  <%= raw structured_data_faqpage(faq_items).to_json %>
+  <%= json_escape(structured_data_faqpage(faq_items).to_json).html_safe %>
 </script>

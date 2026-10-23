@@ -233,8 +233,8 @@ fr:
     delete_my_account: "Supprimer mon compte"
     data_to_delete: "Ceci supprimera définitivement :"
     migraines_count:
-      one: "%{count} entrée de migraine"
-      other: "%{count} entrées de migraines"
+      one: "%{count} épisode"
+      other: "%{count} épisodes"
     medications_count:
       one: "%{count} médicament"
       other: "%{count} médicaments"
@@ -243,6 +243,7 @@ fr:
     delete_modal_description: "Cette action est irréversible. Toutes vos données seront définitivement supprimées de nos serveurs."
     delete_modal_warning: "Les données suivantes seront définitivement supprimées :"
     delete_modal_account_info: "Votre compte et toutes vos informations personnelles"
+    rest_of_journal: "et le reste de votre journal (périodes de traitement, déclencheurs, jours de règles, bilans du jour)"
     delete_modal_type_phrase: "Tapez la phrase suivante pour confirmer :"
     delete_modal_password: "Entrez votre mot de passe pour confirmer"
     delete_account_permanently: "Supprimer définitivement"
@@ -366,81 +367,9 @@ fr:
       - :month
       - :year
 
-  # FAQ
-  faq:
-    title: "Questions fréquentes"
-    subtitle: "Trouvez des réponses aux questions courantes sur Migraine Tracker"
-    privacy_section: "Confidentialité et données"
-    data_storage_question: "Comment mes données sont-elles stockées ?"
-    data_storage_answer: "Vos données sont stockées de manière sécurisée dans notre base de données. Nous utilisons des pratiques de chiffrement et de sécurité conformes aux normes de l'industrie pour protéger vos informations. Vos journaux de migraines, médicaments et détails personnels ne sont accessibles qu'à vous."
-    gdpr_question: "Migraine Tracker est-il conforme au RGPD ?"
-    gdpr_answer_html: "Oui ! Nous sommes entièrement conformes au RGPD. Vous avez un contrôle total sur vos données :<br><br>• <strong>Droit d'accès :</strong> Exportez toutes vos données à tout moment depuis les paramètres du compte<br>• <strong>Droit à l'effacement :</strong> Supprimez votre compte et toutes les données associées de façon permanente<br>• <strong>Droit à la portabilité :</strong> Téléchargez vos données au format JSON<br>• <strong>Minimisation des données :</strong> Nous ne collectons que les données nécessaires au fonctionnement de l'application"
-    data_sharing_question: "Partagez-vous mes données avec des tiers ?"
-    data_sharing_answer: "Non, nous ne vendons ni ne partageons jamais vos données de santé personnelles avec des tiers. Vos informations sur les migraines vous appartiennent. Nous n'utilisons pas vos données à des fins publicitaires ou marketing."
-    account_section: "Gestion du compte"
-    delete_account_question: "Comment supprimer mon compte ?"
-    delete_account_answer_html: "Vous pouvez supprimer votre compte depuis la page Paramètres du compte. Faites défiler jusqu'à la section \"Zone de danger\" et cliquez sur \"Supprimer mon compte\". Vous devrez :<br><br>1. Taper la phrase de confirmation exactement comme indiqué<br>2. Entrer votre mot de passe<br><br>Cette action est permanente et supprimera toutes vos migraines, médicaments et informations de compte. Nous vous recommandons d'exporter vos données d'abord si vous souhaitez en conserver une copie."
-    export_data_question: "Comment exporter mes données ?"
-    export_data_answer: "Allez dans les Paramètres du compte et trouvez la section \"Gestion des données\". Cliquez sur \"Exporter toutes les données\" pour télécharger un fichier JSON contenant toutes vos migraines et médicaments. Ce fichier peut être utilisé pour des sauvegardes ou pour importer vos données plus tard."
-    import_data_question: "Puis-je importer des données depuis une sauvegarde ?"
-    import_data_answer: "Oui ! Dans les Paramètres du compte sous \"Gestion des données\", cliquez sur \"Importer depuis un fichier\" et sélectionnez un fichier JSON précédemment exporté. Les entrées en double (basées sur la date) seront automatiquement ignorées pour éviter la duplication des données."
-    usage_section: "Utilisation de l'application"
-    track_migraine_question: "Comment suivre une migraine ?"
-    track_migraine_answer: "Cliquez sur \"Nouvelle entrée\" depuis la page Journal des migraines ou utilisez la vue calendrier pour sélectionner une date. Remplissez les détails incluant la nature du mal de tête, l'intensité (0-10), si vous étiez pendant votre cycle menstruel, et tout médicament pris. Cliquez sur \"Enregistrer la migraine\" pour enregistrer l'entrée."
-    medications_question: "Comment gérer mes médicaments ?"
-    medications_answer: "Allez dans les Paramètres du compte pour trouver la section \"Mes médicaments\". Ici vous pouvez ajouter de nouveaux médicaments en tapant le nom et en cliquant sur \"Ajouter\". Pour supprimer un médicament, cliquez sur le bouton \"Supprimer\" à côté de celui-ci. Votre liste de médicaments apparaît comme options lors de l'enregistrement des migraines."
-    statistics_question: "Que montrent les statistiques ?"
-    statistics_answer: "La page Statistiques montre des aperçus visuels incluant : le nombre total de migraines, les migraines avec/sans médicament, un graphique de tendance sur 12 mois, la distribution par jour de la semaine, et la répartition de l'utilisation des médicaments. Ceux-ci vous aident à identifier les tendances et à discuter des patterns avec votre professionnel de santé."
-    contact_title: "Encore des questions ?"
-    contact_text: "Si vous n'avez pas trouvé la réponse que vous cherchez, n'hésitez pas à nous contacter. Nous sommes là pour vous aider !"
-    go_to_data_settings: "Aller aux paramètres de données"
-    disclaimer_title: "Avertissement médical"
-    disclaimer_text: "Migraine Tracker est un journal personnel. Il ne pose pas de diagnostic, ne donne pas de directives de traitement et ne remplace pas un avis médical."
-
-  privacy:
-    title: "Politique de confidentialité"
-    description: "Découvrez quelles données nous collectons, pourquoi nous les traitons et comment exercer vos droits en tant qu'utilisateur."
-    intro: "Migraine Tracker conserve uniquement les informations que vous saisissez volontairement pour suivre vos épisodes de migraine, vos médicaments et vos tendances personnelles."
-    data_title: "Données personnelles collectées"
-    data_description: "Vous enregistrez directement les éléments de votre historique de migraines et de vos traitements."
-    data_points:
-      - "Occurrences datées de migraines avec intensité, nature, indicateur de cycle et médicament associé."
-      - "Noms des médicaments que vous saisissez afin de les réutiliser lors de nouveaux enregistrements."
-      - "Adresse e-mail du compte et mot de passe hashé pour l'authentification et la récupération."
-    purpose_title: "Pourquoi nous traitons ces données"
-    purpose_points:
-      - "Pour vous offrir un historique des migraines avec intensité et contexte médicamenteux."
-      - "Pour permettre l'export/import afin que vous gardiez le contrôle de vos dossiers."
-      - "Pour envoyer uniquement des e-mails transactionnels liés à votre compte et votre santé."
-    retention_title: "Conservation et sauvegardes"
-    retention_description: "Les données subsistent uniquement tant que votre compte existe et les logs/sauvegardes sont conservés brièvement."
-    retention_points:
-      - "Les journaux applicatifs contenant des métadonnées de requête sont conservés 30 jours avant rotation."
-      - "L'historique des jobs Solid Queue et les erreurs sont purgés tous les 30 jours."
-      - "Les fichiers JSON exportés sont transmis en flux vers vous et ne sont pas stockés durablement."
-    rights_title: "Vos droits RGPD"
-    rights_description: "Vous contrôlez tout ce qui concerne vos données de santé."
-    rights_points:
-      - "Accès : exportez une copie JSON complète depuis la page Gestion des données à tout moment."
-      - "Rectification : modifiez vos migraines ou médicaments dans l'application ou via l'API."
-      - "Effacement : supprimez votre compte et toutes les données associées en un seul geste."
-      - "Portabilité : téléchargez des sauvegardes et importez-les dans un autre service si vous le souhaitez."
-    contact_title: "Contact et responsable du traitement"
-    contact_description: "Remplacez les champs ci-dessous par vos informations réelles avant publication."
-    contact_email_label: "E-mail du responsable"
-    contact_email: "[privacy@migraine-tracker.eu]"
-    contact_address_label: "Adresse"
-    contact_address: "[Rue, Ville, Pays]"
-    hosting_title: "Hébergement"
-    hosting_description: "Les données résident dans le conteneur déployé avec Kamal, hébergé en région UE ; les volumes persistants restent sous votre infrastructure."
-
   forms:
-    health_consent_html: "Je consens au stockage et au traitement de mes données de santé (épisodes de migraine et médicaments) afin que Migraine Tracker puisse fournir le service. Consultez la %{privacy} pour en savoir plus."
+    health_consent_html: "Je consens au stockage et au traitement de mes données de santé (journal de migraine, traitements, bilans du jour et, si je l'active, mon cycle) afin que Migraine Tracker puisse fournir le service. Consultez la %{privacy} pour en savoir plus."
 
-    # Messages Devise personnalisés
-    devise:
-      registrations:
-        password_invalid: "Mot de passe incorrect. Veuillez réessayer."
 
   triggers:
     defaults:
@@ -759,6 +688,119 @@ fr:
         title: "Les facteurs du quotidien"
         body: "Le bilan quotidien compare la part des jours avec douleur après un jour avec un facteur (mauvaise nuit, stress élevé, baisse du stress, repas sauté, beaucoup de caféine) à la part après les autres jours, le jour même, le lendemain et 2 jours après. Rien n'est affiché avant 30 jours de bilan, et un facteur n'est signalé qu'à partir de 8 jours concernés et de 15 points d'écart. C'est un lien dans votre journal, pas une preuve de cause. Les signes avant-coureurs d'une crise (fatigue, envie de sucré, nuque raide) ressemblent à des déclencheurs : ne les notez pas dans le bilan."
         source: "Études de journaux de migraineux : Peris 2017 ; Lipton 2014 ; Bertisch 2020 ; Mostofsky 2019."
+
+  privacy:
+    title: "Politique de confidentialité"
+    description: "Ce que Migraine Tracker conserve, pourquoi, combien de temps, avec qui, et vos droits."
+    updated: "Dernière mise à jour : 23 octobre 2026"
+    intro: "Migraine Tracker conserve uniquement ce que vous y notez. Il n'y a ni publicité, ni pistage, ni script, police ou outil de mesure chargé depuis un autre site."
+    sections:
+      data:
+        title: "Les données conservées"
+        points:
+          - "Votre compte : adresse e-mail, mot de passe haché (jamais lisible), date et version de votre consentement."
+          - "Votre journal : pour chaque épisode, la date, l'heure de début et la durée si vous les notez, le type de douleur, l'aura, l'intensité, les médicaments pris (dose, heure, effet), les déclencheurs cochés et vos notes."
+          - "Vos médicaments (nom, type, dose habituelle) et les périodes de vos traitements de fond (début, fin, dose, raison de l'arrêt)."
+          - "Vos bilans du jour (sommeil, stress, repas sauté, caféine) et, si vous activez le suivi du cycle, vos jours de règles."
+          - "Sans compte : une crise notée depuis la page d'accueil reste dans un cookie chiffré de votre navigateur. Elle n'arrive sur le serveur que si vous créez un compte ou vous connectez, et disparaît si vous choisissez « Ne pas le garder » ou fermez le navigateur."
+      technical:
+        title: "Cookies et données techniques"
+        points:
+          - "Un cookie de session, indispensable pour rester connecté ; si vous cochez « Se souvenir de moi », un second cookie qui dure deux semaines. Aucun cookie de mesure ou de publicité."
+          - "Votre choix de thème (Auto, Papier, Nuit) reste dans votre navigateur."
+          - "Pour bloquer les attaques sur les mots de passe, l'adresse IP et l'adresse e-mail des tentatives de connexion sont comptées pendant une heure au plus."
+          - "Les journaux techniques du serveur notent les pages demandées et l'adresse IP ; vos données de santé en sont filtrées."
+      purpose:
+        title: "Pourquoi et sur quelle base"
+        points:
+          - "Tenir votre journal, calculer vos statistiques et produire le rapport PDF pour votre médecin."
+          - "Vous permettre d'exporter et d'importer vos données."
+          - "Vous écrire uniquement pour réinitialiser votre mot de passe : pas de lettre d'information, pas de publicité."
+          - "Base légale : votre consentement explicite à la création du compte, nécessaire pour des données de santé (RGPD, article 9, paragraphe 2, point a). Vous pouvez le retirer à tout moment en supprimant votre compte."
+      retention:
+        title: "Durée de conservation"
+        points:
+          - "Vos données restent tant que votre compte existe ; le supprimer les efface immédiatement de la base."
+          - "Les fichiers d'export vous sont envoyés directement et ne sont pas gardés sur le serveur."
+          - "Les compteurs anti-abus disparaissent au bout d'une heure au plus."
+      sharing:
+        title: "Partage et sécurité"
+        points:
+          - "Vos données ne sont ni vendues, ni partagées, ni utilisées pour la publicité."
+          - "Le service tourne sur un serveur loué chez Hetzner Online, dans l'Union européenne. L'hébergeur stocke les données pour notre compte ; aucun autre service n'y a accès."
+          - "Les données circulent chiffrées (HTTPS). Dans la base, elles sont protégées par l'accès au serveur ; elles ne sont pas encore chiffrées une à une."
+      rights:
+        title: "Vos droits"
+        points:
+          - "Accès et portabilité : Compte › Gestion des données › « Exporter toutes les données », un fichier JSON complet, à tout moment."
+          - "Rectification : modifiez chaque épisode, médicament, période ou bilan dans l'application."
+          - "Effacement et retrait du consentement : Compte › Gestion des données › « Supprimer mon compte » efface tout, définitivement."
+          - "Pour toute autre demande (opposition, limitation, question) : écrivez à l'adresse ci-dessous."
+          - "Réclamation : l'Autorité de protection des données en Belgique (autoriteprotectiondonnees.be), ou l'autorité de votre pays."
+    contact_title: "Contact et responsable du traitement"
+    contact_email_label: "E-mail"
+    contact_email: "[privacy@migraine-tracker.eu]"
+    contact_address_label: "Responsable"
+    contact_address: "[Nom, ville, pays]"
+
+  faq:
+    title: "Questions fréquentes"
+    subtitle: "Utiliser Migraine Tracker, gérer vos données, protéger votre vie privée."
+    disclaimer_title: "En cas de doute"
+    disclaimer_text: "Un mal de tête inhabituel peut demander un avis rapide."
+    sections:
+      usage: "Utiliser l'application"
+      account: "Votre compte et vos données"
+      privacy: "Confidentialité"
+    items:
+      track_crisis:
+        question: "Comment noter une crise ?"
+        answer: "Touchez « J'ai mal » (en bas sur téléphone, en haut sur ordinateur), choisissez le type puis l'intensité : la crise démarre. Ajoutez les médicaments au fur et à mesure, touchez « C'est passé », puis dites comment ils ont agi. Une crise passée se note avec « Épisode passé » ou en touchant le jour dans le journal."
+      guest:
+        question: "Puis-je noter une crise sans compte ?"
+        answer: "Oui, depuis la page d'accueil. Elle reste dans votre navigateur ; créez ensuite un compte ou connectez-vous pour la garder."
+      daily_check:
+        question: "À quoi sert le bilan du jour ?"
+        answer: "Trois questions (sommeil, stress, repas et caféine), même les jours sans crise, et vos règles si vous les suivez. Après 30 jours, les statistiques comparent les jours qui suivent un facteur aux autres jours : c'est un lien dans votre journal, pas une preuve de cause."
+      medications:
+        question: "Comment gérer mes médicaments ?"
+        answer: "Compte › Médicaments. Ajoutez un médicament, ou choisissez-le parmi les médicaments courants, avec son type : il décide comment ses jours sont comptés. « Modifier » change le nom, le type ou la dose, ou le retire (il est archivé s'il a déjà servi). Pour un traitement de fond, notez ses périodes : début, fin et raison de l'arrêt."
+      statistics:
+        question: "Que montrent les statistiques ?"
+        answer: "Les jours de douleur et de traitement du mois, les limites de traitement à surveiller, l'effet de chaque traitement de crise, l'avant et après de vos traitements de fond, le lien avec les règles si vous les suivez, et ce qui précède vos crises d'après vos bilans."
+      report:
+        question: "Comment préparer ma consultation ?"
+        answer: "Le lien « Rapport médecin (PDF) », dans le journal ou les statistiques, produit l'année : une page de synthèse, une page d'indicateurs et vos feuilles de calendrier, comme celles de votre neurologue."
+      export:
+        question: "Comment exporter mes données ?"
+        answer: "Compte › Gestion des données › « Exporter toutes les données » télécharge un fichier JSON avec tout votre journal : épisodes, médicaments et périodes de traitement, déclencheurs, jours de règles et bilans du jour."
+      import:
+        question: "Puis-je importer une sauvegarde ?"
+        answer: "Oui, au même endroit, avec « Importer depuis un fichier ». Ce qui est déjà présent (même épisode, même jour de règles, même bilan) est ignoré. Si le fichier contient une erreur, rien n'est importé."
+      delete:
+        question: "Comment supprimer mon compte ?"
+        answer: "Compte › Gestion des données › « Supprimer mon compte ». Tapez la phrase de confirmation et votre mot de passe. Tout est effacé définitivement : exportez d'abord si vous voulez garder une copie."
+      storage:
+        question: "Où sont mes données et qui peut les voir ?"
+        answer: "Sur un serveur dans l'Union européenne, visibles par vous seul depuis votre compte. Elles circulent chiffrées (HTTPS) et votre mot de passe est haché. Aucun script, police ou outil de mesure d'un autre site n'est chargé."
+      sharing:
+        question: "Partagez-vous mes données ?"
+        answer: "Non. Elles ne sont ni vendues, ni partagées, ni utilisées pour la publicité. Seul l'hébergeur du serveur les stocke pour notre compte."
+      rights:
+        question: "Quels sont mes droits ?"
+        answer: "Exporter vos données, les corriger dans l'application et supprimer votre compte, à tout moment et sans nous écrire. Le détail et le contact sont dans la politique de confidentialité."
+    links:
+      data: "Gestion des données"
+      numbers: "Comprendre mes chiffres"
+      privacy: "Politique de confidentialité"
+      urgent: "Quand consulter en urgence"
+    contact_title: "Encore une question ?"
+    contact_text: "Écrivez à l'adresse indiquée dans la politique de confidentialité."
+
+  # Custom Devise messages
+  devise:
+    registrations:
+      password_invalid: "Mot de passe incorrect. Veuillez réessayer."
 
   theme:
     label: "Apparence"

@@ -13,8 +13,8 @@ class User < ApplicationRecord
 
   after_create :seed_default_triggers
 
-  HEALTH_DATA_CONSENT_VERSION = "2026-03-06".freeze
-  HEALTH_DATA_CONSENT_TEXT = "I consent to the storage and processing of my health data (migraine logs and medications) so Migraine Tracker can provide the service.".freeze
+  HEALTH_DATA_CONSENT_VERSION = "2026-10-23".freeze
+  HEALTH_DATA_CONSENT_TEXT = "I consent to the storage and processing of my health data (migraine journal, treatments, daily check-ins and, if I turn it on, my cycle) so Migraine Tracker can provide the service.".freeze
 
   attr_accessor :health_data_consent
 
