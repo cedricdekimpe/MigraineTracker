@@ -54,6 +54,7 @@ Rails.application.routes.draw do
 
     resources :medications, only: %i[create update destroy] do
       patch :unarchive, on: :member
+      resources :treatment_periods, only: %i[create update destroy]
     end
 
     resources :triggers, only: %i[create destroy]

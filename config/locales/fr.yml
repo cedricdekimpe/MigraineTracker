@@ -461,6 +461,12 @@ fr:
         effect: "L'effet"
         medication: "Le médicament"
         taken_time: "L'heure de prise"
+      treatment_period:
+        started_on: "Le début"
+        ended_on: "La fin"
+        dose: "La dose"
+        stop_reason: "La raison de l'arrêt"
+        medication: "Le médicament"
       trigger:
         name: "Le nom"
       user:
@@ -471,6 +477,16 @@ fr:
         health_data_consent: "Le consentement"
     errors:
       models:
+        treatment_period:
+          attributes:
+            ended_on:
+              before_start: "ne peut pas précéder le début."
+            stop_reason:
+              needs_end: "ne peut être indiquée que si le traitement est arrêté."
+            medication:
+              not_preventive: "doit être un traitement de fond."
+            base:
+              overlap: "Ce traitement est déjà noté sur une partie de cette période."
         episode:
           attributes:
             base:
@@ -591,6 +607,31 @@ fr:
     flash:
       finished: "Épisode enregistré (%{duration})."
       cancelled: "Épisode annulé."
+
+  treatment_periods:
+    title: "Périodes de traitement"
+    hint: "Notez quand vous avez commencé et arrêté ce traitement. Il se juge après 3 mois à la bonne dose, et votre neurologue vous demandera ceux déjà essayés."
+    empty: "Aucune période notée."
+    started_on: "Début"
+    ended_on: "Fin"
+    ongoing: "en cours"
+    dose: "Dose"
+    stop_reason: "Raison de l'arrêt"
+    reasons:
+      ineffective: "Pas assez efficace"
+      not_tolerated: "Mal toléré"
+      planned: "Arrêt prévu ou pause"
+      other: "Autre raison"
+    duration:
+      one: "%{count} jour"
+      other: "%{count} jours"
+    add: "Ajouter la période"
+    remove: "Supprimer cette période"
+    confirm_remove: "Supprimer cette période de traitement ?"
+    flash:
+      created: "Période ajoutée."
+      updated: "Période mise à jour."
+      deleted: "Période supprimée."
 
   theme:
     label: "Apparence"

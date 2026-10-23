@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_200000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_210000) do
   create_table "episode_triggers", force: :cascade do |t|
     t.integer "episode_id", null: false
     t.integer "trigger_id", null: false
@@ -74,6 +74,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_200000) do
     t.index ["user_id"], name: "index_period_days_on_user_id"
   end
 
+  create_table "treatment_periods", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "medication_id", null: false
+    t.date "started_on", null: false
+    t.date "ended_on"
+    t.string "dose"
+    t.string "stop_reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["medication_id"], name: "index_treatment_periods_on_medication_id"
+    t.index ["user_id"], name: "index_treatment_periods_on_user_id"
+    t.check_constraint "ended_on IS NULL OR ended_on >= started_on", name: "treatment_periods_dates_in_order"
+  end
+
   create_table "triggers", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "name", null: false
@@ -107,5 +121,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_200000) do
   add_foreign_key "medication_intakes", "medications"
   add_foreign_key "medications", "users"
   add_foreign_key "period_days", "users"
+  add_foreign_key "treatment_periods", "medications"
+  add_foreign_key "treatment_periods", "users"
   add_foreign_key "triggers", "users"
 end

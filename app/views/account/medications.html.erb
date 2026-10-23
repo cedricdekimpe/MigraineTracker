@@ -21,7 +21,7 @@
         <% if @medications.any? %>
           <ul class="space-y-3">
             <% @medications.each do |medication| %>
-              <li class="rounded-xl border border-ink-200 p-4">
+              <li id="medication-<%= medication.id %>" class="rounded-xl border border-ink-200 p-4">
                 <%= form_with model: medication, url: medication_path(medication), method: :patch, data: { turbo: false }, class: "grid gap-3 sm:grid-cols-[2fr_1fr_1fr_auto] sm:items-end" do |form| %>
                   <div>
                     <%= form.label :name, t('account.medication_name'), class: "block text-xs font-medium text-ink-600" %>
@@ -42,6 +42,7 @@
                         data: { turbo_confirm: t('medications_page.confirm_remove', name: medication.name) },
                         class: "text-xs font-medium text-ink-500 transition hover:text-rose-600" %>
                 </div>
+                <%= render "account/treatment_periods", medication: medication if medication.kind == "preventive" %>
               </li>
             <% end %>
           </ul>

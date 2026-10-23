@@ -24,3 +24,8 @@ aspirin:
   name: Aspirin
   user: two
   kind: acute
+
+candesartan:
+  name: Candesartan
+  user: one
+  kind: preventive

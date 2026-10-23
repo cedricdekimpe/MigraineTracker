@@ -23,7 +23,7 @@ class DataExporter
   private
 
   def medications
-    @medications ||= @user.medications.order(:name)
+    @medications ||= @user.medications.includes(:treatment_periods).order(:name)
   end
 
   def triggers
@@ -40,8 +40,13 @@ class DataExporter
       kind: medication.kind,
       default_dose: medication.default_dose,
       archived: medication.archived?,
+      periods: medication.treatment_periods.chronological.map { |period| period_hash(period) },
       created_at: medication.created_at.iso8601
     }
+  end
+
+  def period_hash(period)
+    { started_on: period.started_on.iso8601, ended_on: period.ended_on&.iso8601, dose: period.dose, stop_reason: period.stop_reason }
   end
 
   def episode_hash(episode)

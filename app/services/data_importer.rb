@@ -12,7 +12,7 @@ class DataImporter
   MAX_PERIOD_DAYS = 10_000
   TIME_FORMAT = /\A([01]\d|2[0-3]):[0-5]\d\z/
 
-  Result = Struct.new(:medications, :triggers, :episodes, :period_days, keyword_init: true)
+  Result = Struct.new(:medications, :triggers, :episodes, :period_days, :treatment_periods, keyword_init: true)
 
   class InvalidData < StandardError; end
 
@@ -24,7 +24,7 @@ class DataImporter
   def call
     validate_shape!
 
-    result = Result.new(medications: 0, triggers: 0, episodes: 0, period_days: 0)
+    result = Result.new(medications: 0, triggers: 0, episodes: 0, period_days: 0, treatment_periods: 0)
     ActiveRecord::Base.transaction do
       @medications = @user.medications.index_by { |medication| key(medication.name) }
       @triggers = @user.triggers.index_by { |trigger| key(trigger.name) }
@@ -63,7 +63,28 @@ class DataImporter
     fail_row = -> { raise InvalidData, row_message("medication_kind", index, t("invalid_name")) }
     fail_row.call unless row.is_a?(Hash) && row["name"].is_a?(String)
 
-    find_or_create_medication(row["name"], result, kind: row["kind"], default_dose: row["default_dose"], archived: row["archived"], &fail_row)
+    medication = find_or_create_medication(row["name"], result, kind: row["kind"], default_dose: row["default_dose"], archived: row["archived"], &fail_row)
+    import_periods(medication, row["periods"], index, result) if medication
+  end
+
+  # Dated periods of a preventive; one already on record for the same start date is left as it is.
+  def import_periods(medication, periods, index, result)
+    return if periods.nil?
+
+    fail_row = ->(details) { raise InvalidData, row_message("medication_kind", index, details) }
+    fail_row.call(t("invalid_row_shape")) unless periods.is_a?(Array)
+
+    periods.each do |data|
+      fail_row.call(t("invalid_row_shape")) unless data.is_a?(Hash)
+      started_on = parse_date(data["started_on"]) || fail_row.call(t("invalid_date"))
+      ended_on = data["ended_on"].nil? ? nil : (parse_date(data["ended_on"]) || fail_row.call(t("invalid_date")))
+      next if medication.treatment_periods.exists?(started_on: started_on)
+
+      period = medication.treatment_periods.new(user: @user, started_on: started_on, ended_on: ended_on,
+                                                dose: data["dose"].is_a?(String) ? data["dose"] : nil, stop_reason: data["stop_reason"])
+      fail_row.call(period.errors.full_messages.to_sentence) unless period.save
+      result.treatment_periods += 1
+    end
   end
 
   def import_trigger_row(row, index, result)

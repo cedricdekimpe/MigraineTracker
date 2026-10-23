@@ -142,6 +142,38 @@ class DataImporterTest < ActiveSupport::TestCase
     assert @user.period_days.exists?(date: "2020-01-15")
   end
 
+  test "imports the dated periods of a preventive" do
+    result = import("episodes" => [], "medications" => [{
+      "name" => "Topiramate", "kind" => "preventive",
+      "periods" => [{ "started_on" => "2026-01-01", "ended_on" => "2026-04-01", "dose" => "50 mg", "stop_reason" => "ineffective" }, { "started_on" => "2026-05-01" }]
+    }])
+
+    assert_equal 2, result.treatment_periods
+    periods = @user.medications.find_by!(name: "Topiramate").treatment_periods.chronological
+    assert_equal ["ineffective", nil], periods.map(&:stop_reason)
+    assert periods.last.current?
+  end
+
+  test "a period already on record for that start date is kept as it is" do
+    medication = medications(:candesartan)
+    medication.treatment_periods.create!(user: @user, started_on: "2026-01-01", dose: "8 mg")
+    result = import("episodes" => [], "medications" => [{ "name" => "Candesartan", "kind" => "preventive", "periods" => [{ "started_on" => "2026-01-01", "dose" => "16 mg" }] }])
+
+    assert_equal 0, result.treatment_periods
+    assert_equal "8 mg", medication.treatment_periods.first.dose
+  end
+
+  test "an invalid period aborts the whole import" do
+    assert_no_difference -> { TreatmentPeriod.count + @user.episodes.count } do
+      assert_raises(DataImporter::InvalidData) do
+        import("episodes" => [episode_row], "medications" => [{ "name" => "Candesartan", "kind" => "preventive", "periods" => [{ "started_on" => "2026-04-01", "ended_on" => "2026-01-01" }] }])
+      end
+      assert_raises(DataImporter::InvalidData) do
+        import("episodes" => [], "medications" => [{ "name" => "Candesartan", "periods" => "nope" }])
+      end
+    end
+  end
+
   test "never touches another user's data" do
     assert_no_difference "users(:two).medications.count" do
       import("episodes" => [episode_row("medications" => [{ "name" => medications(:aspirin).name }])])

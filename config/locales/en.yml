@@ -378,6 +378,16 @@ en:
   activerecord:
     errors:
       models:
+        treatment_period:
+          attributes:
+            ended_on:
+              before_start: "cannot be before the start."
+            stop_reason:
+              needs_end: "can only be given once the treatment is stopped."
+            medication:
+              not_preventive: "must be a preventive treatment."
+            base:
+              overlap: "This treatment is already recorded for part of that period."
         episode:
           attributes:
             base:
@@ -498,6 +508,31 @@ en:
     flash:
       finished: "Episode saved (%{duration})."
       cancelled: "Episode cancelled."
+
+  treatment_periods:
+    title: "Treatment periods"
+    hint: "Note when you started and stopped this treatment. It is judged after 3 months at the right dose, and your neurologist will ask which ones you have tried."
+    empty: "No period recorded."
+    started_on: "Start"
+    ended_on: "End"
+    ongoing: "ongoing"
+    dose: "Dose"
+    stop_reason: "Reason for stopping"
+    reasons:
+      ineffective: "Not effective enough"
+      not_tolerated: "Not well tolerated"
+      planned: "Planned stop or pause"
+      other: "Other reason"
+    duration:
+      one: "%{count} day"
+      other: "%{count} days"
+    add: "Add the period"
+    remove: "Delete this period"
+    confirm_remove: "Delete this treatment period?"
+    flash:
+      created: "Period added."
+      updated: "Period updated."
+      deleted: "Period deleted."
 
   theme:
     label: "Appearance"

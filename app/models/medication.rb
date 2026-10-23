@@ -13,6 +13,7 @@ class Medication < ApplicationRecord
   belongs_to :user
   has_many :medication_intakes, dependent: :restrict_with_error
   has_many :episodes, through: :medication_intakes
+  has_many :treatment_periods, dependent: :destroy
 
   before_validation :normalize_fields
 
@@ -68,9 +69,9 @@ class Medication < ApplicationRecord
     update!(archived_at: nil)
   end
 
-  # Archives a medication that has history, deletes one that was never used.
+  # Archives a medication that has history (intakes or treatment periods), deletes one that was never used.
   def retire!
-    medication_intakes.exists? ? archive! : destroy!
+    medication_intakes.exists? || treatment_periods.exists? ? archive! : destroy!
   end
 
   def abbreviation
