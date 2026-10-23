@@ -473,6 +473,7 @@ en:
     add_details: "Add details"
     cancel: "Started by mistake? Cancel"
     confirm_cancel: "Delete this episode?"
+    no_medication: "No medication saved yet. Tap a common one or type a name."
     guest:
       hint: "Note it now, no account needed. We'll sort out the rest afterwards."
       have_account: "Already have an account?"

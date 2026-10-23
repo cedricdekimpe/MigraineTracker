@@ -142,6 +142,35 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     assert_equal ["400 mg", "14:32"], [intake.dose, intake.taken_time.strftime("%H:%M")]
   end
 
+  test "with no medication yet, the progress screen offers common ones and a name field" do
+    @user.episodes.destroy_all
+    @user.medications.destroy_all
+    @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", pain_kind: "migraine", intensity: 6, ongoing: true)
+    get now_path
+    assert_select "button[name=name]", text: /Ibuprof|Parac/
+    assert_select "input[name=name]"
+  end
+
+  test "tapping a suggestion creates the medication with its class and logs the intake" do
+    @user.episodes.destroy_all
+    @user.medications.destroy_all
+    @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", pain_kind: "migraine", intensity: 6, ongoing: true)
+    triptan = Medication.suggestions["triptan"].first
+    assert_difference -> { @user.medications.count }, 1 do
+      post now_medication_path, params: { name: triptan }
+    end
+    assert_equal "triptan", @user.medications.find_by!(name: triptan).kind
+    assert_equal 1, ongoing.medication_intakes.count
+  end
+
+  test "a typed name reuses an existing medication instead of duplicating it" do
+    @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", pain_kind: "migraine", intensity: 6, ongoing: true)
+    assert_no_difference -> { @user.medications.count } do
+      post now_medication_path, params: { name: medications(:ibuprofen).name.upcase }
+    end
+    assert_equal medications(:ibuprofen), ongoing.medication_intakes.last.medication
+  end
+
   test "the same medication can be taken twice" do
     post now_path, params: { pain_kind: "migraine", intensity: "6" }
     2.times do

@@ -566,6 +566,7 @@ fr:
     add_details: "Ajouter des détails"
     cancel: "Démarré par erreur ? Annuler"
     confirm_cancel: "Supprimer cet épisode ?"
+    no_medication: "Aucun médicament enregistré. Touchez-en un courant ou tapez un nom."
     guest:
       hint: "Notez-le maintenant, sans compte. On s'occupe du reste ensuite."
       have_account: "Vous avez déjà un compte ?"
