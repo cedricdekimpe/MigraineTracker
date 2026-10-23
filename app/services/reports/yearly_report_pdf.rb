@@ -91,7 +91,7 @@ module Reports
 
       pdf.move_down 12
       pdf.fill_color MUTED
-      pdf.text t("overuse_note", triptan: MonthlyOverview::TRIPTAN_LIMIT, acute: MonthlyOverview::ACUTE_LIMIT, mixed: MonthlyOverview::MIXED_LIMIT), size: 8.5, leading: 2
+      pdf.text t("overuse_note", triptan: MonthlyOverview::TRIPTAN_LIMIT, combination: MonthlyOverview::COMBINATION_LIMIT, acute: MonthlyOverview::ACUTE_LIMIT, mixed: MonthlyOverview::MIXED_LIMIT), size: 8.5, leading: 2
       pdf.move_down 4
       pdf.text t("disclaimer"), size: 8.5, style: :italic
     end
@@ -105,7 +105,7 @@ module Reports
 
       [
         l_month(month.month), month.pain_days, month.migraine_days, month.headache_days, month.aura_days,
-        month.triptan_days, month.acute_days, month.any_acute_days, t("status.#{month.overuse_status}")
+        month.triptan_days, month.non_triptan_days, month.any_acute_days, t("status.#{month.overuse_status}")
       ]
     end
 

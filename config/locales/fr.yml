@@ -115,11 +115,12 @@ fr:
       other: "Plus %{count} jours d'aura seule."
     overuse:
       title: "Jours de traitement aigu"
-      hint: "Prendre un traitement aigu trop de jours peut provoquer des maux de tête à son tour. Les seuils usuels, comptés par mois et sur plus de 3 mois : 10 jours pour les triptans, 15 jours pour les autres antidouleurs, ou 10 jours en les mélangeant."
+      hint: "Prendre un traitement aigu trop de jours peut provoquer des maux de tête à son tour. Les seuils usuels, comptés par mois et sur plus de 3 mois : 10 jours pour les triptans et pour les antidouleurs associés ou opioïdes, 15 jours pour les antidouleurs simples et les AINS, ou 10 jours en mélangeant plusieurs types."
       triptan: "Triptans (t)"
-      acute: "Autres traitements aigus (X)"
+      combination: "Antidouleurs associés ou opioïdes (X)"
+      acute: "Antidouleurs simples et AINS (X)"
       days_of_limit: "%{days} jours sur %{limit}"
-      mixed: "Les deux ensemble : %{days} jours (seuil %{limit})."
+      mixed: "Plusieurs types ensemble : %{days} jours (seuil %{limit})."
       status_ok: "Sous les seuils ce mois-ci."
       status_watch: "Vous approchez d'un seuil. À surveiller."
       status_over: "Un seuil est atteint ce mois-ci. Si cela se répète, parlez-en à votre médecin. C'est un rappel, pas un diagnostic."
@@ -413,9 +414,12 @@ fr:
 
   # Suggestions en un tap lors de l'ajout d'un médicament
   medication_suggestions:
-    acute: ["Ibuprofène", "Paracétamol", "Aspirine", "Naproxène", "Diclofénac", "Métoclopramide"]
-    triptan: ["Sumatriptan", "Rizatriptan", "Zolmitriptan", "Élétriptan"]
-    preventive: ["Propranolol", "Topiramate", "Amitriptyline"]
+    acute: ["Ibuprofène", "Paracétamol", "Aspirine", "Naproxène", "Diclofénac", "Kétoprofène"]
+    combination: ["Paracétamol + caféine", "Paracétamol + codéine", "Aspirine + paracétamol + caféine"]
+    triptan: ["Sumatriptan", "Rizatriptan", "Zolmitriptan", "Élétriptan", "Almotriptan", "Frovatriptan", "Naratriptan"]
+    gepant: ["Rimégépant", "Ubrogépant", "Lasmiditan"]
+    other: ["Métoclopramide", "Dompéridone"]
+    preventive: ["Propranolol", "Métoprolol", "Candésartan", "Topiramate", "Amitriptyline", "Flunarizine", "Venlafaxine", "Valproate", "Érénumab", "Frémanézumab", "Galcanézumab", "Atogépant", "Toxine botulique"]
 
   activerecord:
     models:
@@ -523,10 +527,12 @@ fr:
     description: "Votre liste de médicaments. Les médicaments archivés restent sur vos épisodes passés."
     kind: "Type"
     kinds:
-      acute: "Traitement aigu (X)"
+      acute: "Antidouleur ou AINS (X)"
+      combination: "Antidouleur associé ou opioïde (X)"
       triptan: "Triptan (t)"
-      preventive: "De fond"
-      other: "Autre"
+      gepant: "Gépant ou ditan (X)"
+      preventive: "Traitement de fond"
+      other: "Autre, non compté (ex. anti-nausée)"
     default_dose: "Dose habituelle"
     remove: "Retirer"
     confirm_remove: "Retirer %{name} ? S'il a été utilisé dans des épisodes passés, il est archivé et non effacé."
@@ -566,6 +572,7 @@ fr:
     add_details: "Ajouter des détails"
     cancel: "Démarré par erreur ? Annuler"
     confirm_cancel: "Supprimer cet épisode ?"
+    kind_question: "Quel type de médicament est « %{name} » ? Cela décide comment il est compté."
     no_medication: "Aucun médicament enregistré. Touchez-en un courant ou tapez un nom."
     guest:
       hint: "Notez-le maintenant, sans compte. On s'occupe du reste ensuite."
@@ -656,5 +663,5 @@ fr:
       cycle: "cycle menstruel"
       acute: "prise de traitement aigu"
       triptan: "prise de triptan"
-    overuse_note: "Le statut compte, par mois, les jours avec un triptan (seuil %{triptan}), avec un autre traitement aigu (seuil %{acute}), ou avec les deux mélangés (seuil %{mixed}). Le surusage se juge habituellement sur plus de 3 mois."
+    overuse_note: "Le statut compte, par mois, les jours avec un triptan (seuil %{triptan}), avec un antidouleur associé ou un opioïde (seuil %{combination}), avec un antidouleur simple ou un AINS (seuil %{acute}), ou avec plusieurs types mélangés (seuil %{mixed}). Le surusage se juge habituellement sur plus de 3 mois."
     disclaimer: "Outil de suivi personnel. Ce rapport ne constitue pas un diagnostic."

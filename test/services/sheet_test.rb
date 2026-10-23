@@ -77,6 +77,16 @@ class SheetTest < ActiveSupport::TestCase
     assert_not day(12).treatment?
   end
 
+  test "X also covers combined analgesics and gepants, an anti-nausea drug shows nothing" do
+    episode(13, medications: [@user.medications.create!(name: "Paracetamol + codeine", kind: "combination")])
+    episode(14, medications: [@user.medications.create!(name: "Rimegepant", kind: "gepant")])
+    episode(15, medications: [@user.medications.create!(name: "Metoclopramide", kind: "other")])
+
+    assert day(13).acute?
+    assert day(14).acute?
+    assert_not day(15).treatment?
+  end
+
   test "counts pain days and treatment days of a month" do
     episode(1, medications: [@acute])
     episode(2, pain: "headache")

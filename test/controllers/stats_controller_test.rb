@@ -104,7 +104,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     visit_stats
 
     assert_select "[data-overuse=over]"
-    assert_match(/Both kinds together: 10 days/, response.body)
+    assert_match(/Several kinds together: 10 days/, response.body)
   end
 
   test "twelve months of columns, coloured by month, with the threshold on the treatment chart" do

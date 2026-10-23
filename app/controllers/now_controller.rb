@@ -5,9 +5,7 @@ class NowController < ApplicationController
 
   def show
     if @episode
-      @medications = current_user.medications.active.where.not(kind: "preventive").most_used_first
-      known = current_user.medications.pluck(:name).map(&:downcase)
-      @suggested_medications = Medication.suggestions.values_at("acute", "triptan").flatten.reject { |name| known.include?(name.downcase) }
+      load_progress
       render :progress
     else
       @default_pain_kind = current_user.episodes.where.not(pain_kind: nil).order(:created_at).last&.pain_kind || "migraine"
@@ -43,15 +41,24 @@ class NowController < ApplicationController
   end
 
   def medication
-    medication =
-      if params[:name].present?
-        found = Medication.find_or_create_for(current_user, params[:name], kind: Medication.kind_for(params[:name]))
-        return redirect_to now_path, alert: found.errors.full_messages.to_sentence unless found.persisted?
+    if params[:name].present?
+      name = params[:name].to_s.strip
+      kind = params[:kind].presence_in(TYPED_KINDS) || Medication.kind_for(name)
+      existing = current_user.medications.find_by("lower(name) = ?", name.downcase)
 
-        found
-      else
-        current_user.medications.active.find(params[:medication_id])
+      if kind.nil? && existing.nil?
+        # Not a name we know: ask which kind it is rather than guess, the class decides the overuse counts.
+        @unknown_name = name
+        load_progress
+        return render :progress
       end
+
+      medication = existing || Medication.find_or_create_for(current_user, name, kind: kind)
+      return redirect_to now_path, alert: medication.errors.full_messages.to_sentence unless medication.persisted?
+    else
+      medication = current_user.medications.active.find(params[:medication_id])
+    end
+
     @episode.medication_intakes.create!(medication: medication, dose: medication.default_dose, taken_time: Time.current.strftime("%H:%M"))
     redirect_to now_path
   end
@@ -68,6 +75,14 @@ class NowController < ApplicationController
   end
 
   private
+
+  TYPED_KINDS = %w[acute combination triptan gepant other].freeze
+
+  def load_progress
+    @medications = current_user.medications.active.where.not(kind: "preventive").most_used_first
+    known = current_user.medications.pluck(:name).map(&:downcase)
+    @suggested_medications = Medication.suggestions.values_at("acute", "triptan").flatten.reject { |name| known.include?(name.downcase) }
+  end
 
   def set_ongoing_episode
     @episode = current_user.episodes.ongoing.includes(medication_intakes: :medication).order(:created_at).last

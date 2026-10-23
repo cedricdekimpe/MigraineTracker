@@ -163,6 +163,31 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, ongoing.medication_intakes.count
   end
 
+  test "an unknown name asks for its kind instead of guessing" do
+    @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", pain_kind: "migraine", intensity: 6, ongoing: true)
+    assert_no_difference -> { @user.medications.count } do
+      post now_medication_path, params: { name: "Mystery pill" }
+    end
+    assert_response :success
+    assert_select "button[name=kind]", 5
+    assert_select "input[name=name][value=?]", "Mystery pill"
+    assert_equal 0, ongoing.medication_intakes.count
+  end
+
+  test "choosing the kind creates the medication in that class and logs the intake" do
+    @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", pain_kind: "migraine", intensity: 6, ongoing: true)
+    post now_medication_path, params: { name: "Mystery pill", kind: "combination" }
+    assert_equal "combination", @user.medications.find_by!(name: "Mystery pill").kind
+    assert_equal 1, ongoing.medication_intakes.count
+  end
+
+  test "preventive is not offered as a kind for a typed name" do
+    @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", pain_kind: "migraine", intensity: 6, ongoing: true)
+    post now_medication_path, params: { name: "Mystery pill", kind: "preventive" }
+    assert_response :success
+    assert_nil @user.medications.find_by(name: "Mystery pill")
+  end
+
   test "a typed name reuses an existing medication instead of duplicating it" do
     @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", pain_kind: "migraine", intensity: 6, ongoing: true)
     assert_no_difference -> { @user.medications.count } do

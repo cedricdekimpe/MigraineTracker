@@ -35,7 +35,7 @@
         <div>
           <dd class="font-display text-6xl font-semibold leading-none text-ink-900" data-figure="acute-days"><%= @month.any_acute_days %></dd>
           <dt class="mt-2 text-sm text-ink-700"><%= t("stats.acute_days", count: @month.any_acute_days) %></dt>
-          <dd class="text-sm text-ink-600"><%= t("stats.triptan_split", triptan: @month.triptan_days, acute: @month.acute_days) %></dd>
+          <dd class="text-sm text-ink-600"><%= t("stats.triptan_split", triptan: @month.triptan_days, acute: @month.non_triptan_days) %></dd>
         </div>
         <div>
           <dd class="font-display text-6xl font-semibold leading-none text-ink-900" data-figure="average"><%= @average ? number_with_precision(@average, precision: 1, strip_insignificant_zeros: true) : "–" %></dd>
@@ -54,7 +54,8 @@
       <p class="mt-2 max-w-2xl text-sm text-ink-600"><%= t("stats.overuse.hint") %></p>
 
       <div class="mt-6 space-y-6">
-        <% [[:triptan, @month.triptan_days, MonthlyOverview::TRIPTAN_LIMIT], [:acute, @month.acute_days, MonthlyOverview::ACUTE_LIMIT]].each do |kind, days, limit| %>
+        <% [[:triptan, @month.triptan_days, MonthlyOverview::TRIPTAN_LIMIT], [:combination, @month.combination_days, MonthlyOverview::COMBINATION_LIMIT], [:acute, @month.acute_days, MonthlyOverview::ACUTE_LIMIT]].each do |kind, days, limit| %>
+          <% next if kind == :combination && days.zero? %>
           <div data-meter="<%= kind %>">
             <div class="mb-2 flex items-baseline justify-between text-sm">
               <span class="font-medium text-ink-800"><%= t("stats.overuse.#{kind}") %></span>
@@ -97,7 +98,7 @@
       <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.medication_chart_title") %></h2>
       <div class="mt-5" data-chart="acute-days">
         <%= month_columns(@overview.months, label: t("stats.medication_chart_title"),
-              segments: ->(m) { [m.triptan_days, m.acute_days] },
+              segments: ->(m) { [m.triptan_days, m.non_triptan_days] },
               threshold: MonthlyOverview::MIXED_LIMIT, threshold_label: t("stats.threshold_label", days: MonthlyOverview::MIXED_LIMIT)) %>
       </div>
       <p class="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-ink-600">

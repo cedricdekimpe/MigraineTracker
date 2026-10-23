@@ -115,11 +115,12 @@ en:
       other: "Plus %{count} days with an aura only."
     overuse:
       title: "Acute treatment days"
-      hint: "Taking acute treatment on too many days can itself cause headaches. The usual thresholds, counted per month and over more than 3 months: 10 days for triptans, 15 days for other painkillers, or 10 days when both are mixed."
+      hint: "Taking acute treatment on too many days can itself cause headaches. The usual thresholds, counted per month and over more than 3 months: 10 days for triptans and for combined painkillers or opioids, 15 days for simple painkillers and NSAIDs, or 10 days when several kinds are mixed."
       triptan: "Triptans (t)"
-      acute: "Other acute treatments (X)"
+      combination: "Combined painkillers or opioids (X)"
+      acute: "Simple painkillers and NSAIDs (X)"
       days_of_limit: "%{days} of %{limit} days"
-      mixed: "Both kinds together: %{days} days (threshold %{limit})."
+      mixed: "Several kinds together: %{days} days (threshold %{limit})."
       status_ok: "Below the thresholds this month."
       status_watch: "Getting close to a threshold. Worth keeping an eye on."
       status_over: "A threshold is reached this month. If it keeps happening, talk to your doctor. This is a reminder, not a diagnosis."
@@ -365,9 +366,12 @@ en:
 
   # One-tap suggestions when adding a medication
   medication_suggestions:
-    acute: ["Ibuprofen", "Paracetamol", "Aspirin", "Naproxen", "Diclofenac", "Metoclopramide"]
-    triptan: ["Sumatriptan", "Rizatriptan", "Zolmitriptan", "Eletriptan"]
-    preventive: ["Propranolol", "Topiramate", "Amitriptyline"]
+    acute: ["Ibuprofen", "Paracetamol", "Aspirin", "Naproxen", "Diclofenac", "Ketoprofen"]
+    combination: ["Paracetamol + caffeine", "Paracetamol + codeine", "Aspirin + paracetamol + caffeine"]
+    triptan: ["Sumatriptan", "Rizatriptan", "Zolmitriptan", "Eletriptan", "Almotriptan", "Frovatriptan", "Naratriptan"]
+    gepant: ["Rimegepant", "Ubrogepant", "Lasmiditan"]
+    other: ["Metoclopramide", "Domperidone"]
+    preventive: ["Propranolol", "Metoprolol", "Candesartan", "Topiramate", "Amitriptyline", "Flunarizine", "Venlafaxine", "Valproate", "Erenumab", "Fremanezumab", "Galcanezumab", "Atogepant", "Botulinum toxin"]
 
   activerecord:
     errors:
@@ -430,10 +434,12 @@ en:
     description: "Your medication list. Archived medications stay on past episodes."
     kind: "Type"
     kinds:
-      acute: "Acute treatment (X)"
+      acute: "Painkiller or NSAID (X)"
+      combination: "Combined painkiller or opioid (X)"
       triptan: "Triptan (t)"
+      gepant: "Gepant or ditan (X)"
       preventive: "Preventive"
-      other: "Other"
+      other: "Other, not counted (e.g. anti-nausea)"
     default_dose: "Usual dose"
     remove: "Remove"
     confirm_remove: "Remove %{name}? If it was used in past episodes it is archived, not erased."
@@ -473,6 +479,7 @@ en:
     add_details: "Add details"
     cancel: "Started by mistake? Cancel"
     confirm_cancel: "Delete this episode?"
+    kind_question: "What kind of medication is \"%{name}\"? It decides how it is counted."
     no_medication: "No medication saved yet. Tap a common one or type a name."
     guest:
       hint: "Note it now, no account needed. We'll sort out the rest afterwards."
@@ -563,5 +570,5 @@ en:
       cycle: "menstrual cycle"
       acute: "acute treatment taken"
       triptan: "triptan taken"
-    overuse_note: "Treatment status counts, per month, the days with a triptan (threshold %{triptan}), with another acute treatment (threshold %{acute}), or with both kinds mixed (threshold %{mixed}). Overuse is usually judged over more than 3 months."
+    overuse_note: "Treatment status counts, per month, the days with a triptan (threshold %{triptan}), with a combined painkiller or opioid (threshold %{combination}), with a simple painkiller or NSAID (threshold %{acute}), or with several kinds mixed (threshold %{mixed}). Overuse is usually judged over more than 3 months."
     disclaimer: "Personal tracking tool. This report is not a diagnosis."

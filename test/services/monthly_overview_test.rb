@@ -106,6 +106,35 @@ class MonthlyOverviewTest < ActiveSupport::TestCase
     assert_equal :over, current.overuse_status
   end
 
+  test "combined analgesics and opioids trip their own threshold at 10 days" do
+    combination = @user.medications.create!(name: "Paracetamol + codeine", kind: "combination")
+    9.times { |i| episode(Date.new(2026, 10, i + 1), medications: [combination]) }
+    assert_equal :watch, overview.current.overuse_status
+
+    episode(Date.new(2026, 10, 10), medications: [combination])
+    assert_equal :over, overview.current.overuse_status
+    assert_equal 10, overview.current.combination_days
+    assert_equal 0, overview.current.acute_days
+  end
+
+  test "gepants count in the mix and as treatment days but have no threshold of their own" do
+    gepant = @user.medications.create!(name: "Rimegepant", kind: "gepant")
+    9.times { |i| episode(Date.new(2026, 10, i + 1), medications: [gepant]) }
+    assert_equal :ok, overview.current.overuse_status
+    assert_equal [9, 9], [overview.current.gepant_days, overview.current.any_acute_days]
+
+    episode(Date.new(2026, 10, 10), medications: [@acute])
+    assert overview.current.mixed?
+    assert_equal :over, overview.current.overuse_status
+  end
+
+  test "an anti-nausea drug is never counted" do
+    antiemetic = @user.medications.create!(name: "Metoclopramide", kind: "other")
+    15.times { |i| episode(Date.new(2026, 10, i + 1), medications: [antiemetic]) }
+    assert_equal 0, overview.current.any_acute_days
+    assert_equal :ok, overview.current.overuse_status
+  end
+
   test "average of the last complete months excludes the current month" do
     episode(Date.new(2026, 10, 1)) # current month, ignored
     [Date.new(2026, 7, 1), Date.new(2026, 8, 1), Date.new(2026, 8, 2), Date.new(2026, 9, 1), Date.new(2026, 9, 2), Date.new(2026, 9, 3)].each { |date| episode(date) }

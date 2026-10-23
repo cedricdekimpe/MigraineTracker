@@ -1,8 +1,14 @@
 class Medication < ApplicationRecord
-  # acute = "traitement aigu" (X on the paper calendar), triptan = t, preventive = daily treatment.
-  # The acute/triptan split is what the medication-overuse thresholds are counted on.
-  KINDS = %w[acute triptan preventive other].freeze
-  SUGGESTED_KINDS = %w[acute triptan preventive].freeze
+  # What the medication is, which decides how its days are counted for the overuse thresholds:
+  # acute       simple analgesic or NSAID (X on the paper calendar), ICHD-3 limit 15 days a month
+  # combination combined analgesic (caffeine, codeine...) or opioid (X), limit 10 days
+  # triptan     (t), limit 10 days
+  # gepant      gepant or ditan (X), no limit of its own but counted in the mixed total
+  # preventive  daily treatment, tracked in treatment periods rather than as intakes
+  # other       anything else, e.g. an anti-nausea drug: never counted
+  KINDS = %w[acute combination triptan gepant preventive other].freeze
+  COUNTED_KINDS = %w[acute combination triptan gepant].freeze
+  SUGGESTED_KINDS = %w[acute combination triptan gepant other preventive].freeze
 
   belongs_to :user
   has_many :medication_intakes, dependent: :restrict_with_error
@@ -37,11 +43,17 @@ class Medication < ApplicationRecord
     SUGGESTED_KINDS.index_with { |kind| I18n.t("medication_suggestions.#{kind}") }
   end
 
-  # Class of a suggested/typed name (matching a suggestion ignoring case), "acute" otherwise.
+  # Class of a suggested name (matching a suggestion ignoring case), nil for a name we do not know:
+  # guessing would silently move days in or out of the overuse counts, so the person is asked.
   def self.kind_for(name)
     clean = name.to_s.strip.downcase
     suggestions.each { |kind, names| return kind if names.any? { |suggestion| suggestion.downcase == clean } }
-    "acute"
+    nil
+  end
+
+  # Whether intakes of this medication count as a treatment day (X or t on the calendar).
+  def counted?
+    kind.in?(COUNTED_KINDS)
   end
 
   def archived?

@@ -39,6 +39,18 @@
         <% end %>
       </div>
     <% end %>
+    <% if @unknown_name %>
+      <%= form_with url: now_medication_path, method: :post, data: { turbo: false }, class: "mb-4 rounded-2xl border border-ink-300 p-4" do %>
+        <p class="mb-3 text-base font-medium"><%= t("now.kind_question", name: @unknown_name) %></p>
+        <%= hidden_field_tag :name, @unknown_name %>
+        <div class="grid gap-2">
+          <% %w[triptan acute combination gepant other].each do |kind| %>
+            <%= button_tag t("medications_page.kinds.#{kind}"), type: "submit", name: "kind", value: kind,
+                  class: "min-h-12 cursor-pointer rounded-2xl border border-ink-200 bg-ink-100 px-4 text-left text-base text-ink-900 hover:border-accent-400" %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
     <% if @medications.empty? %>
       <p class="mb-3 text-sm text-ink-500"><%= t("now.no_medication") %></p>
     <% end %>

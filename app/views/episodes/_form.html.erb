@@ -78,7 +78,10 @@
       </div>
     <% end %>
     <div>
-      <%= text_field_tag "episode[new_medication_names]", params.dig(:episode, :new_medication_names), placeholder: t("episodes.add_medication"), "aria-label": t("episodes.add_medication"), class: input_class %>
+      <div class="flex flex-col gap-2 sm:flex-row">
+        <%= text_field_tag "episode[new_medication_names]", params.dig(:episode, :new_medication_names), placeholder: t("episodes.add_medication"), "aria-label": t("episodes.add_medication"), class: "#{input_class} sm:flex-1" %>
+        <%= select_tag "episode[new_medication_kind]", options_for_select(%w[acute combination triptan gepant other].map { |kind| [t("medications_page.kinds.#{kind}"), kind] }, params.dig(:episode, :new_medication_kind)), "aria-label": t("medications_page.kind"), class: "#{input_class} sm:w-72" %>
+      </div>
       <p class="mt-1 text-xs text-ink-500"><%= t("episodes.add_medication_hint") %></p>
     </div>
   </fieldset>

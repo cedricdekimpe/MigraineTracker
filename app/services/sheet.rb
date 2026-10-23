@@ -45,8 +45,9 @@ class Sheet
       kinds.include?("triptan")
     end
 
+    # X: any counted treatment other than a triptan (painkiller, combination, gepant)
     def acute?
-      kinds.include?("acute")
+      kinds.intersect?(%w[acute combination gepant])
     end
 
     def treatment?

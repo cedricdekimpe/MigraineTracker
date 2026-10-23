@@ -6,8 +6,12 @@ class MedicationTest < ActiveSupport::TestCase
     assert users(:two).medications.new(name: "Ibuprofen").valid?
   end
 
-  test "triptan and acute treatment are separate classes" do
-    assert_equal %w[acute triptan preventive other], Medication::KINDS
+  test "classes decide how a medication is counted" do
+    assert_equal %w[acute combination triptan gepant preventive other], Medication::KINDS
+    assert_equal %w[acute combination triptan gepant], Medication::COUNTED_KINDS
+    assert users(:one).medications.new(name: "Domperidone", kind: "other").valid?
+    assert_not users(:one).medications.new(name: "Domperidone", kind: "other").counted?
+    assert users(:one).medications.new(name: "Rimegepant", kind: "gepant").counted?
     assert users(:one).medications.new(name: "Zolmitriptan", kind: "triptan").valid?
   end
 
@@ -16,7 +20,9 @@ class MedicationTest < ActiveSupport::TestCase
     assert_includes Medication.suggestions["acute"], "Ibuprofen"
     assert_equal "triptan", Medication.kind_for(" sumatriptan ")
     assert_equal "preventive", Medication.kind_for("Propranolol")
-    assert_equal "acute", Medication.kind_for("Something unknown")
+    assert_equal "other", Medication.kind_for("Metoclopramide")
+    assert_equal "gepant", Medication.kind_for("Rimegepant")
+    assert_nil Medication.kind_for("Something unknown")
   end
 
   test "kind must be known" do

@@ -147,7 +147,7 @@ class EpisodesController < ApplicationController
 
   # Form fields outside the Episode columns: chips (ids), free-text additions and suggestions.
   def entry_params
-    params.fetch(:episode, {}).permit(:new_medication_names, :new_trigger_names, medication_ids: [], trigger_ids: [], suggested_medications: [])
+    params.fetch(:episode, {}).permit(:new_medication_names, :new_trigger_names, :new_medication_kind, medication_ids: [], trigger_ids: [], suggested_medications: [])
   end
 
   def save_episode
@@ -168,7 +168,8 @@ class EpisodesController < ApplicationController
   def selected_medications(entry)
     chosen = current_user.medications.where(id: Array(entry[:medication_ids])).to_a
     names = split_names(entry[:new_medication_names]) + Array(entry[:suggested_medications]).map(&:to_s)
-    created = names.filter_map { |name| Medication.find_or_create_for(current_user, name, kind: Medication.kind_for(name)) }.select(&:persisted?)
+    typed_kind = entry[:new_medication_kind].presence_in(Medication::KINDS) || "acute"
+    created = names.filter_map { |name| Medication.find_or_create_for(current_user, name, kind: Medication.kind_for(name) || typed_kind) }.select(&:persisted?)
     (chosen + created).uniq
   end
 
