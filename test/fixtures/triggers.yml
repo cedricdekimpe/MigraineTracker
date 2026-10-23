@@ -1,0 +1,11 @@
+stress:
+  user: one
+  name: Stress
+
+sleep:
+  user: one
+  name: Lack of sleep
+
+other_users_trigger:
+  user: two
+  name: Stress

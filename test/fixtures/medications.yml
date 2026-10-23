@@ -1,17 +1,26 @@
-one:
+ibuprofen:
   name: Ibuprofen
   user: one
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
+  kind: acute
+  default_dose: 400 mg
 
-two:
+paracetamol:
   name: Paracetamol
   user: one
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
+  kind: acute
 
-three:
+propranolol:
+  name: Propranolol
+  user: one
+  kind: preventive
+
+old_med:
+  name: Old Med
+  user: one
+  kind: acute
+  archived_at: <%= 1.month.ago %>
+
+aspirin:
   name: Aspirin
   user: two
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
+  kind: acute

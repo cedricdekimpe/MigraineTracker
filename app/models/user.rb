@@ -5,12 +5,13 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: JwtDenylist
 
-  has_many :migraines, dependent: :destroy
+  has_many :episodes, dependent: :destroy
   has_many :medications, dependent: :destroy
+  has_many :triggers, dependent: :destroy
 
   scope :admins, -> { where(admin: true) }
 
-  after_create :ensure_default_medications
+  after_create :seed_default_triggers
 
   HEALTH_DATA_CONSENT_VERSION = "2026-03-06".freeze
   HEALTH_DATA_CONSENT_TEXT = "I consent to the storage and processing of my health data (migraine logs and medications) so Migraine Tracker can provide the service.".freeze
@@ -25,10 +26,8 @@ class User < ApplicationRecord
 
   private
 
-  def ensure_default_medications
-    %w[Ibuprofen Triptan].each do |name|
-      medications.find_or_create_by(name: name)
-    end
+  def seed_default_triggers
+    Trigger.seed_defaults_for(self)
   end
 
   def health_data_consent_presence

@@ -1,0 +1,7 @@
+aura_stress:
+  episode: migraine_with_aura
+  trigger: stress
+
+aura_sleep:
+  episode: migraine_with_aura
+  trigger: sleep

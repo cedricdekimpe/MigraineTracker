@@ -367,3 +367,26 @@ fr:
     devise:
       registrations:
         password_invalid: "Mot de passe incorrect. Veuillez réessayer."
+
+  triggers:
+    defaults:
+      stress: "Stress"
+      lack_of_sleep: "Manque de sommeil"
+      alcohol: "Alcool"
+      skipped_meal: "Repas sauté"
+      weather: "Changement de météo"
+      screens: "Écrans"
+      strong_smells: "Odeurs fortes"
+
+  # Suggestions en un tap lors de l'ajout d'un médicament
+  medication_suggestions:
+    acute: ["Ibuprofène", "Paracétamol", "Aspirine", "Naproxène", "Diclofénac", "Sumatriptan", "Rizatriptan", "Zolmitriptan", "Élétriptan", "Métoclopramide"]
+    preventive: ["Propranolol", "Topiramate", "Amitriptyline"]
+
+  activerecord:
+    errors:
+      models:
+        episode:
+          attributes:
+            base:
+              aura_or_pain: "Indiquez une aura, une douleur (migraine ou mal de tête), ou les deux."

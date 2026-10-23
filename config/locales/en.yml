@@ -319,3 +319,26 @@ en:
     devise:
       registrations:
         password_invalid: "Incorrect password. Please try again."
+
+  triggers:
+    defaults:
+      stress: "Stress"
+      lack_of_sleep: "Lack of sleep"
+      alcohol: "Alcohol"
+      skipped_meal: "Skipped meal"
+      weather: "Weather change"
+      screens: "Screens"
+      strong_smells: "Strong smells"
+
+  # One-tap suggestions when adding a medication
+  medication_suggestions:
+    acute: ["Ibuprofen", "Paracetamol", "Aspirin", "Naproxen", "Diclofenac", "Sumatriptan", "Rizatriptan", "Zolmitriptan", "Eletriptan", "Metoclopramide"]
+    preventive: ["Propranolol", "Topiramate", "Amitriptyline"]
+
+  activerecord:
+    errors:
+      models:
+        episode:
+          attributes:
+            base:
+              aura_or_pain: "Record an aura, a pain (migraine or headache), or both."

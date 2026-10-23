@@ -1,0 +1,15 @@
+first_dose:
+  episode: migraine_with_aura
+  medication: ibuprofen
+  dose: 400 mg
+  taken_time: "08:45:00"
+  effect: partial
+
+second_dose:
+  episode: migraine_with_aura
+  medication: paracetamol
+  effect: good
+
+headache_dose:
+  episode: headache
+  medication: ibuprofen
