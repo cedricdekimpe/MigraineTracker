@@ -15,6 +15,7 @@ en:
     language: "Language"
     faq: "FAQ"
     privacy: "Privacy policy"
+    urgent: "When to seek urgent care"
   
   # SEO
   seo:
@@ -274,6 +275,8 @@ en:
       too_many: "The file contains too many %{what} (maximum %{max})."
       medications_label: "medications"
       period_days_label: "period days"
+      daily_checks_label: "daily check-ins"
+      daily_check_kind: "Daily check-in"
       episodes_label: "episodes"
       triggers_label: "triggers"
       medication_kind: "Medication"
@@ -409,6 +412,7 @@ en:
       lack_of_sleep: "Lack of sleep"
       alcohol: "Alcohol"
       skipped_meal: "Skipped meal"
+      caffeine: "Caffeine"
       weather: "Weather change"
       screens: "Screens"
       strong_smells: "Strong smells"
@@ -618,6 +622,28 @@ en:
       todo_hint: "20 seconds, even without an attack"
       done: "Daily check-in done"
       edit: "Edit"
+
+  urgent:
+    link: "When to seek urgent care"
+    title: "When to seek urgent care"
+    intro: "A headache is almost never dangerous, but some signs call for quick medical advice. This page is a pointer, not a diagnosis: if in doubt, call."
+    emergency_title: "Call 112 or go to the emergency room if"
+    emergency:
+      - "the headache is sudden and severe, at its worst within a minute (\"thunderclap\"), or is the worst of your life"
+      - "it comes with weakness or numbness on one side of the body, a drooping face, trouble speaking, double vision or loss of vision, confusion, fainting or seizures"
+      - "it comes with fever and a stiff neck, or a skin rash"
+      - "it follows a blow to the head"
+    soon_title: "See a doctor quickly if"
+    soon:
+      - "it is a new headache after 50, or different from your usual attacks"
+      - "the headaches get worse bit by bit over days or weeks"
+      - "the pain is set off by coughing, exertion or sneezing, or changes with position (lying or standing)"
+      - "an aura is new, lasts more than an hour, or comes with weakness"
+      - "you are pregnant or have just given birth"
+      - "you have cancer, or an illness or treatment that weakens the immune system"
+      - "the eye is red and painful with blurred vision"
+      - "an attack lasts more than 72 hours"
+    source: "Pointers based on the list of warning signs for secondary headaches (Do et al., Neurology 2019) and the recommendations of the International Headache Society. They do not replace a doctor's advice."
 
   theme:
     label: "Appearance"

@@ -174,6 +174,28 @@ class DataImporterTest < ActiveSupport::TestCase
     end
   end
 
+  test "imports daily check-ins once, leaving days already checked in as they are" do
+    @user.daily_checks.create!(date: "2020-01-02", sleep: "good")
+    result = import("episodes" => [], "daily_checks" => [
+      { "date" => "2020-01-01", "sleep" => "short", "stress" => "high", "skipped_meal" => true, "caffeine" => "usual" },
+      { "date" => "2020-01-02", "sleep" => "short" },
+      { "date" => "2020-01-01", "sleep" => "good" }
+    ])
+
+    assert_equal 1, result.daily_checks
+    imported = @user.daily_checks.find_by!(date: "2020-01-01")
+    assert_equal ["short", "high", true, "usual"], [imported.sleep, imported.stress, imported.skipped_meal, imported.caffeine]
+    assert_equal "good", @user.daily_checks.find_by!(date: "2020-01-02").sleep
+  end
+
+  test "an invalid check-in aborts the whole import" do
+    assert_no_difference -> { @user.episodes.count } do
+      assert_raises(DataImporter::InvalidData) { import("episodes" => [episode_row], "daily_checks" => [{ "date" => "2020-01-01", "sleep" => "wonderful" }]) }
+      assert_raises(DataImporter::InvalidData) { import("episodes" => [episode_row], "daily_checks" => [{ "date" => "nope" }]) }
+      assert_raises(DataImporter::InvalidData) { import("episodes" => [], "daily_checks" => "x") }
+    end
+  end
+
   test "never touches another user's data" do
     assert_no_difference "users(:two).medications.count" do
       import("episodes" => [episode_row("medications" => [{ "name" => medications(:aspirin).name }])])

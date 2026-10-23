@@ -15,6 +15,7 @@ fr:
     language: "Langue"
     faq: "FAQ"
     privacy: "Politique de confidentialité"
+    urgent: "Quand consulter en urgence"
   
   # SEO
   seo:
@@ -274,6 +275,8 @@ fr:
       too_many: "Le fichier contient trop de %{what} (maximum %{max})."
       medications_label: "médicaments"
       period_days_label: "jours de règles"
+      daily_checks_label: "cases de bilan quotidien"
+      daily_check_kind: "Bilan quotidien"
       episodes_label: "épisodes"
       triggers_label: "déclencheurs"
       medication_kind: "Médicament"
@@ -457,6 +460,7 @@ fr:
       lack_of_sleep: "Manque de sommeil"
       alcohol: "Alcool"
       skipped_meal: "Repas sauté"
+      caffeine: "Caféine"
       weather: "Changement de météo"
       screens: "Écrans"
       strong_smells: "Odeurs fortes"
@@ -717,6 +721,28 @@ fr:
       todo_hint: "20 secondes, même sans crise"
       done: "Bilan du jour fait"
       edit: "Modifier"
+
+  urgent:
+    link: "Quand consulter en urgence"
+    title: "Quand consulter en urgence"
+    intro: "Un mal de tête n'est presque jamais dangereux, mais certains signes demandent un avis médical rapide. Cette page est un repère, pas un diagnostic : en cas de doute, appelez."
+    emergency_title: "Appelez le 112 ou allez aux urgences si"
+    emergency:
+      - "le mal de tête est soudain et violent, au maximum en moins d'une minute (« en coup de tonnerre »), ou c'est le pire de votre vie"
+      - "il s'accompagne d'une faiblesse ou d'un engourdissement d'un côté du corps, d'un visage qui se déforme, de difficultés à parler, d'une vue double ou d'une perte de vision, d'une confusion, d'une perte de connaissance ou de convulsions"
+      - "il s'accompagne de fièvre avec une nuque raide, ou d'une éruption cutanée"
+      - "il survient après un coup à la tête"
+    soon_title: "Consultez rapidement un médecin si"
+    soon:
+      - "c'est un mal de tête nouveau après 50 ans, ou différent de vos crises habituelles"
+      - "les maux de tête s'aggravent peu à peu sur des jours ou des semaines"
+      - "la douleur est déclenchée par la toux, un effort ou un éternuement, ou change avec la position (couché ou debout)"
+      - "une aura est nouvelle, dure plus d'une heure, ou s'accompagne d'une faiblesse"
+      - "vous êtes enceinte ou venez d'accoucher"
+      - "vous avez un cancer, une maladie ou un traitement qui affaiblit les défenses immunitaires"
+      - "l'œil est rouge et douloureux avec une vue trouble"
+      - "une crise dure plus de 72 heures"
+    source: "Repères d'après la liste des signes d'alerte des céphalées secondaires (Do et coll., Neurology 2019) et les recommandations de l'International Headache Society. Ils ne remplacent pas l'avis d'un médecin."
 
   theme:
     label: "Apparence"

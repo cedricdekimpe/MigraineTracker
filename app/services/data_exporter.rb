@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Builds the JSON backup of a user's data (format version 3). DataImporter reads the same shape back.
+# Builds the JSON backup of a user's data (format version 4). DataImporter reads the same shape back.
 class DataExporter
-  FORMAT_VERSION = 3
+  FORMAT_VERSION = 4
 
   def initialize(user)
     @user = user
@@ -16,6 +16,7 @@ class DataExporter
       medications: medications.map { |medication| medication_hash(medication) },
       triggers: triggers.map { |trigger| { name: trigger.name } },
       period_days: @user.period_days.order(:date).pluck(:date).map(&:iso8601),
+      daily_checks: @user.daily_checks.order(:date).map { |check| daily_check_hash(check) },
       episodes: episodes.map { |episode| episode_hash(episode) }
     }
   end
@@ -43,6 +44,10 @@ class DataExporter
       periods: medication.treatment_periods.chronological.map { |period| period_hash(period) },
       created_at: medication.created_at.iso8601
     }
+  end
+
+  def daily_check_hash(check)
+    { date: check.date.iso8601, sleep: check.sleep, stress: check.stress, skipped_meal: check.skipped_meal, caffeine: check.caffeine }
   end
 
   def period_hash(period)

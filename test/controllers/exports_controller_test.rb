@@ -55,6 +55,32 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
     assert_nil aura_only["intensity"]
   end
 
+  test "carries period days, daily check-ins and the periods of a preventive" do
+    @user.period_days.create!(date: "2026-03-01")
+    @user.daily_checks.create!(date: "2026-03-02", sleep: "short", stress: "high", skipped_meal: true, caffeine: "none")
+    medications(:candesartan).treatment_periods.create!(user: @user, started_on: "2026-01-01", ended_on: "2026-04-01", dose: "16 mg", stop_reason: "ineffective")
+    post exports_path
+
+    assert_includes exported["period_days"], "2026-03-01"
+    assert_equal({ "date" => "2026-03-02", "sleep" => "short", "stress" => "high", "skipped_meal" => true, "caffeine" => "none" },
+                 exported["daily_checks"].find { |row| row["date"] == "2026-03-02" })
+    candesartan = exported["medications"].find { |m| m["name"] == "Candesartan" }
+    assert_equal [{ "started_on" => "2026-01-01", "ended_on" => "2026-04-01", "dose" => "16 mg", "stop_reason" => "ineffective" }], candesartan["periods"]
+  end
+
+  test "an export can be imported back into an empty account" do
+    @user.period_days.create!(date: "2026-03-01")
+    @user.daily_checks.create!(date: "2026-03-02", sleep: "short")
+    post exports_path
+    data = exported
+
+    fresh = User.create!({ email: "roundtrip@example.com", password: "password123" }.merge(consent_attrs))
+    DataImporter.new(fresh, data).call
+    assert_equal @user.episodes.count, fresh.episodes.count
+    assert_equal @user.period_days.order(:date).pluck(:date), fresh.period_days.order(:date).pluck(:date)
+    assert_equal @user.daily_checks.pluck(:sleep), fresh.daily_checks.pluck(:sleep)
+  end
+
   test "does not include another user's data" do
     post exports_path
 

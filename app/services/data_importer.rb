@@ -10,9 +10,10 @@ class DataImporter
   MAX_TRIGGERS = 200
   MAX_EPISODES = 20_000
   MAX_PERIOD_DAYS = 10_000
+  MAX_DAILY_CHECKS = 10_000
   TIME_FORMAT = /\A([01]\d|2[0-3]):[0-5]\d\z/
 
-  Result = Struct.new(:medications, :triggers, :episodes, :period_days, :treatment_periods, keyword_init: true)
+  Result = Struct.new(:medications, :triggers, :episodes, :period_days, :treatment_periods, :daily_checks, keyword_init: true)
 
   class InvalidData < StandardError; end
 
@@ -24,7 +25,7 @@ class DataImporter
   def call
     validate_shape!
 
-    result = Result.new(medications: 0, triggers: 0, episodes: 0, period_days: 0, treatment_periods: 0)
+    result = Result.new(medications: 0, triggers: 0, episodes: 0, period_days: 0, treatment_periods: 0, daily_checks: 0)
     ActiveRecord::Base.transaction do
       @medications = @user.medications.index_by { |medication| key(medication.name) }
       @triggers = @user.triggers.index_by { |trigger| key(trigger.name) }
@@ -35,6 +36,7 @@ class DataImporter
       list("triggers").each_with_index { |row, index| import_trigger_row(row, index, result) }
       list("episodes").each_with_index { |row, index| import_episode(row, index, result) }
       import_period_days(result)
+      import_daily_checks(result)
     end
     result
   end
@@ -49,7 +51,7 @@ class DataImporter
     raise InvalidData, t("invalid_structure") unless @data.is_a?(Hash)
     raise InvalidData, t("invalid_structure") unless @data["episodes"].is_a?(Array)
 
-    %w[medications triggers period_days].each do |name|
+    %w[medications triggers period_days daily_checks].each do |name|
       raise InvalidData, t("invalid_structure") unless @data[name].nil? || @data[name].is_a?(Array)
     end
 
@@ -57,6 +59,7 @@ class DataImporter
     raise InvalidData, t("too_many", what: t("triggers_label"), max: MAX_TRIGGERS) if list("triggers").size > MAX_TRIGGERS
     raise InvalidData, t("too_many", what: t("episodes_label"), max: MAX_EPISODES) if list("episodes").size > MAX_EPISODES
     raise InvalidData, t("too_many", what: t("period_days_label"), max: MAX_PERIOD_DAYS) if list("period_days").size > MAX_PERIOD_DAYS
+    raise InvalidData, t("too_many", what: t("daily_checks_label"), max: MAX_DAILY_CHECKS) if list("daily_checks").size > MAX_DAILY_CHECKS
   end
 
   def import_medication_row(row, index, result)
@@ -103,6 +106,24 @@ class DataImporter
 
       @user.period_days.create!(date: date)
       result.period_days += 1
+    end
+  end
+
+  # A day already checked in is left as it is.
+  def import_daily_checks(result)
+    existing = @user.daily_checks.pluck(:date).to_set
+
+    list("daily_checks").each_with_index do |row, index|
+      fail_row = ->(details) { raise InvalidData, row_message("daily_check_kind", index, details) }
+      fail_row.call(t("invalid_row_shape")) unless row.is_a?(Hash)
+      date = parse_date(row["date"]) || fail_row.call(t("invalid_date"))
+      next if existing.include?(date)
+
+      check = @user.daily_checks.new(date: date, sleep: row["sleep"], stress: row["stress"], caffeine: row["caffeine"],
+                                     skipped_meal: ActiveModel::Type::Boolean.new.cast(row["skipped_meal"]) || false)
+      fail_row.call(check.errors.full_messages.to_sentence) unless check.save
+      existing << date
+      result.daily_checks += 1
     end
   end
 
