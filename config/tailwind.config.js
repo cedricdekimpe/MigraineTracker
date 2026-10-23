@@ -1,5 +1,8 @@
 // Design tokens live in app/assets/stylesheets/application.tailwind.css as CSS variables, so the
 // whole app can switch between "Papier" (light) and "Nuit" (dark) without touching any markup.
+const role = (name) => `rgb(var(--${name}) / <alpha-value>)`
+const roles = (prefix, keys) => Object.fromEntries(keys.map((key) => [key, role(`${prefix}-${key}`)]))
+
 const ramp = (name) =>
   Object.fromEntries(
     [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950].map((n) => [n, `rgb(var(--${name}-${n}) / <alpha-value>)`])
@@ -22,7 +25,27 @@ module.exports = {
         rose: ramp("rose"), //    month 2: pink
         sky: ramp("sky"), //      month 3: blue
         red: ramp("red"), //      danger
-        paper: "rgb(var(--paper) / <alpha-value>)" // card / surface
+        paper: "rgb(var(--paper) / <alpha-value>)", // card / surface
+
+        // Roles (the design system's semantic tokens): what views should use
+        page: role("page"),
+        surface: { DEFAULT: role("surface"), soft: role("surface-soft") },
+        line: { DEFAULT: role("line"), control: role("line-control") },
+        fg: { DEFAULT: role("fg"), secondary: role("fg-secondary"), muted: role("fg-muted"), disabled: role("fg-disabled") },
+        primary: { DEFAULT: role("primary"), hover: role("primary-hover"), on: role("on-primary") },
+        link: role("link"),
+        crisis: { DEFAULT: role("crisis"), hover: role("crisis-hover"), on: role("on-crisis") },
+        focus: role("focus"),
+        ok: roles("ok", ["surface", "text"]),
+        advised: roles("advised", ["surface", "text"]),
+        over: roles("over", ["surface", "text"]),
+        sustained: roles("sustained", ["surface", "text"]),
+        meter: roles("meter", ["track", "ok", "advised", "over"]),
+        "sheet-letter": role("sheet-letter"),
+        period: role("period-mark"),
+        sev: { mild: role("sev-mild"), moderate: role("sev-moderate"), severe: role("sev-severe"), extreme: role("sev-extreme"), "on-extreme": role("on-sev-extreme") },
+        panel: roles("panel", ["amber", "rose", "sky"]),
+        chart: roles("chart", ["a", "b"])
       },
       fontFamily: {
         display: ['"Iowan Old Style"', '"Palatino Linotype"', '"Book Antiqua"', "Palatino", "Georgia", "serif"],

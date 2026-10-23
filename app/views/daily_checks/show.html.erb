@@ -1,8 +1,8 @@
 <% content_for :title, t("daily_check.title") %>
-<% chip = "flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border border-ink-200 bg-ink-100 px-3 text-center text-base leading-tight text-ink-800 peer-checked:border-accent-400 peer-checked:bg-accent-600 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-accent-400" %>
+<% chip = "flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border border-line-control bg-surface-soft px-3 text-center text-base leading-tight text-fg peer-checked:border-accent-400 peer-checked:bg-primary peer-checked:text-primary-on peer-focus-visible:ring-2 peer-focus-visible:ring-focus" %>
 
 <section class="mx-auto w-full max-w-xl py-2 sm:py-6">
-  <p class="text-sm text-ink-500"><%= l(@date, format: :long) %></p>
+  <p class="text-sm text-fg-muted"><%= l(@date, format: :long) %></p>
   <h1 class="text-3xl font-semibold tracking-tight"><%= t("daily_check.title") %> <%= render "shared/info", text: t("daily_check.premonitory") %></h1>
 
   <%= form_with model: @check, url: daily_check_path(date: @date.iso8601), method: :patch, scope: :daily_check, data: { turbo: false }, class: "mt-6 space-y-7" do |form| %>
@@ -27,10 +27,10 @@
       </fieldset>
     <% end %>
 
-    <%= form.submit t("daily_check.save"), class: "flex min-h-14 w-full cursor-pointer items-center justify-center rounded-2xl bg-accent-600 text-lg font-semibold text-white hover:bg-accent-500" %>
+    <%= form.submit t("daily_check.save"), class: "flex min-h-14 w-full cursor-pointer items-center justify-center rounded-2xl bg-primary text-lg font-semibold text-primary-on hover:bg-primary-hover" %>
   <% end %>
 
-  <p class="mt-6 text-sm text-ink-500">
+  <p class="mt-6 text-sm text-fg-muted">
     <% if @date == Date.current %>
       <%= link_to t("daily_check.yesterday"), daily_check_path(date: (@date - 1).iso8601), class: "underline" %>
     <% elsif @date == Date.current - 1 %>

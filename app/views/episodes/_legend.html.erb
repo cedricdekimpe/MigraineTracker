@@ -1,15 +1,15 @@
 <%# The legend of the paper calendar %>
-<details class="rounded-2xl border border-ink-200 bg-paper p-4 text-sm text-ink-700" data-legend>
-  <summary class="cursor-pointer text-base font-semibold text-ink-900"><%= t("sheet.legend.title") %></summary>
+<details class="rounded-2xl border border-line bg-surface p-4 text-sm text-fg-secondary" data-legend>
+  <summary class="cursor-pointer text-base font-semibold text-fg"><%= t("sheet.legend.title") %></summary>
   <dl class="mt-2 grid gap-x-8 gap-y-1 sm:grid-cols-2">
-    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">M</dt><dd><%= t("sheet.legend.migraine") %></dd></div>
-    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">T</dt><dd><%= t("sheet.legend.headache") %></dd></div>
-    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">A</dt><dd><%= t("sheet.legend.aura") %></dd></div>
-    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">0–10</dt><dd><%= t("sheet.legend.intensity") %></dd></div>
+    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-sheet-letter">M</dt><dd><%= t("sheet.legend.migraine") %></dd></div>
+    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-sheet-letter">T</dt><dd><%= t("sheet.legend.headache") %></dd></div>
+    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-sheet-letter">A</dt><dd><%= t("sheet.legend.aura") %></dd></div>
+    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-sheet-letter">0–10</dt><dd><%= t("sheet.legend.intensity") %></dd></div>
     <% if current_user.track_cycle? %>
-      <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">0</dt><dd><%= t("sheet.legend.cycle") %></dd></div>
+      <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-period">0</dt><dd><%= t("sheet.legend.cycle") %></dd></div>
     <% end %>
-    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">X</dt><dd><%= t("sheet.legend.acute") %></dd></div>
-    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-accent-700">t</dt><dd><%= t("sheet.legend.triptan") %></dd></div>
+    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-sheet-letter">X</dt><dd><%= t("sheet.legend.acute") %></dd></div>
+    <div class="flex gap-2"><dt class="w-12 shrink-0 font-bold text-sheet-letter">t</dt><dd><%= t("sheet.legend.triptan") %></dd></div>
   </dl>
 </details>

@@ -18,58 +18,58 @@
 
 <div class="mx-auto max-w-3xl">
   <header class="mb-8">
-    <h1 class="text-3xl font-bold text-ink-900"><%= t('faq.title') %></h1>
-    <p class="mt-2 text-ink-600"><%= t('faq.subtitle') %></p>
+    <h1 class="text-3xl font-bold text-fg"><%= t('faq.title') %></h1>
+    <p class="mt-2 text-fg-secondary"><%= t('faq.subtitle') %></p>
   </header>
 
-  <div class="rounded-2xl border border-ink-200 bg-ink-50 p-6 text-sm text-ink-600">
-    <p class="font-semibold text-ink-900"><%= t('faq.disclaimer_title') %></p>
+  <div class="rounded-2xl border border-line bg-page p-6 text-sm text-fg-secondary">
+    <p class="font-semibold text-fg"><%= t('faq.disclaimer_title') %></p>
     <p class="mt-1"><%= t('faq.disclaimer_text') %></p>
   </div>
 
   <div class="space-y-6">
     <!-- Privacy & Data Section -->
-    <section class="rounded-2xl border border-ink-200 bg-paper p-6">
-      <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-ink-900">
-        <svg class="h-5 w-5 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <section class="rounded-2xl border border-line bg-surface p-6">
+      <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-fg">
+        <svg class="h-5 w-5 text-link" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
         </svg>
         <%= t('faq.privacy_section') %>
       </h2>
 
       <div class="space-y-4">
-        <details class="group rounded-xl border border-ink-200 bg-ink-50">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-ink-900">
+        <details class="group rounded-xl border border-line bg-page">
+          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
             <%= t('faq.data_storage_question') %>
-            <svg class="h-5 w-5 text-ink-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="border-t border-ink-200 px-4 py-3 text-sm text-ink-600">
+          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
             <%= t('faq.data_storage_answer') %>
           </div>
         </details>
 
-        <details class="group rounded-xl border border-ink-200 bg-ink-50">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-ink-900">
+        <details class="group rounded-xl border border-line bg-page">
+          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
             <%= t('faq.gdpr_question') %>
-            <svg class="h-5 w-5 text-ink-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="border-t border-ink-200 px-4 py-3 text-sm text-ink-600">
+          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
             <%= t('faq.gdpr_answer_html') %>
           </div>
         </details>
 
-        <details class="group rounded-xl border border-ink-200 bg-ink-50">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-ink-900">
+        <details class="group rounded-xl border border-line bg-page">
+          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
             <%= t('faq.data_sharing_question') %>
-            <svg class="h-5 w-5 text-ink-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="border-t border-ink-200 px-4 py-3 text-sm text-ink-600">
+          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
             <%= t('faq.data_sharing_answer') %>
           </div>
         </details>
@@ -77,27 +77,27 @@
     </section>
 
     <!-- Account Management Section -->
-    <section class="rounded-2xl border border-ink-200 bg-paper p-6">
-      <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-ink-900">
-        <svg class="h-5 w-5 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <section class="rounded-2xl border border-line bg-surface p-6">
+      <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-fg">
+        <svg class="h-5 w-5 text-link" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
         </svg>
         <%= t('faq.account_section') %>
       </h2>
 
       <div class="space-y-4">
-        <details class="group rounded-xl border border-ink-200 bg-ink-50">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-ink-900">
+        <details class="group rounded-xl border border-line bg-page">
+          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
             <%= t('faq.delete_account_question') %>
-            <svg class="h-5 w-5 text-ink-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="border-t border-ink-200 px-4 py-3 text-sm text-ink-600">
+          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
             <p><%= t('faq.delete_account_answer_html') %></p>
             <% if user_signed_in? %>
               <p class="mt-3">
-                <%= link_to t('faq.go_to_data_settings'), account_data_path, class: "inline-flex items-center gap-1 font-medium text-accent-600 hover:text-accent-700" %>
+                <%= link_to t('faq.go_to_data_settings'), account_data_path, class: "inline-flex items-center gap-1 font-medium text-link hover:text-link" %>
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
@@ -106,18 +106,18 @@
           </div>
         </details>
 
-        <details class="group rounded-xl border border-ink-200 bg-ink-50">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-ink-900">
+        <details class="group rounded-xl border border-line bg-page">
+          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
             <%= t('faq.export_data_question') %>
-            <svg class="h-5 w-5 text-ink-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="border-t border-ink-200 px-4 py-3 text-sm text-ink-600">
+          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
             <p><%= t('faq.export_data_answer') %></p>
             <% if user_signed_in? %>
               <p class="mt-3">
-                <%= link_to t('faq.go_to_data_settings'), account_data_path, class: "inline-flex items-center gap-1 font-medium text-accent-600 hover:text-accent-700" %>
+                <%= link_to t('faq.go_to_data_settings'), account_data_path, class: "inline-flex items-center gap-1 font-medium text-link hover:text-link" %>
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
@@ -126,18 +126,18 @@
           </div>
         </details>
 
-        <details class="group rounded-xl border border-ink-200 bg-ink-50">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-ink-900">
+        <details class="group rounded-xl border border-line bg-page">
+          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
             <%= t('faq.import_data_question') %>
-            <svg class="h-5 w-5 text-ink-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="border-t border-ink-200 px-4 py-3 text-sm text-ink-600">
+          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
             <p><%= t('faq.import_data_answer') %></p>
             <% if user_signed_in? %>
               <p class="mt-3">
-                <%= link_to t('faq.go_to_data_settings'), account_data_path, class: "inline-flex items-center gap-1 font-medium text-accent-600 hover:text-accent-700" %>
+                <%= link_to t('faq.go_to_data_settings'), account_data_path, class: "inline-flex items-center gap-1 font-medium text-link hover:text-link" %>
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
@@ -149,47 +149,47 @@
     </section>
 
     <!-- Using the App Section -->
-    <section class="rounded-2xl border border-ink-200 bg-paper p-6">
-      <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-ink-900">
-        <svg class="h-5 w-5 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <section class="rounded-2xl border border-line bg-surface p-6">
+      <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold text-fg">
+        <svg class="h-5 w-5 text-link" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
         </svg>
         <%= t('faq.usage_section') %>
       </h2>
 
       <div class="space-y-4">
-        <details class="group rounded-xl border border-ink-200 bg-ink-50">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-ink-900">
+        <details class="group rounded-xl border border-line bg-page">
+          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
             <%= t('faq.track_migraine_question') %>
-            <svg class="h-5 w-5 text-ink-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="border-t border-ink-200 px-4 py-3 text-sm text-ink-600">
+          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
             <%= t('faq.track_migraine_answer') %>
           </div>
         </details>
 
-        <details class="group rounded-xl border border-ink-200 bg-ink-50">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-ink-900">
+        <details class="group rounded-xl border border-line bg-page">
+          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
             <%= t('faq.medications_question') %>
-            <svg class="h-5 w-5 text-ink-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="border-t border-ink-200 px-4 py-3 text-sm text-ink-600">
+          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
             <%= t('faq.medications_answer') %>
           </div>
         </details>
 
-        <details class="group rounded-xl border border-ink-200 bg-ink-50">
-          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-ink-900">
+        <details class="group rounded-xl border border-line bg-page">
+          <summary class="flex cursor-pointer items-center justify-between px-4 py-3 font-medium text-fg">
             <%= t('faq.statistics_question') %>
-            <svg class="h-5 w-5 text-ink-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-fg-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="border-t border-ink-200 px-4 py-3 text-sm text-ink-600">
+          <div class="border-t border-line px-4 py-3 text-sm text-fg-secondary">
             <%= t('faq.statistics_answer') %>
           </div>
         </details>
@@ -204,7 +204,7 @@
   </div>
 
   <div class="mt-8 text-center">
-    <%= link_to t('common.back'), root_path, class: "inline-flex items-center gap-2 text-sm font-medium text-ink-600 hover:text-ink-900" %>
+    <%= link_to t('common.back'), root_path, class: "inline-flex items-center gap-2 text-sm font-medium text-fg-secondary hover:text-fg" %>
   </div>
 </div>
 

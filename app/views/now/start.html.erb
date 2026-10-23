@@ -7,7 +7,7 @@
   <%= render "now/form", url: now_path, default_pain_kind: @default_pain_kind %>
 
   <p class="mt-6 text-center text-sm">
-    <%= link_to t("now.fill_form"), new_episode_path, class: "text-ink-500 underline hover:text-ink-800" %>
+    <%= link_to t("now.fill_form"), new_episode_path, class: "text-fg-muted underline hover:text-fg" %>
   </p>
-  <p class="mt-3 text-center text-xs text-ink-500"><%= link_to t("urgent.link"), urgent_path, class: "underline" %></p>
+  <p class="mt-3 text-center text-xs text-fg-muted"><%= link_to t("urgent.link"), urgent_path, class: "underline" %></p>
 </section>

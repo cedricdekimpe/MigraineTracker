@@ -111,7 +111,7 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
 
   test "today is marked" do
     get episodes_path
-    assert_select "li[data-date='#{Date.current.iso8601}'] a.ring-accent-600"
+    assert_select "li[data-date='#{Date.current.iso8601}'] a.ring-primary"
   end
 
   test "the monthly summary and the legend are there" do

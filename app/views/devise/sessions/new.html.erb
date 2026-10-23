@@ -1,9 +1,9 @@
 <% content_for :title, "Sign in" %>
 
 <section class="mx-auto w-full max-w-md">
-  <div class="rounded-2xl border border-ink-200 bg-paper p-8">
-    <h1 class="text-2xl font-semibold text-ink-900">Welcome back</h1>
-    <p class="mt-2 text-sm text-ink-500">Sign in to keep tracking your migraine patterns.</p>
+  <div class="rounded-2xl border border-line bg-surface p-8">
+    <h1 class="text-2xl font-semibold text-fg">Welcome back</h1>
+    <p class="mt-2 text-sm text-fg-muted">Sign in to keep tracking your migraine patterns.</p>
 
     <div class="mt-6">
       <%= render "devise/shared/error_messages" %>
@@ -11,37 +11,37 @@
 
     <%= form_with scope: resource_name, url: session_path(resource_name), data: { turbo: false }, html: { class: "mt-6 space-y-5" } do |form| %>
       <div class="space-y-2">
-        <%= form.label :email, class: "block text-sm font-medium text-ink-700" %>
-        <%= form.email_field :email, autofocus: true, autocomplete: "email", class: "block w-full rounded-lg border border-ink-300 px-3 py-2 text-ink-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500" %>
+        <%= form.label :email, class: "block text-sm font-medium text-fg-secondary" %>
+        <%= form.email_field :email, autofocus: true, autocomplete: "email", class: "block w-full rounded-lg border border-line-control px-3 py-2 text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus" %>
       </div>
 
       <div class="space-y-2">
-        <%= form.label :password, class: "block text-sm font-medium text-ink-700" %>
-        <%= form.password_field :password, autocomplete: "current-password", class: "block w-full rounded-lg border border-ink-300 px-3 py-2 text-ink-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500" %>
+        <%= form.label :password, class: "block text-sm font-medium text-fg-secondary" %>
+        <%= form.password_field :password, autocomplete: "current-password", class: "block w-full rounded-lg border border-line-control px-3 py-2 text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus" %>
       </div>
 
       <% if devise_mapping.rememberable? %>
         <div class="flex items-center justify-between text-sm">
-          <label class="flex items-center gap-2 text-ink-600">
-            <%= form.check_box :remember_me, class: "h-4 w-4 rounded border-ink-300 text-accent-600 focus:ring-accent-500" %>
+          <label class="flex items-center gap-2 text-fg-secondary">
+            <%= form.check_box :remember_me, class: "h-4 w-4 rounded border-line-control text-link focus:ring-focus" %>
             <span>Remember me</span>
           </label>
           <% if devise_mapping.recoverable? %>
-            <%= link_to "Forgot password?", new_password_path(resource_name), class: "font-medium text-accent-700 hover:text-accent-800" %>
+            <%= link_to "Forgot password?", new_password_path(resource_name), class: "font-medium text-link hover:text-accent-800" %>
           <% end %>
         </div>
       <% elsif devise_mapping.recoverable? %>
         <div class="text-right text-sm">
-          <%= link_to "Forgot password?", new_password_path(resource_name), class: "font-medium text-accent-700 hover:text-accent-800" %>
+          <%= link_to "Forgot password?", new_password_path(resource_name), class: "font-medium text-link hover:text-accent-800" %>
         </div>
       <% end %>
 
-      <%= form.submit "Sign in", class: "w-full rounded-lg bg-accent-600 px-4 py-2 text-base font-semibold text-white transition hover:bg-accent-700" %>
+      <%= form.submit "Sign in", class: "w-full rounded-lg bg-primary px-4 py-2 text-base font-semibold text-primary-on transition hover:bg-primary-hover" %>
     <% end %>
 
-    <div class="mt-6 text-center text-sm text-ink-600">
+    <div class="mt-6 text-center text-sm text-fg-secondary">
       <span>Need an account?</span>
-      <%= link_to "Create one", new_registration_path(resource_name), class: "font-medium text-accent-700 hover:text-accent-800" %>
+      <%= link_to "Create one", new_registration_path(resource_name), class: "font-medium text-link hover:text-accent-800" %>
     </div>
   </div>
 </section>

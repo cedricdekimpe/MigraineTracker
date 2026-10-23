@@ -5,13 +5,13 @@
       <% [["migraine", t("episodes.pain_migraine")], ["headache", t("episodes.pain_headache")]].each do |value, label| %>
         <label>
           <%= radio_button_tag "pain_kind", value, default_pain_kind == value, class: "peer sr-only" %>
-          <span class="flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border border-ink-200 bg-ink-100 px-4 text-lg font-medium text-ink-800 peer-checked:border-accent-400 peer-checked:bg-accent-600 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-accent-400"><%= label %></span>
+          <span class="flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border border-line-control bg-surface-soft px-4 text-lg font-medium text-fg peer-checked:border-accent-400 peer-checked:bg-primary peer-checked:text-primary-on peer-focus-visible:ring-2 peer-focus-visible:ring-focus"><%= label %></span>
         </label>
       <% end %>
     </div>
     <label class="mt-3 block">
       <%= check_box_tag "aura", "1", false, class: "peer sr-only" %>
-      <span class="flex min-h-12 cursor-pointer items-center justify-center rounded-2xl border border-ink-200 bg-ink-100 px-4 text-base text-ink-800 peer-checked:border-accent-400 peer-checked:bg-accent-600 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-accent-400"><%= t("episodes.aura") %></span>
+      <span class="flex min-h-12 cursor-pointer items-center justify-center rounded-2xl border border-line-control bg-surface-soft px-4 text-base text-fg peer-checked:border-accent-400 peer-checked:bg-primary peer-checked:text-primary-on peer-focus-visible:ring-2 peer-focus-visible:ring-focus"><%= t("episodes.aura") %></span>
     </label>
   </fieldset>
 
@@ -20,12 +20,12 @@
     <div class="grid grid-cols-5 gap-3">
       <% (1..10).each do |value| %>
         <%= button_tag value, type: "submit", name: "intensity", value: value,
-              class: "min-h-16 cursor-pointer rounded-2xl border border-ink-200 bg-ink-100 text-2xl font-semibold text-ink-900 transition active:bg-accent-600 hover:border-accent-400" %>
+              class: "min-h-16 cursor-pointer rounded-2xl border border-line-control bg-surface-soft text-2xl font-semibold text-fg transition active:bg-primary hover:border-accent-400" %>
       <% end %>
     </div>
-    <p class="mt-2 flex justify-between text-xs text-ink-500"><span><%= t("now.mild") %></span><span><%= t("now.unbearable") %></span></p>
+    <p class="mt-2 flex justify-between text-xs text-fg-muted"><span><%= t("now.mild") %></span><span><%= t("now.unbearable") %></span></p>
   </fieldset>
 
   <%= button_tag t("now.aura_only"), type: "submit", name: "aura_only", value: "1",
-        class: "min-h-12 w-full cursor-pointer rounded-2xl border border-dashed border-ink-300 px-4 text-base text-ink-600 hover:border-accent-400" %>
+        class: "min-h-12 w-full cursor-pointer rounded-2xl border border-dashed border-line-control px-4 text-base text-fg-secondary hover:border-accent-400" %>
 <% end %>

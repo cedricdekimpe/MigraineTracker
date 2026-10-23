@@ -121,6 +121,9 @@ en:
       one: "1 day at 4/10 or more"
       other: "%{count} days at 4/10 or more"
     treatments:
+      intakes_count:
+        one: "1 dose"
+        other: "%{count} doses"
       chronic_month: "Chronic migraine pattern this month (15 headache days with 8 migraine days). Talk to your doctor."
       chronic_sustained: "Chronic migraine pattern for 3 months (15 headache days with 8 migraine days a month). Talk to your doctor."
       acute_title: "Your acute treatments"

@@ -1,5 +1,6 @@
-<%# The sheet turned 90 degrees for a phone: one row per day. Tap a day to open it, tap an empty one to add. %>
-<section class="overflow-hidden rounded-2xl border-2 border-dashed <%= sheet_frame_class(month) %> bg-paper" data-month="<%= month.strftime("%Y-%m") %>">
+<%# The sheet turned 90 degrees for a phone: one row per day. Tap a day to open it, tap an empty one to add.
+    Bleeding days are entered in the daily check-in or on the day itself; here they are only shown. %>
+<section class="overflow-hidden rounded-2xl border-2 border-dashed <%= sheet_frame_class(month) %> bg-surface" data-month="<%= month.strftime("%Y-%m") %>">
   <ol>
     <% sheet.days_of(month).each do |day| %>
       <% date = day.date %>
@@ -7,33 +8,27 @@
       <% future = sheet_future?(date) %>
       <% target = day.any? ? history_episodes_path(date: date.iso8601) : new_episode_path(date: date.iso8601) %>
       <li data-date="<%= date.iso8601 %>" class="<%= sheet_column_class(date.day, month) %> <%= 'opacity-50' if future %>">
-        <% row_class = "flex min-h-12 items-center gap-3 px-3 py-2 #{'ring-2 ring-inset ring-accent-600' if today}" %>
+        <% row_class = "flex min-h-12 items-center gap-3 px-3 py-2 #{'ring-2 ring-inset ring-primary' if today}" %>
         <% content = capture do %>
           <span class="w-9 shrink-0 text-center leading-none">
-            <span class="font-display text-xl font-semibold text-ink-900"><%= date.day %></span>
-            <span class="mt-0.5 block text-[0.65rem] uppercase tracking-wide text-ink-600"><%= l(date, format: "%a") %></span>
+            <span class="font-display text-xl font-semibold text-fg"><%= date.day %></span>
+            <span class="mt-0.5 block text-xs uppercase tracking-wide text-fg-secondary"><%= l(date, format: "%a") %></span>
           </span>
 
           <% if day.any? %>
-            <span class="w-7 shrink-0 text-center text-xl font-bold text-accent-700" data-attribute="type"><%= sheet_letter(day) %></span>
+            <span class="w-7 shrink-0 text-center text-xl font-bold text-sheet-letter" data-attribute="type"><%= sheet_letter(day) %></span>
             <% if day.intensity %>
-              <span class="inline-flex min-w-8 items-center justify-center rounded-full px-2 py-0.5 text-sm font-semibold <%= intensity_color_class(day.intensity) %>" data-attribute="intensity"><%= day.intensity %></span>
+              <span class="text-base" data-attribute="intensity"><%= intensity_mark(day.intensity) %></span>
             <% end %>
-            <span class="ml-auto flex items-center gap-3 text-base font-semibold text-accent-700">
-              <% if day.treatment? %><span data-attribute="treatment"><%= sheet_treatment(day) %></span><% end %>
-            </span>
           <% elsif !future %>
-            <span class="ml-auto text-lg text-ink-400" aria-label="<%= t("sheet.add_on_day") %>">+</span>
+            <span class="sr-only"><%= t("sheet.add_on_day") %></span>
           <% end %>
+          <span class="ml-auto flex items-center gap-3 text-base font-semibold text-sheet-letter">
+            <% if current_user.track_cycle? && day.cycle? %><span class="text-period" data-attribute="cycle" title="<%= t("sheet.legend.cycle") %>">0</span><% end %>
+            <% if day.treatment? %><span data-attribute="treatment"><%= sheet_treatment(day) %></span><% end %>
+          </span>
         <% end %>
-        <% if current_user.track_cycle? && !future %>
-          <div class="flex items-stretch">
-            <%= link_to(target, class: "#{row_class} flex-1") { content } %>
-            <div class="flex w-12 shrink-0 items-stretch border-l border-ink-100"><%= period_toggle(day, size: "min-h-12", label: "0") %></div>
-          </div>
-        <% else %>
-          <%= future ? tag.div(content, class: row_class) : link_to(target, class: row_class) { content } %>
-        <% end %>
+        <%= future ? tag.div(content, class: row_class) : link_to(target, class: row_class) { content } %>
       </li>
     <% end %>
   </ol>

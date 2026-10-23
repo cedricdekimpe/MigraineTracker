@@ -121,6 +121,9 @@ fr:
       one: "1 jour à 4/10 ou plus"
       other: "%{count} jours à 4/10 ou plus"
     treatments:
+      intakes_count:
+        one: "1 prise"
+        other: "%{count} prises"
       chronic_month: "Profil de migraine chronique ce mois-ci (15 jours de maux de tête dont 8 de migraine). Parlez-en à votre médecin."
       chronic_sustained: "Profil de migraine chronique depuis 3 mois (15 jours de maux de tête dont 8 de migraine par mois). Parlez-en à votre médecin."
       acute_title: "Vos traitements de crise"

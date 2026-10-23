@@ -55,10 +55,11 @@ class PeriodDaysControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_user_session_path
   end
 
-  test "the journal offers the tap on each past day, phone list and desktop sheet" do
+  test "the wide sheet offers the tap on each past day; the phone list only shows the marked days" do
+    @user.period_days.create!(date: @date)
     get episodes_path
     assert_select "table td[data-attribute=cycle] button", minimum: 1
-    assert_select "li[data-date='#{@date.iso8601}'] form[action=?]", period_days_path(date: @date.iso8601)
-    assert_select "li[data-date='#{(Date.current + 1).iso8601}'] form", count: 0
+    assert_select "li[data-date='#{@date.iso8601}'] form", count: 0
+    assert_select "li[data-date='#{@date.iso8601}'] [data-attribute=cycle]", text: "0"
   end
 end

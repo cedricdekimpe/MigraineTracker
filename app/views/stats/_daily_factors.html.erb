@@ -1,35 +1,52 @@
 <%# Days after a factor against the other days, from the daily check-ins. An association, never a verdict. %>
 <section data-daily-factors>
-  <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.factors.title") %> <%= render "shared/info", text: t("stats.factors.caveat"), more: numbers_path(anchor: "factors") %></h2>
+  <h2 class="text-2xl font-semibold text-fg"><%= t("stats.factors.title") %> <%= render "shared/info", text: t("stats.factors.caveat"), more: numbers_path(anchor: "factors") %></h2>
 
   <% if !factors.enough_data? %>
-    <p class="mt-2 max-w-2xl text-sm text-ink-600"><%= t("stats.factors.not_enough", checked: factors.checked_days, needed: DailyFactors::MIN_CHECKED_DAYS) %></p>
-    <%= link_to t("stats.factors.start"), check_path, class: "mt-4 inline-flex rounded-xl border border-accent-300 bg-accent-50 px-4 py-2 text-sm font-semibold text-accent-800 hover:bg-accent-100" %>
+    <p class="mt-2 max-w-2xl text-sm text-fg-secondary"><%= t("stats.factors.not_enough", checked: factors.checked_days, needed: DailyFactors::MIN_CHECKED_DAYS) %></p>
+    <%= link_to t("stats.factors.start"), check_path, class: "mt-4 inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-on hover:bg-primary-hover" %>
   <% else %>
     <% notable = factors.notable %>
-    <p class="mt-2 max-w-2xl text-sm text-ink-700" data-factors-summary>
+    <p class="mt-2 max-w-2xl text-sm text-fg-secondary" data-factors-summary>
       <%= notable.any? ? t("stats.factors.notable", factors: notable.map { |row| t("stats.factors.names.#{row.factor}").downcase }.to_sentence) : t("stats.factors.none") %>
     </p>
-    <div class="mt-4 overflow-x-auto rounded-2xl border border-ink-200 bg-paper">
+    <%# Phones: one block per factor, its three delays on lines; wider screens: the table %>
+    <ul class="mt-4 divide-y divide-line rounded-2xl border border-line bg-surface sm:hidden" data-factor-list>
+      <% DailyFactors::FACTORS.each_key do |factor| %>
+        <li class="px-4 py-3">
+          <p class="font-medium text-fg"><%= t("stats.factors.names.#{factor}") %></p>
+          <dl class="mt-1 grid grid-cols-[auto_1fr] gap-x-3 text-sm tabular-nums">
+            <% DailyFactors::LAGS.each do |lag| %>
+              <% row = factors.results.find { |result| result.factor == factor && result.lag == lag } %>
+              <dt class="text-fg-muted"><%= t("stats.factors.lags.l#{lag}") %></dt>
+              <dd class="<%= row&.notable? ? 'font-semibold text-advised-text' : 'text-fg-secondary' %>">
+                <%= row && row.exposed_days >= DailyFactors::MIN_EXPOSED_DAYS ? "#{t('stats.factors.cell', exposed: row.exposed_share, other: row.other_share)} · #{t('stats.factors.days', count: row.exposed_days)}" : "–" %>
+              </dd>
+            <% end %>
+          </dl>
+        </li>
+      <% end %>
+    </ul>
+    <div class="mt-4 hidden overflow-x-auto rounded-2xl border border-line bg-surface sm:block">
       <table class="w-full text-left text-sm">
-        <thead class="text-xs uppercase tracking-wide text-ink-500">
+        <thead class="text-xs uppercase tracking-wide text-fg-muted">
           <tr>
             <th class="px-4 py-3 font-semibold"><%= t("stats.factors.factor") %></th>
             <% DailyFactors::LAGS.each do |lag| %><th class="px-3 py-3 font-semibold"><%= t("stats.factors.lags.l#{lag}") %></th><% end %>
           </tr>
         </thead>
-        <tbody class="divide-y divide-ink-100">
+        <tbody class="divide-y divide-line tabular-nums">
           <% DailyFactors::FACTORS.each_key do |factor| %>
             <tr data-factor="<%= factor %>">
-              <th scope="row" class="px-4 py-3 font-medium text-ink-900"><%= t("stats.factors.names.#{factor}") %></th>
+              <th scope="row" class="px-4 py-3 font-medium text-fg"><%= t("stats.factors.names.#{factor}") %></th>
               <% DailyFactors::LAGS.each do |lag| %>
                 <% row = factors.results.find { |result| result.factor == factor && result.lag == lag } %>
-                <td class="px-3 py-3 <%= 'font-semibold text-amber-800' if row&.notable? %>" data-lag="<%= lag %>">
+                <td class="px-3 py-3 <%= 'font-semibold text-advised-text' if row&.notable? %>" data-lag="<%= lag %>">
                   <% if row && row.exposed_days >= DailyFactors::MIN_EXPOSED_DAYS %>
                     <%= t("stats.factors.cell", exposed: row.exposed_share, other: row.other_share) %>
-                    <span class="block text-xs font-normal text-ink-500"><%= t("stats.factors.days", count: row.exposed_days) %></span>
+                    <span class="block text-xs font-normal text-fg-muted"><%= t("stats.factors.days", count: row.exposed_days) %></span>
                   <% else %>
-                    <span class="text-ink-400">–</span>
+                    <span class="text-fg-muted">–</span>
                   <% end %>
                 </td>
               <% end %>

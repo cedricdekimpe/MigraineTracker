@@ -1,88 +1,88 @@
 <% content_for :title, t('account.medications_page_title') %>
 
-<% field = "rounded-lg border border-ink-300 px-3 py-2 text-sm text-ink-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500" %>
+<% field = "rounded-lg border border-line-control bg-surface px-3 py-2 text-base text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus" %>
 
 <div class="mx-auto flex w-full max-w-5xl flex-col gap-6 lg:flex-row">
   <aside class="lg:w-64 lg:shrink-0">
-    <div class="rounded-2xl border border-ink-200 bg-paper p-4">
-      <h2 class="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-ink-500"><%= t('account.settings') %></h2>
+    <div class="rounded-2xl border border-line bg-surface p-4">
+      <h2 class="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-fg-muted"><%= t('account.settings') %></h2>
       <%= render 'account/navigation' %>
     </div>
   </aside>
 
   <main class="flex-1">
-    <div class="rounded-2xl border border-ink-200 bg-paper p-8">
+    <div class="rounded-2xl border border-line bg-surface p-8">
       <header class="mb-6">
-        <h1 class="text-2xl font-semibold text-ink-900"><%= t('account.medications_title') %></h1>
+        <h1 class="text-2xl font-semibold text-fg"><%= t('account.medications_title') %></h1>
       </header>
 
       <div class="space-y-6">
         <% if @medications.any? %>
           <ul class="space-y-3">
             <% @medications.each do |medication| %>
-              <li id="medication-<%= medication.id %>" class="rounded-xl border border-ink-200 p-4">
+              <li id="medication-<%= medication.id %>" class="rounded-xl border border-line p-4">
                 <%= form_with model: medication, url: medication_path(medication), method: :patch, data: { turbo: false }, class: "grid gap-3 sm:grid-cols-[2fr_2fr_1fr_auto] sm:items-end" do |form| %>
                   <div>
-                    <%= form.label :name, t('account.medication_name'), class: "block text-xs font-medium text-ink-600" %>
+                    <%= form.label :name, t('account.medication_name'), class: "block text-xs font-medium text-fg-secondary" %>
                     <%= form.text_field :name, class: "#{field} w-full" %>
                   </div>
                   <div>
-                    <%= form.label :kind, t('medications_page.kind'), class: "block text-xs font-medium text-ink-600" %>
+                    <%= form.label :kind, t('medications_page.kind'), class: "block text-xs font-medium text-fg-secondary" %>
                     <%= form.select :kind, Medication::KINDS.map { |kind| [t("medications_page.kinds.#{kind}"), kind] }, {}, class: "#{field} w-full" %>
                   </div>
                   <div>
-                    <%= form.label :default_dose, t('medications_page.default_dose'), class: "block text-xs font-medium text-ink-600" %>
+                    <%= form.label :default_dose, t('medications_page.default_dose'), class: "block text-xs font-medium text-fg-secondary" %>
                     <%= form.text_field :default_dose, placeholder: "400 mg", class: "#{field} w-full" %>
                   </div>
-                  <%= form.submit t('common.save'), class: "cursor-pointer rounded-lg border border-ink-300 bg-paper px-3 py-2 text-sm font-medium text-ink-700 transition hover:border-accent-400 hover:text-accent-700" %>
+                  <%= form.submit t('common.save'), class: "cursor-pointer rounded-lg border border-line-control bg-surface px-3 py-2 text-sm font-medium text-fg-secondary transition hover:border-accent-400 hover:text-link" %>
                 <% end %>
                 <div class="mt-3 flex justify-end">
                   <%= button_to t('medications_page.remove'), medication_path(medication), method: :delete,
                         data: { turbo_confirm: t('medications_page.confirm_remove', name: medication.name) },
-                        class: "text-xs font-medium text-ink-500 transition hover:text-rose-600" %>
+                        class: "text-xs font-medium text-fg-muted transition hover:text-rose-600" %>
                 </div>
                 <%= render "account/treatment_periods", medication: medication if medication.kind == "preventive" %>
               </li>
             <% end %>
           </ul>
         <% else %>
-          <div class="rounded-lg border border-dashed border-ink-300 px-4 py-8 text-center">
-            <p class="text-sm text-ink-500"><%= t('account.no_medications') %></p>
+          <div class="rounded-lg border border-dashed border-line-control px-4 py-8 text-center">
+            <p class="text-sm text-fg-muted"><%= t('account.no_medications') %></p>
           </div>
         <% end %>
 
         <% if @suggestions.any? %>
-          <div class="border-t border-ink-200 pt-6">
-            <h3 class="mb-3 text-sm font-medium text-ink-900"><%= t('episodes.common_medications') %></h3>
+          <div class="border-t border-line pt-6">
+            <h3 class="mb-3 text-sm font-medium text-fg"><%= t('episodes.common_medications') %></h3>
             <div class="flex flex-wrap gap-2">
               <% @suggestions.each do |name, kind| %>
                 <%= button_to name, medications_path, params: { medication: { name: name, kind: kind } }, method: :post, form: { data: { turbo: false } },
-                      class: "cursor-pointer rounded-full border border-dashed border-ink-300 bg-paper px-3 py-1.5 text-sm text-ink-700 transition hover:border-accent-400 hover:text-accent-700" %>
+                      class: "cursor-pointer rounded-full border border-dashed border-line-control bg-surface px-3 py-1.5 text-sm text-fg-secondary transition hover:border-accent-400 hover:text-link" %>
               <% end %>
             </div>
           </div>
         <% end %>
 
-        <div class="border-t border-ink-200 pt-6">
-          <h3 class="mb-4 text-sm font-medium text-ink-900"><%= t('account.add_new_medication') %></h3>
+        <div class="border-t border-line pt-6">
+          <h3 class="mb-4 text-sm font-medium text-fg"><%= t('account.add_new_medication') %></h3>
           <%= form_with model: Medication.new, url: medications_path, data: { turbo: false }, class: "grid gap-3 sm:grid-cols-[2fr_2fr_1fr_auto]" do |form| %>
             <%= form.label :name, t('account.medication_name'), class: "sr-only" %>
             <%= form.text_field :name, placeholder: t('account.medication_name'), class: field %>
             <%= form.select :kind, Medication::KINDS.map { |kind| [t("medications_page.kinds.#{kind}"), kind] }, {}, "aria-label": t('medications_page.kind'), class: field %>
             <%= form.text_field :default_dose, placeholder: t('medications_page.default_dose'), "aria-label": t('medications_page.default_dose'), class: field %>
-            <%= form.submit t('account.add'), class: "cursor-pointer rounded-lg bg-accent-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-700" %>
+            <%= form.submit t('account.add'), class: "cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-on transition hover:bg-primary-hover" %>
           <% end %>
         </div>
 
         <% if @archived_medications.any? %>
-          <div class="border-t border-ink-200 pt-6">
-            <h3 class="mb-1 text-sm font-medium text-ink-900"><%= t('medications_page.archived') %></h3>
+          <div class="border-t border-line pt-6">
+            <h3 class="mb-1 text-sm font-medium text-fg"><%= t('medications_page.archived') %></h3>
             <ul class="space-y-2">
               <% @archived_medications.each do |medication| %>
-                <li class="flex items-center justify-between rounded-xl border border-ink-200 px-4 py-2">
-                  <span class="text-sm text-ink-600"><%= medication.name %></span>
+                <li class="flex items-center justify-between rounded-xl border border-line px-4 py-2">
+                  <span class="text-sm text-fg-secondary"><%= medication.name %></span>
                   <%= button_to t('medications_page.restore'), unarchive_medication_path(medication), method: :patch, data: { turbo: false },
-                        class: "text-sm font-medium text-accent-700 hover:text-accent-800" %>
+                        class: "text-sm font-medium text-link hover:text-accent-800" %>
                 </li>
               <% end %>
             </ul>

@@ -4,29 +4,29 @@
 <section class="space-y-6">
   <header class="flex flex-wrap items-end justify-between gap-4">
     <div>
-      <h1 class="text-3xl font-semibold text-ink-900 sm:text-4xl">
+      <h1 class="text-3xl font-semibold text-fg sm:text-4xl">
         <span class="md:hidden"><%= l(@month, format: :month_year) %></span>
         <span class="hidden md:inline"><%= sheet_title(@quarter) %></span>
       </h1>
-      <p class="mt-1 text-sm text-ink-600 md:hidden" data-month-summary><%= t("sheet.month_summary", pain: @sheet.pain_days(@month), treatment: @sheet.treatment_days(@month)) %></p>
+      <p class="mt-1 text-sm text-fg-secondary md:hidden" data-month-summary><%= t("sheet.month_summary", pain: @sheet.pain_days(@month), treatment: @sheet.treatment_days(@month)) %></p>
     </div>
 
     <%# Phones page through months, larger screens through the paper's quarters %>
     <nav class="flex items-center gap-2 text-sm md:hidden" aria-label="<%= t("sheet.nav.months") %>">
-      <%= link_to t("sheet.nav.previous"), episodes_path(month: @previous_month.strftime("%Y-%m")), class: "rounded-xl border border-ink-200 bg-paper px-4 py-2 font-medium text-ink-700 hover:bg-ink-100" %>
-      <%= link_to t("sheet.nav.today"), episodes_path, class: "rounded-xl px-3 py-2 font-medium text-accent-700 hover:bg-ink-100" %>
-      <%= link_to t("sheet.nav.next"), episodes_path(month: @next_month.strftime("%Y-%m")), class: "rounded-xl border border-ink-200 bg-paper px-4 py-2 font-medium text-ink-700 hover:bg-ink-100" %>
+      <%= link_to t("sheet.nav.previous"), episodes_path(month: @previous_month.strftime("%Y-%m")), class: "rounded-xl border border-line bg-surface px-4 py-2 font-medium text-fg-secondary hover:bg-surface-soft" %>
+      <%= link_to t("sheet.nav.today"), episodes_path, class: "rounded-xl px-3 py-2 font-medium text-link hover:bg-surface-soft" %>
+      <%= link_to t("sheet.nav.next"), episodes_path(month: @next_month.strftime("%Y-%m")), class: "rounded-xl border border-line bg-surface px-4 py-2 font-medium text-fg-secondary hover:bg-surface-soft" %>
     </nav>
     <nav class="hidden items-center gap-2 text-sm md:flex" aria-label="<%= t("sheet.nav.quarters") %>">
-      <%= link_to t("sheet.nav.previous"), episodes_path(month: @previous_quarter.strftime("%Y-%m")), class: "rounded-xl border border-ink-200 bg-paper px-4 py-2 font-medium text-ink-700 hover:bg-ink-100" %>
-      <%= link_to t("sheet.nav.today"), episodes_path, class: "rounded-xl px-3 py-2 font-medium text-accent-700 hover:bg-ink-100" %>
-      <%= link_to t("sheet.nav.next"), episodes_path(month: @next_quarter.strftime("%Y-%m")), class: "rounded-xl border border-ink-200 bg-paper px-4 py-2 font-medium text-ink-700 hover:bg-ink-100" %>
+      <%= link_to t("sheet.nav.previous"), episodes_path(month: @previous_quarter.strftime("%Y-%m")), class: "rounded-xl border border-line bg-surface px-4 py-2 font-medium text-fg-secondary hover:bg-surface-soft" %>
+      <%= link_to t("sheet.nav.today"), episodes_path, class: "rounded-xl px-3 py-2 font-medium text-link hover:bg-surface-soft" %>
+      <%= link_to t("sheet.nav.next"), episodes_path(month: @next_quarter.strftime("%Y-%m")), class: "rounded-xl border border-line bg-surface px-4 py-2 font-medium text-fg-secondary hover:bg-surface-soft" %>
     </nav>
   </header>
 
   <% todays_check = current_user.daily_checks.find_by(date: Date.current) %>
   <%= link_to daily_check_path(date: Date.current.iso8601), data: { daily_check_card: todays_check ? "done" : "todo" },
-        class: "flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-sm #{todays_check ? 'border-ink-200 bg-paper text-ink-600' : 'border-accent-300 bg-accent-50 text-accent-900'} hover:border-accent-400" do %>
+        class: "flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-sm #{todays_check ? 'border-line bg-surface text-fg-secondary' : 'border-accent-300 bg-accent-50 text-accent-900'} hover:border-accent-400" do %>
     <span>
       <span class="font-semibold"><%= todays_check ? t("daily_check.card.done") : t("daily_check.card.todo") %></span>
     </span>
@@ -49,8 +49,8 @@
 
   <footer class="flex flex-wrap gap-3 text-sm">
     <%= link_to t("sheet.links.report"), yearly_episodes_path(year: @month.year, format: :pdf), data: { turbo: false }, class: "rounded-xl border border-accent-200 bg-accent-50 px-4 py-2 font-semibold text-accent-800 hover:bg-accent-100" %>
-    <%= link_to t("sheet.links.past_episode"), new_episode_path, class: "rounded-xl border border-ink-200 bg-paper px-4 py-2 font-medium text-ink-700 hover:bg-ink-100" %>
-    <%= link_to t("sheet.links.history"), history_episodes_path, class: "rounded-xl border border-ink-200 bg-paper px-4 py-2 font-medium text-ink-700 hover:bg-ink-100" %>
-    <%= link_to t("sheet.links.year"), yearly_episodes_path(year: @month.year), class: "rounded-xl border border-ink-200 bg-paper px-4 py-2 font-medium text-ink-700 hover:bg-ink-100" %>
+    <%= link_to t("sheet.links.past_episode"), new_episode_path, class: "rounded-xl border border-line bg-surface px-4 py-2 font-medium text-fg-secondary hover:bg-surface-soft" %>
+    <%= link_to t("sheet.links.history"), history_episodes_path, class: "rounded-xl border border-line bg-surface px-4 py-2 font-medium text-fg-secondary hover:bg-surface-soft" %>
+    <%= link_to t("sheet.links.year"), yearly_episodes_path(year: @month.year), class: "rounded-xl border border-line bg-surface px-4 py-2 font-medium text-fg-secondary hover:bg-surface-soft" %>
   </footer>
 </section>

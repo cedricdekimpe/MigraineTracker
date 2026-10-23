@@ -4,10 +4,10 @@
 <% rows << :cycle if current_user.track_cycle? %>
 <% rows << :treatment %>
 
-<section class="rounded-2xl border-2 border-dashed <%= sheet_frame_class(month) %> bg-paper p-3" data-month="<%= month.strftime("%Y-%m") %>">
+<section class="rounded-2xl border-2 border-dashed <%= sheet_frame_class(month) %> bg-surface p-3" data-month="<%= month.strftime("%Y-%m") %>">
   <header class="mb-2 flex items-baseline justify-between px-1">
-    <h2 class="text-lg font-semibold text-ink-900"><%= l(month, format: :month_year) %></h2>
-    <p class="text-xs text-ink-500"><%= t("sheet.month_summary", pain: sheet.pain_days(month), treatment: sheet.treatment_days(month)) %></p>
+    <h2 class="text-lg font-semibold text-fg"><%= l(month, format: :month_year) %></h2>
+    <p class="text-xs text-fg-muted"><%= t("sheet.month_summary", pain: sheet.pain_days(month), treatment: sheet.treatment_days(month)) %></p>
   </header>
 
   <table class="w-full table-fixed border-collapse text-center text-sm">
@@ -16,10 +16,10 @@
         <th class="w-24 lg:w-36"></th>
         <% (1..31).each do |number| %>
           <% date = number <= month.end_of_month.day ? month.change(day: number) : nil %>
-          <th class="<%= sheet_column_class(number, month) %> px-0 py-1 text-xs font-semibold <%= date.nil? ? 'text-ink-300' : 'text-ink-700' %>">
+          <th class="<%= sheet_column_class(number, month) %> px-0 py-1 text-xs font-semibold <%= date.nil? ? 'text-fg-disabled' : 'text-fg-secondary' %> <%= 'opacity-50' if date && sheet_future?(date) %>">
             <% if date && !sheet_future?(date) %>
               <%= link_to number, new_episode_path(date: date.iso8601), title: t("sheet.add_on_day"),
-                    class: "block rounded py-0.5 hover:bg-paper #{'ring-2 ring-accent-600 text-accent-800' if date == Date.current}" %>
+                    class: "block rounded-lg py-0.5 hover:bg-surface #{'ring-2 ring-primary text-sheet-letter' if date == Date.current}" %>
             <% else %>
               <%= number %>
             <% end %>
@@ -30,14 +30,14 @@
     <tbody>
       <% rows.each do |row| %>
         <tr>
-          <th scope="row" class="py-2 pr-2 text-left text-[0.7rem] font-semibold leading-tight text-ink-800 lg:text-xs"><%= sheet_row_label(row) %></th>
+          <th scope="row" class="py-2 pr-2 text-left text-xs font-semibold leading-tight text-fg"><%= sheet_row_label(row) %></th>
           <% days.each do |day| %>
             <% number = day.date.day %>
-            <td class="<%= sheet_column_class(number, month) %> h-10 p-0 align-middle" data-day="<%= number %>" data-attribute="<%= row %>">
+            <td class="<%= sheet_column_class(number, month) %> h-10 p-0 align-middle <%= 'opacity-50' if sheet_future?(day.date) %>" data-day="<%= number %>" data-attribute="<%= row %>">
               <% if row == :cycle %>
                 <%= period_toggle(day) unless sheet_future?(day.date) %>
               <% elsif day.any? %>
-                <%= link_to history_episodes_path(date: day.date.iso8601), class: "flex h-10 items-center justify-center font-semibold text-accent-700 hover:bg-paper/60", title: l(day.date, format: :long) do %>
+                <%= link_to history_episodes_path(date: day.date.iso8601), class: "flex h-10 items-center justify-center font-semibold text-sheet-letter hover:bg-surface/60", title: l(day.date, format: :long) do %>
                   <%= sheet_cell(day, row) %>
                 <% end %>
               <% end %>

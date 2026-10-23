@@ -20,10 +20,10 @@ module ApplicationHelper
     if pagy.prev
       html << link.call(pagy.prev, 
         '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>', 
-        classes: "inline-flex items-center rounded-lg border border-ink-300 bg-paper px-2 py-2 text-sm font-medium text-ink-500 hover:bg-ink-50 transition",
+        classes: "inline-flex items-center rounded-lg border border-line-control bg-surface px-2 py-2 text-sm font-medium text-fg-muted hover:bg-page transition",
         aria_label: "Previous")
     else
-      html << %(<span class="inline-flex items-center rounded-lg border border-ink-200 bg-ink-50 px-2 py-2 text-sm font-medium text-ink-300 cursor-not-allowed"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></span>)
+      html << %(<span class="inline-flex items-center rounded-lg border border-line bg-page px-2 py-2 text-sm font-medium text-fg-disabled cursor-not-allowed"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></span>)
     end
 
     # Page numbers
@@ -31,11 +31,11 @@ module ApplicationHelper
       case item
       when Integer
         html << link.call(item, item.to_s, 
-          classes: "inline-flex items-center rounded-lg border border-ink-300 bg-paper px-3 py-2 text-sm font-medium text-ink-700 hover:bg-ink-50 transition")
+          classes: "inline-flex items-center rounded-lg border border-line-control bg-surface px-3 py-2 text-sm font-medium text-fg-secondary hover:bg-page transition")
       when String
         html << %(<span class="inline-flex items-center rounded-lg border border-accent-500 bg-accent-500 px-3 py-2 text-sm font-medium text-white">#{item}</span>)
       when :gap
-        html << %(<span class="inline-flex items-center px-2 py-2 text-sm font-medium text-ink-500">…</span>)
+        html << %(<span class="inline-flex items-center px-2 py-2 text-sm font-medium text-fg-muted">…</span>)
       end
     end
 
@@ -43,10 +43,10 @@ module ApplicationHelper
     if pagy.next
       html << link.call(pagy.next, 
         '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>', 
-        classes: "inline-flex items-center rounded-lg border border-ink-300 bg-paper px-2 py-2 text-sm font-medium text-ink-500 hover:bg-ink-50 transition",
+        classes: "inline-flex items-center rounded-lg border border-line-control bg-surface px-2 py-2 text-sm font-medium text-fg-muted hover:bg-page transition",
         aria_label: "Next")
     else
-      html << %(<span class="inline-flex items-center rounded-lg border border-ink-200 bg-ink-50 px-2 py-2 text-sm font-medium text-ink-300 cursor-not-allowed"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>)
+      html << %(<span class="inline-flex items-center rounded-lg border border-line bg-page px-2 py-2 text-sm font-medium text-fg-disabled cursor-not-allowed"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>)
     end
 
     html << %(</nav>)

@@ -40,6 +40,32 @@
     color-scheme: light;
   }
 
+  /* Roles, declared where the ramps are, so an element that switches theme (the "now" screen's body)
+     resolves them with its own ramps */
+  :root, [data-theme="night"] {
+    /* Roles (see the design system): views use these, not the ramps. "R G B" like the ramps. */
+    --page: var(--ink-50); --surface: var(--paper); --surface-soft: var(--ink-100);
+    --line: var(--ink-200); --line-control: 138 127 111;
+    --fg: var(--ink-900); --fg-secondary: var(--ink-700); --fg-muted: var(--ink-500); --fg-disabled: var(--ink-400);
+    --primary: var(--accent-600); --primary-hover: var(--accent-700); --on-primary: 255 255 255;
+    --link: var(--accent-700);
+    --crisis: var(--amber-400); --crisis-hover: var(--amber-300); --on-crisis: 22 20 24;
+    --focus: var(--accent-600);
+    --ok-surface: var(--accent-50); --ok-text: var(--accent-800);
+    --advised-surface: var(--amber-100); --advised-text: var(--amber-900);
+    --over-surface: var(--red-100); --over-text: var(--red-800);
+    --sustained-surface: var(--red-200); --sustained-text: var(--red-900);
+    --meter-track: var(--ink-100); --meter-ok: var(--accent-600); --meter-advised: var(--amber-700); --meter-over: var(--red-600);
+    --sheet-letter: var(--accent-800); --period-mark: var(--rose-700);
+    /* Two series of a chart, told apart by lightness and a surface-coloured gap, never by month colour */
+    --chart-a: var(--accent-700); --chart-b: var(--accent-500);
+    --sev-mild: var(--sky-800); --sev-moderate: var(--amber-800); --sev-severe: var(--red-700); --sev-extreme: var(--red-600); --on-sev-extreme: 255 255 255;
+    /* The month panel of the statistics: tinted in Papier, plain surface in Nuit (a dark tint reads muddy) */
+    --panel-amber: var(--amber-100); --panel-rose: var(--rose-100); --panel-sky: var(--sky-100);
+    /* Space kept under the content on phones for the bottom tab bar */
+    --tab-bar: 6rem;
+  }
+
   /* Nuit: automatic with the system, unless the user pinned "Papier" (data-theme="light") */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) { @apply theme-night; }
@@ -48,7 +74,20 @@
 
   html { background-color: rgb(var(--ink-50)); }
   html:has(body[data-theme="night"]) { background-color: rgb(20 19 26); }
-  body { @apply bg-ink-50 font-sans text-ink-900 antialiased; }
+  body { @apply bg-page font-sans text-fg antialiased; }
+
+  /* One visible focus for everything (WCAG 2.4.7), solid and at least 3:1 in both themes */
+  :focus-visible { outline: 2px solid rgb(var(--focus)); outline-offset: 2px; }
+  /* Placeholders are text: the muted role, never lighter (Tailwind's default grey is 2.5:1 on paper) */
+  input::placeholder, textarea::placeholder { color: rgb(var(--fg-muted)); opacity: 1; }
+  /* Every form field at 16px or more, or Safari on iOS zooms into it */
+  input:not([type=checkbox]):not([type=radio]), select, textarea { font-size: max(16px, 1em); }
+  /* Keep a focused element clear of the phone tab bar (WCAG 2.4.11) */
+  @media (max-width: 767px) { html:has([data-tab-bar]) { scroll-padding-bottom: var(--tab-bar); } }
+  /* Calm: no motion for people who asked for less */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
   h1, h2, h3 { @apply font-display tracking-tight; }
   ::selection { background-color: rgb(var(--accent-200)); color: rgb(var(--ink-900)); }
 }
@@ -80,6 +119,15 @@
     --red-50: 45 22 22; --red-100: 66 28 28; --red-200: 92 36 34; --red-300: 140 52 48;
     --red-400: 200 86 78; --red-500: 226 112 100; --red-600: 196 62 54; --red-700: 244 160 150;
     --red-800: 248 188 180; --red-900: 251 212 207; --red-950: 253 232 229;
+
+    /* Roles that differ in Nuit; the others follow their ramp */
+    --line-control: var(--ink-400);
+    --primary-hover: 42 108 138;
+    --crisis-hover: var(--amber-500);
+    --focus: var(--accent-700);
+    --meter-ok: var(--accent-500); --meter-advised: var(--amber-500); --meter-over: var(--red-500);
+    --chart-b: var(--accent-400);
+    --panel-amber: var(--paper); --panel-rose: var(--paper); --panel-sky: var(--paper);
 
     color-scheme: dark;
     background-color: rgb(var(--ink-50));

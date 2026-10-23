@@ -9,17 +9,17 @@
     <%= render "now/form", url: guest_episode_path, default_pain_kind: "migraine" %>
   </section>
 
-  <hr class="mx-auto my-10 w-full max-w-xl border-ink-200">
+  <hr class="mx-auto my-10 w-full max-w-xl border-line">
 <% end %>
 
 <article class="mx-auto max-w-xl space-y-5 text-center" itemscope itemtype="https://schema.org/SoftwareApplication">
   <header>
-    <p class="text-sm font-semibold uppercase tracking-wide text-accent-600">Migraine Tracker</p>
-    <h2 class="mt-2 text-2xl font-bold tracking-tight text-ink-900" itemprop="name"><%= t('home.tagline') %></h2>
-    <p class="mt-2 text-base text-ink-600" itemprop="description"><%= t('home.description') %></p>
+    <p class="text-sm font-semibold uppercase tracking-wide text-link">Migraine Tracker</p>
+    <h2 class="mt-2 text-2xl font-bold tracking-tight text-fg" itemprop="name"><%= t('home.tagline') %></h2>
+    <p class="mt-2 text-base text-fg-secondary" itemprop="description"><%= t('home.description') %></p>
   </header>
 
-  <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-medium text-ink-800">
+  <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-medium text-fg">
     <% %w[calendars medication secure].each do |key| %>
       <li itemprop="featureList"><%= t("home.feature_#{key}_title") %></li>
     <% end %>

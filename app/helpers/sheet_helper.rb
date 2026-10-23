@@ -29,14 +29,6 @@ module SheetHelper
     safe_join([day.letter, (tag.sup("a", class: "ml-px text-[0.6em] font-semibold", title: t("episodes.aura")) if day.aura_with_pain?)])
   end
 
-  # Severity colouring of the written number: calm, then warm, then red
-  def sheet_intensity_class(value)
-    case value
-    when 0..3 then "text-ink-800"
-    when 4..6 then "text-amber-800 font-semibold"
-    else "text-red-700 font-bold"
-    end
-  end
 
   # "X" and/or "t", as on the paper's "acute treatment" row
   def sheet_treatment(day)
@@ -50,17 +42,18 @@ module SheetHelper
   def sheet_cell(day, row)
     case row
     when :type then sheet_letter(day)
-    when :intensity then (tag.span(day.intensity, class: sheet_intensity_class(day.intensity)) if day.intensity)
+    when :intensity then intensity_mark(day.intensity)
     when :cycle then ("0" if day.cycle?)
     when :treatment then sheet_treatment(day)
     end
   end
 
-  # The cycle-row tap: marks the day as a bleeding day, or unmarks it ("0" when marked).
+  # The cycle-row tap on the wide sheet: marks the day as a bleeding day, or unmarks it. A marked day
+  # shows its "0"; an unmarked one stays blank and shows a "+" only under the pointer or keyboard focus.
   def period_toggle(day, size: "h-10", label: "0")
     date = day.date
-    text = day.cycle? ? label : "·"
-    classes = "flex #{size} w-full cursor-pointer items-center justify-center font-semibold #{day.cycle? ? 'text-rose-700' : 'text-ink-300 hover:text-ink-600'}"
+    text = day.cycle? ? label : "+"
+    classes = "flex #{size} w-full cursor-pointer items-center justify-center font-semibold #{day.cycle? ? 'text-period' : 'text-fg-muted opacity-0 hover:opacity-100 focus-visible:opacity-100'}"
     title = t(day.cycle? ? "sheet.period.unmark" : "sheet.period.mark", date: l(date, format: :long))
     if day.cycle?
       button_to text, period_day_path(date: date.iso8601), method: :delete, class: classes, title: title, "aria-label": title, form: { class: "contents", data: { turbo: false } }

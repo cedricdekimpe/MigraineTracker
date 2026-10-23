@@ -1,7 +1,7 @@
 <%# Shared by new and edit. Pain, intensity, medication and triggers are one-tap chips; the rest is optional. %>
 <%
-  chip = "inline-flex cursor-pointer items-center rounded-full border border-ink-300 bg-paper px-4 py-2 text-sm font-medium text-ink-700 transition hover:border-accent-400 peer-checked:border-accent-600 peer-checked:bg-accent-600 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-accent-500"
-  input_class = "block w-full rounded-lg border border-ink-300 px-3 py-2 text-ink-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500"
+  chip = "inline-flex cursor-pointer items-center rounded-full border border-line-control bg-surface px-4 py-2 text-sm font-medium text-fg-secondary transition hover:border-accent-400 peer-checked:border-accent-600 peer-checked:bg-primary peer-checked:text-primary-on peer-focus-visible:ring-2 peer-focus-visible:ring-focus"
+  input_class = "block w-full rounded-lg border border-line-control px-3 py-2 text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus"
   selected_medication_ids = episode.medication_intakes.reject(&:marked_for_destruction?).map(&:medication_id)
   selected_trigger_ids = episode.trigger_ids
 %>
@@ -13,12 +13,12 @@
   <%= hidden_field_tag :date, params[:date] if params[:date].present? %>
 
   <div class="space-y-2">
-    <%= form.label :occurred_on, t("episodes.date"), class: "block text-sm font-medium text-ink-700" %>
+    <%= form.label :occurred_on, t("episodes.date"), class: "block text-sm font-medium text-fg-secondary" %>
     <%= form.date_field :occurred_on, class: input_class %>
   </div>
 
   <fieldset class="space-y-3">
-    <legend class="text-sm font-medium text-ink-700"><%= t("episodes.pain") %></legend>
+    <legend class="text-sm font-medium text-fg-secondary"><%= t("episodes.pain") %></legend>
     <div class="flex flex-wrap gap-2">
       <% [["", t("episodes.pain_none")], ["migraine", t("episodes.pain_migraine")], ["headache", t("episodes.pain_headache")]].each do |value, label| %>
         <label>
@@ -36,7 +36,7 @@
   </fieldset>
 
   <fieldset class="space-y-3">
-    <legend class="text-sm font-medium text-ink-700"><%= t("episodes.intensity") %> <span class="font-normal text-ink-500">(1–10)</span></legend>
+    <legend class="text-sm font-medium text-fg-secondary"><%= t("episodes.intensity") %> <span class="font-normal text-fg-muted">(1–10)</span></legend>
     <div class="flex flex-wrap gap-2">
       <% (1..10).each do |value| %>
         <label>
@@ -48,9 +48,9 @@
   </fieldset>
 
   <fieldset class="space-y-3">
-    <legend class="flex w-full items-center justify-between text-sm font-medium text-ink-700">
+    <legend class="flex w-full items-center justify-between text-sm font-medium text-fg-secondary">
       <%= t("episodes.medication") %>
-      <%= link_to t("episodes.manage_medications"), account_medications_path, class: "text-xs font-medium text-accent-700 hover:text-accent-800" %>
+      <%= link_to t("episodes.manage_medications"), account_medications_path, class: "text-xs font-medium text-link hover:text-accent-800" %>
     </legend>
     <div class="flex flex-wrap gap-2">
       <% medications.each do |medication| %>
@@ -62,7 +62,7 @@
     </div>
     <% if suggested_medications.any? %>
       <div class="space-y-2">
-        <p class="text-xs font-medium uppercase tracking-wide text-ink-500"><%= t("episodes.common_medications") %></p>
+        <p class="text-xs font-medium uppercase tracking-wide text-fg-muted"><%= t("episodes.common_medications") %></p>
         <div class="flex flex-wrap gap-2">
           <% suggested_medications.each_with_index do |name, index| %>
             <label>
@@ -82,9 +82,9 @@
   </fieldset>
 
   <fieldset class="space-y-3">
-    <legend class="flex w-full items-center justify-between text-sm font-medium text-ink-700">
+    <legend class="flex w-full items-center justify-between text-sm font-medium text-fg-secondary">
       <%= t("episodes.triggers") %>
-      <%= link_to t("episodes.manage_triggers"), account_triggers_path, class: "text-xs font-medium text-accent-700 hover:text-accent-800" %>
+      <%= link_to t("episodes.manage_triggers"), account_triggers_path, class: "text-xs font-medium text-link hover:text-accent-800" %>
     </legend>
     <div class="flex flex-wrap gap-2">
       <% triggers.each do |trigger| %>
@@ -99,16 +99,16 @@
     </div>
   </fieldset>
 
-  <details class="rounded-xl border border-ink-200 p-4" <%= "open" if episode.persisted? || episode.errors.any? %>>
-    <summary class="cursor-pointer text-sm font-medium text-ink-700"><%= t("episodes.more_details") %></summary>
+  <details class="rounded-xl border border-line p-4" <%= "open" if episode.persisted? || episode.errors.any? %>>
+    <summary class="cursor-pointer text-sm font-medium text-fg-secondary"><%= t("episodes.more_details") %></summary>
     <div class="mt-4 space-y-6">
       <div class="grid gap-4 sm:grid-cols-2">
         <div class="space-y-2">
-          <%= form.label :started_time, t("episodes.start_time"), class: "block text-sm font-medium text-ink-700" %>
+          <%= form.label :started_time, t("episodes.start_time"), class: "block text-sm font-medium text-fg-secondary" %>
           <%= form.time_field :started_time, value: episode.started_time&.strftime("%H:%M"), class: input_class %>
         </div>
         <div class="space-y-2">
-          <%= form.label :duration_minutes, t("episodes.duration"), class: "block text-sm font-medium text-ink-700" %>
+          <%= form.label :duration_minutes, t("episodes.duration"), class: "block text-sm font-medium text-fg-secondary" %>
           <%= form.number_field :duration_minutes, min: 1, step: 1, class: input_class %>
         </div>
       </div>
@@ -116,32 +116,32 @@
       <% if current_user.track_cycle? %>
         <div class="flex items-center gap-3">
           <%= hidden_field_tag "episode[period_day]", "0", id: nil %>
-          <%= check_box_tag "episode[period_day]", "1", current_user.period_days.exists?(date: episode.occurred_on), class: "h-4 w-4 rounded border-ink-300 text-accent-600 focus:ring-accent-500" %>
-          <%= label_tag "episode_period_day", t("episodes.on_period"), class: "text-sm font-medium text-ink-700" %>
+          <%= check_box_tag "episode[period_day]", "1", current_user.period_days.exists?(date: episode.occurred_on), class: "h-4 w-4 rounded border-line-control text-link focus:ring-focus" %>
+          <%= label_tag "episode_period_day", t("episodes.on_period"), class: "text-sm font-medium text-fg-secondary" %>
         </div>
       <% end %>
 
       <div class="space-y-2">
-        <%= form.label :notes, t("episodes.notes"), class: "block text-sm font-medium text-ink-700" %>
+        <%= form.label :notes, t("episodes.notes"), class: "block text-sm font-medium text-fg-secondary" %>
         <%= form.text_area :notes, rows: 3, class: input_class %>
       </div>
 
       <% if form.object.medication_intakes.reject(&:new_record?).any? %>
         <div class="space-y-3">
-          <h3 class="text-sm font-medium text-ink-700"><%= t("episodes.intake_details") %></h3>
+          <h3 class="text-sm font-medium text-fg-secondary"><%= t("episodes.intake_details") %></h3>
           <%= form.fields_for :medication_intakes, form.object.medication_intakes.reject(&:new_record?) do |intake_form| %>
-            <div class="grid gap-3 rounded-lg border border-ink-200 p-3 sm:grid-cols-4 sm:items-end">
-              <p class="text-sm font-medium text-ink-900 sm:self-center"><%= intake_form.object.medication.name %></p>
+            <div class="grid gap-3 rounded-lg border border-line p-3 sm:grid-cols-4 sm:items-end">
+              <p class="text-sm font-medium text-fg sm:self-center"><%= intake_form.object.medication.name %></p>
               <div>
-                <%= intake_form.label :dose, t("episodes.dose"), class: "block text-xs font-medium text-ink-600" %>
+                <%= intake_form.label :dose, t("episodes.dose"), class: "block text-xs font-medium text-fg-secondary" %>
                 <%= intake_form.text_field :dose, class: input_class %>
               </div>
               <div>
-                <%= intake_form.label :taken_time, t("episodes.taken_at"), class: "block text-xs font-medium text-ink-600" %>
+                <%= intake_form.label :taken_time, t("episodes.taken_at"), class: "block text-xs font-medium text-fg-secondary" %>
                 <%= intake_form.time_field :taken_time, value: intake_form.object.taken_time&.strftime("%H:%M"), class: input_class %>
               </div>
               <div>
-                <%= intake_form.label :effect, t("episodes.effect"), class: "block text-xs font-medium text-ink-600" %>
+                <%= intake_form.label :effect, t("episodes.effect"), class: "block text-xs font-medium text-fg-secondary" %>
                 <%= intake_form.select :effect, MedicationIntake::EFFECTS.map { |effect| [t("episodes.effects.#{effect}"), effect] }, { include_blank: "—" }, class: input_class %>
               </div>
             </div>
@@ -151,8 +151,8 @@
     </div>
   </details>
 
-  <div class="flex items-center justify-between border-t border-ink-200 pt-6">
-    <%= link_to t("episodes.cancel"), cancel_path, class: "rounded-lg border border-transparent px-3 py-2 text-sm font-medium text-ink-600 transition hover:text-ink-800" %>
-    <%= form.submit submit_label, class: "cursor-pointer rounded-lg bg-accent-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-700" %>
+  <div class="flex items-center justify-between border-t border-line pt-6">
+    <%= link_to t("episodes.cancel"), cancel_path, class: "rounded-lg border border-transparent px-3 py-2 text-sm font-medium text-fg-secondary transition hover:text-fg" %>
+    <%= form.submit submit_label, class: "cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-on transition hover:bg-primary-hover" %>
   </div>
 <% end %>

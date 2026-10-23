@@ -1,19 +1,20 @@
 module EpisodesHelper
-  def intensity_color_class(intensity)
-    case intensity
-    when 0..3
-      "bg-sky-100 text-sky-800"
-    when 4..6
-      "bg-amber-100 text-amber-800"
-    when 7..8
-      "bg-red-100 text-red-700"
-    else
-      "bg-red-600 text-white"
-    end
-  end
+  # The intensity as it is written everywhere: the number itself, its colour only reinforcing it
+  # (calm, warm, red), and a filled badge for 9 and 10. Never a tinted chip, which vanishes on a
+  # calendar column of the same tint.
+  def intensity_mark(intensity)
+    return if intensity.nil?
 
-  def intensity_badge_class(intensity)
-    intensity ? intensity_color_class(intensity) : "bg-ink-100 text-ink-600"
+    if intensity >= 9
+      tag.span(intensity, class: "inline-flex min-w-7 items-center justify-center rounded-full bg-sev-extreme px-1.5 font-bold text-sev-on-extreme", data: { severity: "extreme" })
+    else
+      severity, weight = case intensity
+                         when 0..3 then ["mild", "font-semibold"]
+                         when 4..6 then ["moderate", "font-semibold"]
+                         else ["severe", "font-bold"]
+                         end
+      tag.span(intensity, class: "#{weight} text-sev-#{severity}", data: { severity: severity })
+    end
   end
 
   # "Migraine with aura", "Headache", "Aura without pain", ...

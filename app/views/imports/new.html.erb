@@ -1,9 +1,9 @@
 <% content_for :title, t('import.title') %>
 
-<section class="mx-auto w-full max-w-2xl rounded-2xl border border-ink-200 bg-paper p-8">
+<section class="mx-auto w-full max-w-2xl rounded-2xl border border-line bg-surface p-8">
   <header class="mb-6">
-    <h1 class="text-2xl font-semibold text-ink-900"><%= t('import.title') %></h1>
-    <p class="mt-2 text-sm text-ink-500"><%= t('import.description') %></p>
+    <h1 class="text-2xl font-semibold text-fg"><%= t('import.title') %></h1>
+    <p class="mt-2 text-sm text-fg-muted"><%= t('import.description') %></p>
   </header>
 
   <div class="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
@@ -23,25 +23,25 @@
 
   <%= form_with url: imports_path, multipart: true, class: "space-y-6" do |form| %>
     <div>
-      <%= form.label :file, t('import.file_label'), class: "block text-sm font-medium text-ink-700" %>
+      <%= form.label :file, t('import.file_label'), class: "block text-sm font-medium text-fg-secondary" %>
       <div class="mt-2">
         <%= form.file_field :file, 
               accept: "application/json,.json",
               required: true,
-              class: "block w-full text-sm text-ink-500 file:mr-4 file:rounded-lg file:border-0 file:bg-accent-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-accent-700 hover:file:bg-accent-100" %>
+              class: "block w-full text-sm text-fg-muted file:mr-4 file:rounded-lg file:border-0 file:bg-accent-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-link hover:file:bg-accent-100" %>
       </div>
     </div>
 
-    <div class="flex gap-3 border-t border-ink-200 pt-6">
+    <div class="flex gap-3 border-t border-line pt-6">
       <%= link_to t('common.cancel'), edit_user_registration_path, 
-            class: "rounded-lg border border-ink-300 bg-paper px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-ink-50" %>
+            class: "rounded-lg border border-line-control bg-surface px-4 py-2 text-sm font-medium text-fg-secondary transition hover:bg-page" %>
       <%= form.submit t('import.import_button'), 
-            class: "rounded-lg bg-accent-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-700" %>
+            class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-on transition hover:bg-primary-hover" %>
     </div>
   <% end %>
 
-  <div class="mt-8 rounded-xl border border-ink-200 bg-ink-50 p-4">
-    <p class="text-sm text-ink-600"><%= t('import.back') %></p>
-    <%= link_to t('navigation.account'), edit_user_registration_path, class: "mt-2 inline-block text-sm font-medium text-accent-700 hover:text-accent-800" %>
+  <div class="mt-8 rounded-xl border border-line bg-page p-4">
+    <p class="text-sm text-fg-secondary"><%= t('import.back') %></p>
+    <%= link_to t('navigation.account'), edit_user_registration_path, class: "mt-2 inline-block text-sm font-medium text-link hover:text-accent-800" %>
   </div>
 </section>

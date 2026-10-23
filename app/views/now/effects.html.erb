@@ -7,11 +7,11 @@
     <% @intakes.each do |intake| %>
       <li data-intake="<%= intake.id %>">
         <p class="text-lg font-medium"><%= [intake.medication.name, intake.dose].compact_blank.join(" ") %>
-          <span class="text-base font-normal text-ink-500">· <%= intake.taken_time&.strftime("%H:%M") %></span></p>
+          <span class="text-base font-normal text-fg-muted">· <%= intake.taken_time&.strftime("%H:%M") %></span></p>
         <%= form_with url: now_intake_effect_path(id: intake.id), method: :patch, data: { turbo: false }, class: "mt-2 grid grid-cols-3 gap-2" do %>
           <% MedicationIntake::EFFECTS.each do |effect| %>
             <%= button_tag t("now.effects.#{effect}"), type: "submit", name: "effect", value: effect,
-                  class: "min-h-14 cursor-pointer rounded-2xl border px-2 text-base leading-tight transition #{intake.effect == effect ? 'border-accent-400 bg-accent-600 text-white' : 'border-ink-200 bg-ink-100 text-ink-900 hover:border-accent-400'}" %>
+                  class: "min-h-14 cursor-pointer rounded-2xl border px-2 text-base leading-tight transition #{intake.effect == effect ? 'border-accent-400 bg-primary text-primary-on' : 'border-line-control bg-surface-soft text-fg hover:border-accent-400'}" %>
           <% end %>
         <% end %>
       </li>
@@ -19,5 +19,5 @@
   </ul>
 
   <%= link_to t("now.effects.done"), episodes_path(month: @episode.occurred_on.strftime("%Y-%m")),
-        class: "mt-8 flex min-h-14 items-center justify-center rounded-2xl bg-accent-600 text-lg font-semibold text-white hover:bg-accent-500" %>
+        class: "mt-8 flex min-h-14 items-center justify-center rounded-2xl bg-primary text-lg font-semibold text-primary-on hover:bg-primary-hover" %>
 </section>

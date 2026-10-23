@@ -2,75 +2,74 @@
 
 <div class="space-y-14">
   <header>
-    <h1 class="text-3xl font-semibold text-ink-900 sm:text-4xl"><%= t("stats.title") %> <%= render "shared/info", text: t("stats.description"), more: numbers_path %></h1>
+    <h1 class="text-3xl font-semibold text-fg sm:text-4xl"><%= t("stats.title") %> <%= render "shared/info", text: t("stats.description"), more: numbers_path %></h1>
   </header>
 
   <% if @has_data %>
     <p>
       <%= link_to t("sheet.links.report"), yearly_episodes_path(year: Date.current.year, format: :pdf), data: { turbo: false },
-            class: "inline-flex rounded-xl border border-accent-200 bg-accent-50 px-4 py-2 text-sm font-semibold text-accent-800 hover:bg-accent-100" %>
+            class: "inline-flex rounded-xl border border-line-control bg-surface px-4 py-2 text-sm font-semibold text-link hover:bg-surface-soft" %>
     </p>
   <% end %>
 
   <% unless @has_data %>
-    <section class="rounded-3xl border border-dashed border-ink-300 px-6 py-14 text-center">
-      <p class="font-display text-xl text-ink-800"><%= t("stats.empty_title") %></p>
-      <p class="mx-auto mt-2 max-w-md text-sm text-ink-600"><%= t("stats.empty_hint") %></p>
-      <%= link_to t("now.nav"), now_path, class: "mt-6 inline-flex rounded-xl bg-amber-400 px-5 py-3 font-bold text-ink-950 ring-1 ring-amber-600/30 hover:bg-amber-300" %>
+    <section class="rounded-3xl border border-dashed border-line-control px-6 py-14 text-center">
+      <p class="font-display text-xl text-fg"><%= t("stats.empty_title") %></p>
+      <p class="mx-auto mt-2 max-w-md text-sm text-fg-secondary"><%= t("stats.empty_hint") %></p>
+      <%= link_to t("now.nav"), now_path, class: "mt-6 inline-flex rounded-full bg-crisis px-6 py-3 font-bold text-crisis-on hover:bg-crisis-hover" %>
     </section>
   <% else %>
-    <%# --- This month, tinted with the month's ink like the paper calendar --- %>
-    <section class="rounded-3xl <%= month_panel_class(@month.month) %> p-6 sm:p-9" data-month-summary>
-      <p class="text-sm font-medium uppercase tracking-wide text-ink-600"><%= t("stats.this_month") %></p>
-      <h2 class="mt-1 text-2xl font-semibold text-ink-900"><%= l(@month.month, format: :month_year) %></h2>
+    <%# --- This month, in the dashed frame and ink of the month, like the paper calendar --- %>
+    <section class="rounded-3xl border-2 border-dashed <%= month_panel_class(@month.month) %> p-5 sm:p-8" data-month-summary>
+      <h2 class="text-2xl font-semibold text-fg"><%= l(@month.month, format: :month_year) %></h2>
 
-      <dl class="mt-8 grid gap-8 sm:grid-cols-3">
+      <dl class="mt-5 grid grid-cols-3 gap-4 sm:mt-8 sm:gap-8">
         <div>
-          <dd class="font-display text-6xl font-semibold leading-none text-ink-900" data-figure="pain-days"><%= @month.pain_days %></dd>
-          <dt class="mt-2 text-sm text-ink-700"><%= t("stats.pain_days", count: @month.pain_days) %></dt>
-          <dd class="text-sm text-ink-600"><%= t("stats.of_which_migraine", count: @month.migraine_days) %></dd>
-          <dd class="text-sm text-ink-600" data-figure="severe-days"><%= t("stats.severe_days", count: @month.severe_days) %></dd>
+          <dd class="font-display text-4xl font-semibold leading-none text-fg tabular-nums sm:text-6xl" data-figure="pain-days"><%= @month.pain_days %></dd>
+          <dt class="mt-2 text-sm leading-5 text-fg-secondary"><%= t("stats.pain_days", count: @month.pain_days) %></dt>
+          <dd class="mt-1 text-xs text-fg-secondary sm:text-sm"><%= t("stats.of_which_migraine", count: @month.migraine_days) %></dd>
+          <dd class="mt-1 text-xs text-fg-secondary sm:text-sm" data-figure="severe-days"><%= t("stats.severe_days", count: @month.severe_days) %></dd>
         </div>
         <div>
-          <dd class="font-display text-6xl font-semibold leading-none text-ink-900" data-figure="acute-days"><%= @month.any_acute_days %></dd>
-          <dt class="mt-2 text-sm text-ink-700"><%= t("stats.acute_days", count: @month.any_acute_days) %></dt>
-          <dd class="text-sm text-ink-600"><%= t("stats.triptan_split", triptan: @month.triptan_days, acute: @month.non_triptan_days) %></dd>
+          <dd class="font-display text-4xl font-semibold leading-none text-fg tabular-nums sm:text-6xl" data-figure="acute-days"><%= @month.any_acute_days %></dd>
+          <dt class="mt-2 text-sm leading-5 text-fg-secondary"><%= t("stats.acute_days", count: @month.any_acute_days) %></dt>
+          <dd class="hidden text-sm text-fg-secondary sm:block"><%= t("stats.triptan_split", triptan: @month.triptan_days, acute: @month.non_triptan_days) %></dd>
         </div>
         <div>
-          <dd class="font-display text-6xl font-semibold leading-none text-ink-900" data-figure="average"><%= @average ? number_with_precision(@average, precision: 1, strip_insignificant_zeros: true) : "–" %></dd>
-          <dt class="mt-2 text-sm text-ink-700"><%= t("stats.average_label") %></dt>
-          <dd class="text-sm text-ink-600"><%= @average ? t("stats.average_hint") : t("stats.no_average") %></dd>
+          <dd class="font-display text-4xl font-semibold leading-none text-fg tabular-nums sm:text-6xl" data-figure="average"><%= @average ? number_with_precision(@average, precision: 1, strip_insignificant_zeros: true) : "–" %></dd>
+          <dt class="mt-2 text-sm leading-5 text-fg-secondary"><%= t("stats.average_label") %></dt>
+          <dd class="hidden text-sm text-fg-secondary sm:block"><%= @average ? t("stats.average_hint") : t("stats.no_average") %></dd>
         </div>
       </dl>
       <% if @month.aura_days.positive? %>
-        <p class="mt-6 text-sm text-ink-700"><%= t("stats.aura_days", count: @month.aura_days) %></p>
+        <p class="mt-6 text-sm text-fg-secondary"><%= t("stats.aura_days", count: @month.aura_days) %></p>
       <% end %>
     </section>
 
     <%# --- Acute treatment days against the overuse thresholds --- %>
     <section data-overuse="<%= @month.overuse_status %>">
-      <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.overuse.title") %> <%= render "shared/info", text: t("stats.overuse.hint"), more: numbers_path(anchor: "limits") %></h2>
+      <h2 class="text-2xl font-semibold text-fg"><%= t("stats.overuse.title") %> <%= render "shared/info", text: t("stats.overuse.hint"), more: numbers_path(anchor: "limits") %></h2>
 
       <div class="mt-6 space-y-6">
         <% [[:triptan, @month.triptan_days, MonthlyOverview::TRIPTAN_LIMIT, MonthlyOverview::TRIPTAN_ADVISED], [:combination, @month.combination_days, MonthlyOverview::COMBINATION_LIMIT, MonthlyOverview::COMBINATION_ADVISED], [:acute, @month.acute_days, MonthlyOverview::ACUTE_LIMIT, MonthlyOverview::ACUTE_ADVISED]].each do |kind, days, limit, advised| %>
           <% next if kind == :combination && days.zero? %>
           <div data-meter="<%= kind %>">
             <div class="mb-2 flex items-baseline justify-between text-sm">
-              <span class="font-medium text-ink-800"><%= t("stats.overuse.#{kind}") %></span>
-              <span class="text-ink-600"><%= t("stats.overuse.days_of_limit", days: days, limit: limit) %></span>
+              <span class="font-medium text-fg"><%= t("stats.overuse.#{kind}") %></span>
+              <span class="text-fg-secondary"><%= t("stats.overuse.days_of_limit", days: days, limit: limit) %></span>
             </div>
             <%= limit_meter(days: days, limit: limit, advised: advised) %>
           </div>
         <% end %>
         <% if @month.mixed? %>
-          <p class="text-sm text-ink-600"><%= t("stats.overuse.mixed", days: @month.any_acute_days, limit: MonthlyOverview::MIXED_LIMIT) %></p>
+          <p class="text-sm text-fg-secondary"><%= t("stats.overuse.mixed", days: @month.any_acute_days, limit: MonthlyOverview::MIXED_LIMIT) %></p>
         <% end %>
         <% if @month.heavy_weeks.positive? %>
-          <p class="text-sm text-ink-600" data-heavy-weeks><%= t("stats.overuse.heavy_weeks", count: @month.heavy_weeks) %></p>
+          <p class="text-sm text-fg-secondary" data-heavy-weeks><%= t("stats.overuse.heavy_weeks", count: @month.heavy_weeks) %></p>
         <% end %>
       </div>
 
-      <% tone = { ok: "border-accent-200 bg-accent-50 text-accent-800", advised: "border-amber-300 bg-amber-100 text-amber-900", over: "border-red-300 bg-red-100 text-red-800", sustained: "border-red-400 bg-red-200 text-red-900" }.fetch(@month.overuse_status) %>
+      <% tone = { ok: "bg-ok-surface text-ok-text", advised: "bg-advised-surface text-advised-text", over: "bg-over-surface text-over-text", sustained: "bg-sustained-surface text-sustained-text" }.fetch(@month.overuse_status) %>
       <p class="mt-6 rounded-2xl border px-4 py-3 text-sm font-medium <%= tone %>" role="status"><%= t("stats.overuse.status_#{@month.overuse_status}") %></p>
     </section>
 
@@ -78,13 +77,13 @@
 
     <%# --- Twelve months, one column per month in the paper's yellow / pink / blue --- %>
     <section>
-      <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.pain_chart_title") %></h2>
+      <h2 class="text-2xl font-semibold text-fg"><%= t("stats.pain_chart_title") %></h2>
       <div class="mt-5" data-chart="pain-days">
         <%= month_columns(@overview.months, label: t("stats.pain_chart_title"), segments: ->(m) { [m.migraine_days, m.headache_days] }) %>
       </div>
-      <p class="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-ink-600">
-        <span class="inline-flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-ink-500"></i><%= t("stats.legend_migraine") %></span>
-        <span class="inline-flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-ink-200"></i><%= t("stats.legend_headache") %></span>
+      <p class="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-fg-secondary">
+        <span class="inline-flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-chart-a"></i><%= t("stats.legend_migraine") %></span>
+        <span class="inline-flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-chart-b"></i><%= t("stats.legend_headache") %></span>
       </p>
       <table class="sr-only">
         <caption><%= t("stats.pain_chart_title") %></caption>
@@ -98,21 +97,21 @@
     </section>
 
     <section>
-      <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.medication_chart_title") %></h2>
+      <h2 class="text-2xl font-semibold text-fg"><%= t("stats.medication_chart_title") %></h2>
       <div class="mt-5" data-chart="acute-days">
         <%= month_columns(@overview.months, label: t("stats.medication_chart_title"),
               segments: ->(m) { [m.triptan_days, m.non_triptan_days] },
               threshold: MonthlyOverview::MIXED_LIMIT, threshold_label: t("stats.threshold_label", days: MonthlyOverview::MIXED_LIMIT)) %>
       </div>
-      <p class="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-ink-600">
-        <span class="inline-flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-ink-500"></i><%= t("stats.overuse.triptan") %></span>
-        <span class="inline-flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-ink-200"></i><%= t("stats.overuse.acute") %></span>
+      <p class="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-fg-secondary">
+        <span class="inline-flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-chart-a"></i><%= t("stats.overuse.triptan") %></span>
+        <span class="inline-flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-chart-b"></i><%= t("stats.overuse.acute") %></span>
       </p>
     </section>
 
     <%# --- What gets ticked: a list of what comes up, not a verdict --- %>
     <%= render "stats/daily_factors", factors: @factors %>
 
-    <p class="border-t border-ink-200 pt-4 text-xs text-ink-500"><%= t("stats.disclaimer") %></p>
+    <p class="border-t border-line pt-4 text-xs text-fg-muted"><%= t("stats.disclaimer") %></p>
   <% end %>
 </div>

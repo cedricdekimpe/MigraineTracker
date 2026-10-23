@@ -66,12 +66,12 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
   test "the month panel takes the ink of the month, like the paper calendar" do
     log(Date.new(2026, 10, 5))
     visit_stats
-    assert_select "[data-month-summary].bg-amber-100" # October = first ink of its quarter
+    assert_select "[data-month-summary].bg-panel-amber.border-amber-400" # October = first ink of its quarter
 
     @today = Time.zone.local(2026, 11, 20)
     log(Date.new(2026, 11, 2))
     visit_stats
-    assert_select "[data-month-summary].bg-rose-100"
+    assert_select "[data-month-summary].bg-panel-rose.border-rose-400"
   end
 
   test "treatment meters stay calm below the thresholds" do
@@ -80,7 +80,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
 
     assert_select "[data-overuse=ok]"
     assert_select "[data-meter=triptan] [role=meter][aria-valuenow='3'][aria-valuemax='10']"
-    assert_select "[data-meter=triptan] .bg-accent-500"
+    assert_select "[data-meter=triptan] .bg-meter-ok"
     assert_match(/Below the advised limits\./, response.body)
   end
 
@@ -88,13 +88,13 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     8.times { |i| log(Date.new(2026, 10, i + 1), medications: [@triptan]) }
     visit_stats
     assert_select "[data-overuse=advised]"
-    assert_select "[data-meter=triptan] .bg-amber-500"
+    assert_select "[data-meter=triptan] .bg-meter-advised"
     assert_match(/Above the advised limits/, response.body)
 
     2.times { |i| log(Date.new(2026, 10, i + 9), medications: [@triptan]) }
     visit_stats
     assert_select "[data-overuse=over]"
-    assert_select "[data-meter=triptan] .bg-red-500"
+    assert_select "[data-meter=triptan] .bg-meter-over"
     assert_match(/Threshold reached this month/, response.body)
   end
 
@@ -125,7 +125,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/Several kinds together: 10 days/, response.body)
   end
 
-  test "twelve months of columns, coloured by month, with the threshold on the treatment chart" do
+  test "twelve months of columns, two series told apart by lightness, with the threshold on the treatment chart" do
     log(Date.new(2026, 10, 5), medications: [@acute])
     visit_stats
 
@@ -135,7 +135,8 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-chart=pain-days] svg text", text: /oct|Oct/
     assert_select "[data-chart=acute-days] svg line[style*='stroke-dasharray']", count: 2
     assert_select "[data-chart=acute-days] svg text", text: "10 days", count: 2
-    assert_select "[data-chart=pain-days] svg rect[style*='--amber-']" # October's ink
+    assert_select "[data-chart=pain-days] svg rect[style*='--chart-a']" # migraine days, the strong series
+    assert_select "[data-chart=pain-days] svg rect[style*='--amber-']", count: 0 # month inks never encode data
   end
 
   test "an accessible table backs the chart" do
