@@ -3,63 +3,63 @@
 <div class="mx-auto flex w-full max-w-5xl flex-col gap-6 lg:flex-row">
   <%# Sidebar Navigation %>
   <aside class="lg:w-64 lg:shrink-0">
-    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-      <h2 class="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500"><%= t('account.settings') %></h2>
+    <div class="rounded-2xl border border-ink-200 bg-paper p-4">
+      <h2 class="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-ink-500"><%= t('account.settings') %></h2>
       <%= render 'account/navigation' %>
     </div>
   </aside>
 
   <%# Main Content %>
   <main class="flex-1">
-    <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div class="rounded-2xl border border-ink-200 bg-paper p-8">
       <header class="mb-6">
-        <h1 class="text-2xl font-semibold text-slate-900"><%= t('account.account_info') %></h1>
-        <p class="mt-2 text-sm text-slate-500"><%= t('account.update_email_password') %></p>
+        <h1 class="text-2xl font-semibold text-ink-900"><%= t('account.account_info') %></h1>
+        <p class="mt-2 text-sm text-ink-500"><%= t('account.update_email_password') %></p>
       </header>
 
       <%= render "devise/shared/error_messages", resource: resource %>
 
       <%= form_with model: resource, scope: resource_name, url: registration_path(resource_name), method: :put, data: { turbo: false }, class: "space-y-6" do |form| %>
         <div class="space-y-2">
-          <%= form.label :email, t('account.email'), class: "block text-sm font-medium text-slate-700" %>
-          <%= form.email_field :email, autofocus: true, autocomplete: "email", class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+          <%= form.label :email, t('account.email'), class: "block text-sm font-medium text-ink-700" %>
+          <%= form.email_field :email, autofocus: true, autocomplete: "email", class: "block w-full rounded-lg border border-ink-300 px-3 py-2 text-ink-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500" %>
         </div>
 
         <div class="space-y-2">
           <div class="flex items-center justify-between">
-            <%= form.label :password, t('account.password'), class: "block text-sm font-medium text-slate-700" %>
-            <span class="text-xs text-slate-500"><%= t('account.password_hint') %></span>
+            <%= form.label :password, t('account.password'), class: "block text-sm font-medium text-ink-700" %>
+            <span class="text-xs text-ink-500"><%= t('account.password_hint') %></span>
           </div>
-          <%= form.password_field :password, autocomplete: "new-password", class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+          <%= form.password_field :password, autocomplete: "new-password", class: "block w-full rounded-lg border border-ink-300 px-3 py-2 text-ink-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500" %>
         </div>
 
         <div class="space-y-2">
-          <%= form.label :password_confirmation, t('account.password_confirmation'), class: "block text-sm font-medium text-slate-700" %>
-          <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+          <%= form.label :password_confirmation, t('account.password_confirmation'), class: "block text-sm font-medium text-ink-700" %>
+          <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-lg border border-ink-300 px-3 py-2 text-ink-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500" %>
         </div>
 
         <div class="space-y-2">
-          <%= form.label :current_password, t('account.current_password'), class: "block text-sm font-medium text-slate-700" %>
-          <%= form.password_field :current_password, autocomplete: "current-password", class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
-          <p class="text-xs text-slate-500"><%= t('account.current_password_hint') %></p>
+          <%= form.label :current_password, t('account.current_password'), class: "block text-sm font-medium text-ink-700" %>
+          <%= form.password_field :current_password, autocomplete: "current-password", class: "block w-full rounded-lg border border-ink-300 px-3 py-2 text-ink-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500" %>
+          <p class="text-xs text-ink-500"><%= t('account.current_password_hint') %></p>
         </div>
 
-        <div class="flex items-center justify-end border-t border-slate-200 pt-6">
-          <%= form.submit t('account.update_account'), class: "rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 cursor-pointer" %>
+        <div class="flex items-center justify-end border-t border-ink-200 pt-6">
+          <%= form.submit t('account.update_account'), class: "rounded-lg bg-accent-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-700 cursor-pointer" %>
         </div>
       <% end %>
 
-      <section class="mt-10 border-t border-slate-200 pt-8">
-        <h2 class="text-lg font-semibold text-slate-900"><%= t('preferences.title') %></h2>
+      <section class="mt-10 border-t border-ink-200 pt-8">
+        <h2 class="text-lg font-semibold text-ink-900"><%= t('preferences.title') %></h2>
         <%= form_with model: current_user, scope: :user, url: account_preferences_path, method: :patch, data: { turbo: false }, class: "mt-4 space-y-4" do |form| %>
           <div class="flex items-start gap-3">
-            <%= form.check_box :track_cycle, class: "mt-1 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" %>
+            <%= form.check_box :track_cycle, class: "mt-1 h-4 w-4 rounded border-ink-300 text-accent-600 focus:ring-accent-500" %>
             <div>
-              <%= form.label :track_cycle, t('preferences.track_cycle'), class: "text-sm font-medium text-slate-700" %>
-              <p class="text-xs text-slate-500"><%= t('preferences.track_cycle_hint') %></p>
+              <%= form.label :track_cycle, t('preferences.track_cycle'), class: "text-sm font-medium text-ink-700" %>
+              <p class="text-xs text-ink-500"><%= t('preferences.track_cycle_hint') %></p>
             </div>
           </div>
-          <%= form.submit t('common.save'), class: "cursor-pointer rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-emerald-400 hover:text-emerald-700" %>
+          <%= form.submit t('common.save'), class: "cursor-pointer rounded-lg border border-ink-300 bg-paper px-4 py-2 text-sm font-medium text-ink-700 transition hover:border-accent-400 hover:text-accent-700" %>
         <% end %>
       </section>
     </div>

@@ -1,12 +1,12 @@
-<div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+<div class="overflow-x-auto rounded-2xl border border-ink-200 bg-paper">
   <table class="min-w-full table-fixed">
     <thead>
       <tr>
-        <th class="sticky left-0 bg-white px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"><%= t("episodes.calendar.attribute") %></th>
+        <th class="sticky left-0 bg-paper px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-ink-500"><%= t("episodes.calendar.attribute") %></th>
         <% days.each do |day| %>
-          <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide text-ink-500">
             <% if day <= month.end_of_month.day %>
-              <%= link_to day, new_episode_path(date: month.change(day: day).iso8601), title: t("episodes.calendar.add_on_day"), class: "block rounded hover:bg-emerald-50 hover:text-emerald-700" %>
+              <%= link_to day, new_episode_path(date: month.change(day: day).iso8601), title: t("episodes.calendar.add_on_day"), class: "block rounded hover:bg-accent-50 hover:text-accent-700" %>
             <% else %>
               <%= day %>
             <% end %>
@@ -25,7 +25,7 @@
       %>
       <% rows.each do |attribute, label, renderer| %>
         <tr>
-          <th scope="row" class="sticky left-0 bg-white px-4 py-3 text-left font-medium text-slate-700"><%= label %></th>
+          <th scope="row" class="sticky left-0 bg-paper px-4 py-3 text-left font-medium text-ink-700"><%= label %></th>
           <% days.each do |day| %>
             <% day_episodes = episodes_by_day[day] %>
             <td class="<%= episode_cell_classes(day, month) %>" data-day="<%= day %>" data-attribute="<%= attribute %>">

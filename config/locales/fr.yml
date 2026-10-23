@@ -9,6 +9,8 @@ fr:
     signed_in_as: "Connecté en tant que %{email}"
     sign_out: "Déconnexion"
     sign_in: "Connexion"
+    journal: "Journal"
+    primary: "Navigation principale"
     create_account: "Créer un compte"
     language: "Langue"
     faq: "FAQ"
@@ -545,3 +547,9 @@ fr:
     flash:
       finished: "Épisode enregistré (%{duration})."
       cancelled: "Épisode annulé."
+
+  theme:
+    label: "Apparence"
+    auto: "Auto"
+    light: "Papier"
+    night: "Nuit"

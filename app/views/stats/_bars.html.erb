@@ -4,11 +4,11 @@
   <% rows.each do |label, count| %>
     <li data-label="<%= label %>" data-count="<%= count %>">
       <div class="flex items-baseline justify-between text-sm">
-        <span class="font-medium text-slate-800"><%= label %></span>
-        <span class="text-slate-500"><%= count %></span>
+        <span class="font-medium text-ink-800"><%= label %></span>
+        <span class="text-ink-500"><%= count %></span>
       </div>
-      <div class="mt-1 h-2 rounded-full bg-slate-100">
-        <div class="h-2 rounded-full bg-emerald-500" style="width: <%= (count * 100.0 / max).round %>%"></div>
+      <div class="mt-1 h-2 rounded-full bg-ink-100">
+        <div class="h-2 rounded-full bg-accent-500" style="width: <%= (count * 100.0 / max).round %>%"></div>
       </div>
     </li>
   <% end %>

@@ -1,9 +1,9 @@
 <% content_for :title, "Create account" %>
 
 <section class="mx-auto w-full max-w-md">
-  <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-    <h1 class="text-2xl font-semibold text-slate-900">Create your account</h1>
-    <p class="mt-2 text-sm text-slate-500">Join Migraine Tracker to log episodes, triggers, and treatments.</p>
+  <div class="rounded-2xl border border-ink-200 bg-paper p-8">
+    <h1 class="text-2xl font-semibold text-ink-900">Create your account</h1>
+    <p class="mt-2 text-sm text-ink-500">Join Migraine Tracker to log episodes, triggers, and treatments.</p>
 
     <div class="mt-6">
       <%= render "devise/shared/error_messages" %>
@@ -11,38 +11,38 @@
 
     <%= form_with model: resource, scope: resource_name, url: registration_path(resource_name), data: { turbo: false }, html: { class: "mt-6 space-y-5" } do |form| %>
       <div class="space-y-2">
-        <%= form.label :email, class: "block text-sm font-medium text-slate-700" %>
-        <%= form.email_field :email, autofocus: true, autocomplete: "email", class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+        <%= form.label :email, class: "block text-sm font-medium text-ink-700" %>
+        <%= form.email_field :email, autofocus: true, autocomplete: "email", class: "block w-full rounded-lg border border-ink-300 px-3 py-2 text-ink-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500" %>
       </div>
 
       <div class="space-y-2">
         <div class="flex items-center justify-between">
-          <%= form.label :password, class: "block text-sm font-medium text-slate-700" %>
+          <%= form.label :password, class: "block text-sm font-medium text-ink-700" %>
           <% if @minimum_password_length.present? %>
-            <span class="text-xs text-slate-500"><%= @minimum_password_length %> characters minimum</span>
+            <span class="text-xs text-ink-500"><%= @minimum_password_length %> characters minimum</span>
           <% end %>
         </div>
-        <%= form.password_field :password, autocomplete: "new-password", class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+        <%= form.password_field :password, autocomplete: "new-password", class: "block w-full rounded-lg border border-ink-300 px-3 py-2 text-ink-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500" %>
       </div>
 
       <div class="space-y-2">
-        <%= form.label :password_confirmation, class: "block text-sm font-medium text-slate-700" %>
-        <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+        <%= form.label :password_confirmation, class: "block text-sm font-medium text-ink-700" %>
+        <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-lg border border-ink-300 px-3 py-2 text-ink-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500" %>
       </div>
 
-      <div class="flex items-start gap-3 text-sm text-slate-600">
-        <%= form.check_box :health_data_consent, { required: true, class: "mt-1 h-4 w-4 rounded border-slate-300 focus:ring-emerald-500" }, "1", "0" %>
+      <div class="flex items-start gap-3 text-sm text-ink-600">
+        <%= form.check_box :health_data_consent, { required: true, class: "mt-1 h-4 w-4 rounded border-ink-300 focus:ring-accent-500" }, "1", "0" %>
         <label for="user_health_data_consent" class="block">
-          <%= t('forms.health_consent_html', privacy: link_to(t('navigation.privacy'), privacy_path, class: "font-semibold text-emerald-600 hover:text-emerald-700")).html_safe %>
+          <%= t('forms.health_consent_html', privacy: link_to(t('navigation.privacy'), privacy_path, class: "font-semibold text-accent-600 hover:text-accent-700")).html_safe %>
         </label>
       </div>
 
-      <%= form.submit "Create account", class: "w-full rounded-md bg-emerald-600 px-4 py-2 text-base font-semibold text-white transition hover:bg-emerald-700" %>
+      <%= form.submit "Create account", class: "w-full rounded-lg bg-accent-600 px-4 py-2 text-base font-semibold text-white transition hover:bg-accent-700" %>
     <% end %>
 
-    <div class="mt-6 text-center text-sm text-slate-600">
+    <div class="mt-6 text-center text-sm text-ink-600">
       <span>Already registered?</span>
-      <%= link_to "Sign in", new_session_path(resource_name), class: "font-medium text-emerald-700 hover:text-emerald-800" %>
+      <%= link_to "Sign in", new_session_path(resource_name), class: "font-medium text-accent-700 hover:text-accent-800" %>
     </div>
   </div>
 </section>

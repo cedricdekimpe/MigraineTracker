@@ -1,9 +1,9 @@
 <% content_for :title, t("now.in_progress") %>
 
-<section class="rounded-2xl bg-slate-900 p-5 text-slate-100 shadow-lg sm:p-8">
-  <p class="text-sm uppercase tracking-wide text-slate-400"><%= t("now.in_progress") %></p>
+<section class="py-2 sm:py-6">
+  <p class="text-sm uppercase tracking-wide text-ink-500"><%= t("now.in_progress") %></p>
   <h1 class="mt-1 text-3xl font-semibold"><%= episode_kind_label(@episode) %></h1>
-  <p class="mt-1 text-slate-300">
+  <p class="mt-1 text-ink-600">
     <%= t("now.since", time: @episode.started_time.strftime("%H:%M")) %>
     · <%= duration_label([((Time.current - @episode.started_at) / 60).round, 1].max) %>
   </p>
@@ -15,7 +15,7 @@
         <div class="grid grid-cols-5 gap-3">
           <% (1..10).each do |value| %>
             <%= button_tag value, type: "submit", name: "intensity", value: value,
-                  class: "min-h-14 cursor-pointer rounded-xl border text-xl font-semibold transition #{value == @episode.intensity ? 'border-emerald-400 bg-emerald-700 text-white' : 'border-slate-700 bg-slate-800 text-slate-100 hover:border-emerald-400'}" %>
+                  class: "min-h-14 cursor-pointer rounded-2xl border text-xl font-semibold transition #{value == @episode.intensity ? 'border-accent-400 bg-accent-600 text-white' : 'border-ink-200 bg-ink-100 text-ink-900 hover:border-accent-400'}" %>
           <% end %>
         </div>
       <% end %>
@@ -25,9 +25,9 @@
   <div class="mt-8">
     <h2 class="mb-3 text-lg font-medium"><%= t("now.medication") %></h2>
     <% if @episode.medication_intakes.any? %>
-      <ul class="mb-4 space-y-1 text-slate-200">
+      <ul class="mb-4 space-y-1 text-ink-800">
         <% @episode.medication_intakes.each do |intake| %>
-          <li>✓ <%= [intake.medication.name, intake.dose].compact_blank.join(" ") %> <span class="text-slate-400">· <%= intake.taken_time&.strftime("%H:%M") %></span></li>
+          <li>✓ <%= [intake.medication.name, intake.dose].compact_blank.join(" ") %> <span class="text-ink-500">· <%= intake.taken_time&.strftime("%H:%M") %></span></li>
         <% end %>
       </ul>
     <% end %>
@@ -35,22 +35,22 @@
       <div class="flex flex-wrap gap-3">
         <% @medications.each do |medication| %>
           <%= button_tag [medication.name, medication.default_dose].compact_blank.join(" "), type: "submit", name: "medication_id", value: medication.id,
-                class: "min-h-14 cursor-pointer rounded-xl border border-slate-700 bg-slate-800 px-5 text-lg text-slate-100 transition hover:border-emerald-400 active:bg-emerald-700" %>
+                class: "min-h-14 cursor-pointer rounded-2xl border border-ink-200 bg-ink-100 px-5 text-lg text-ink-900 transition hover:border-accent-400 active:bg-accent-600" %>
         <% end %>
       </div>
     <% end %>
     <% if @medications.empty? %>
-      <p class="text-sm text-slate-400"><%= t("episodes.no_medication_yet") %> <%= link_to t("episodes.manage_medications"), account_medications_path, class: "underline" %></p>
+      <p class="text-sm text-ink-500"><%= t("episodes.no_medication_yet") %> <%= link_to t("episodes.manage_medications"), account_medications_path, class: "underline" %></p>
     <% end %>
   </div>
 
   <%= button_to t("now.finish"), now_finish_path, method: :patch, data: { turbo: false },
-        class: "mt-10 min-h-16 w-full cursor-pointer rounded-xl bg-emerald-600 text-xl font-semibold text-white transition hover:bg-emerald-500",
+        class: "mt-10 min-h-16 w-full cursor-pointer rounded-2xl bg-accent-600 text-xl font-semibold text-white transition hover:bg-accent-500",
         form: { class: "w-full" } %>
 
   <div class="mt-6 flex items-center justify-between text-sm">
-    <%= link_to t("now.add_details"), edit_episode_path(id: @episode), class: "text-slate-400 underline hover:text-slate-200" %>
+    <%= link_to t("now.add_details"), edit_episode_path(id: @episode), class: "text-ink-500 underline hover:text-ink-800" %>
     <%= button_to t("now.cancel"), now_path, method: :delete, data: { turbo: false, turbo_confirm: t("now.confirm_cancel") },
-          class: "cursor-pointer text-slate-400 underline hover:text-slate-200", form: { class: "inline" } %>
+          class: "cursor-pointer text-ink-500 underline hover:text-ink-800", form: { class: "inline" } %>
   </div>
 </section>

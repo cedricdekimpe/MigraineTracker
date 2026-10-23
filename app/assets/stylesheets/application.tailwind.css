@@ -1,3 +1,95 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+ * Two themes, same tokens. "Papier" is the neurologist's paper calendar (warm paper, ink, and its
+ * yellow / pink / blue month colours); "Nuit" is the calm dark version for evenings and attacks.
+ * Colours are "R G B" triples so Tailwind opacity modifiers keep working.
+ * Shade roles: 50 page, 100 soft fill, 200 borders, 500-600 muted text / filled buttons (white text),
+ * 700-900 text. In Nuit the roles are kept but the values are re-balanced for a dark background.
+ */
+@layer base {
+  :root {
+    --paper: 255 253 248;
+
+    --ink-50: 251 247 239; --ink-100: 245 239 227; --ink-200: 232 223 207; --ink-300: 214 203 184;
+    --ink-400: 169 158 141; --ink-500: 117 108 95; --ink-600: 94 87 77; --ink-700: 74 68 60;
+    --ink-800: 52 48 43; --ink-900: 36 33 38; --ink-950: 22 20 24;
+
+    --accent-50: 237 247 251; --accent-100: 214 237 246; --accent-200: 175 220 237; --accent-300: 129 197 224;
+    --accent-400: 79 170 205; --accent-500: 47 150 189; --accent-600: 36 124 160; --accent-700: 30 100 130;
+    --accent-800: 27 79 102; --accent-900: 24 61 79; --accent-950: 14 38 51;
+
+    --amber-50: 255 250 232; --amber-100: 253 240 200; --amber-200: 250 226 150; --amber-300: 245 207 98;
+    --amber-400: 240 187 56; --amber-500: 224 163 25; --amber-600: 184 128 14; --amber-700: 140 96 14;
+    --amber-800: 108 75 17; --amber-900: 87 62 18; --amber-950: 49 33 7;
+
+    --rose-50: 253 240 246; --rose-100: 249 219 233; --rose-200: 243 190 215; --rose-300: 233 150 187;
+    --rose-400: 222 105 155; --rose-500: 208 66 125; --rose-600: 180 44 102; --rose-700: 146 36 84;
+    --rose-800: 120 33 72; --rose-900: 98 30 62; --rose-950: 55 14 34;
+
+    --sky-50: 238 248 252; --sky-100: 215 236 245; --sky-200: 182 221 237; --sky-300: 141 202 226;
+    --sky-400: 96 179 211; --sky-500: 66 157 194; --sky-600: 49 128 164; --sky-700: 41 102 132;
+    --sky-800: 38 82 105; --sky-900: 36 68 87; --sky-950: 20 38 50;
+
+    --red-50: 253 242 240; --red-100: 251 224 220; --red-200: 246 196 189; --red-300: 238 154 144;
+    --red-400: 226 108 95; --red-500: 205 72 60; --red-600: 176 52 44; --red-700: 142 42 37;
+    --red-800: 117 38 35; --red-900: 96 35 33; --red-950: 53 17 16;
+
+    color-scheme: light;
+  }
+
+  /* Nuit: automatic with the system, unless the user pinned "Papier" (data-theme="light") */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { @apply theme-night; }
+  }
+  :root[data-theme="night"], [data-theme="night"] { @apply theme-night; }
+
+  html { background-color: rgb(var(--ink-50)); }
+  html:has(body[data-theme="night"]) { background-color: rgb(20 19 26); }
+  body { @apply bg-ink-50 font-sans text-ink-900 antialiased; }
+  h1, h2, h3 { @apply font-display tracking-tight; }
+  ::selection { background-color: rgb(var(--accent-200)); color: rgb(var(--ink-900)); }
+}
+
+@layer components {
+  .theme-night {
+    --paper: 29 27 38;
+
+    --ink-50: 20 19 26; --ink-100: 29 27 38; --ink-200: 48 45 60; --ink-300: 72 68 88;
+    --ink-400: 120 114 138; --ink-500: 154 148 170; --ink-600: 178 172 192; --ink-700: 202 197 212;
+    --ink-800: 223 218 227; --ink-900: 236 231 220; --ink-950: 248 245 238;
+
+    --accent-50: 17 36 46; --accent-100: 21 50 64; --accent-200: 28 72 92; --accent-300: 38 98 124;
+    --accent-400: 62 137 168; --accent-500: 66 150 186; --accent-600: 47 125 160; --accent-700: 130 200 228;
+    --accent-800: 160 213 235; --accent-900: 195 228 242; --accent-950: 226 243 250;
+
+    --amber-50: 38 31 13; --amber-100: 56 45 17; --amber-200: 76 61 22; --amber-300: 110 87 30;
+    --amber-400: 170 133 40; --amber-500: 214 168 52; --amber-600: 232 188 74; --amber-700: 240 204 112;
+    --amber-800: 245 217 150; --amber-900: 250 230 185; --amber-950: 253 241 214;
+
+    --rose-50: 42 22 33; --rose-100: 62 31 48; --rose-200: 84 40 64; --rose-300: 122 55 90;
+    --rose-400: 180 82 130; --rose-500: 214 104 156; --rose-600: 190 70 120; --rose-700: 238 160 195;
+    --rose-800: 245 190 215; --rose-900: 250 215 230; --rose-950: 253 235 243;
+
+    --sky-50: 20 33 42; --sky-100: 28 48 62; --sky-200: 38 68 88; --sky-300: 52 98 126;
+    --sky-400: 80 140 172; --sky-500: 106 170 202; --sky-600: 56 130 168; --sky-700: 150 205 230;
+    --sky-800: 180 220 238; --sky-900: 210 234 246; --sky-950: 232 244 251;
+
+    --red-50: 45 22 22; --red-100: 66 28 28; --red-200: 92 36 34; --red-300: 140 52 48;
+    --red-400: 200 86 78; --red-500: 226 112 100; --red-600: 196 62 54; --red-700: 244 160 150;
+    --red-800: 248 188 180; --red-900: 251 212 207; --red-950: 253 232 229;
+
+    color-scheme: dark;
+    background-color: rgb(var(--ink-50));
+    color: rgb(var(--ink-900));
+  }
+
+  /* The three month inks of the paper calendar, as a small logo mark */
+  .month-dots { display: inline-flex; gap: 3px; }
+  .month-dots > i { width: .55rem; height: .95rem; border-radius: .2rem; display: block; }
+  .month-dots > i:nth-child(1) { background: rgb(var(--amber-400)); }
+  .month-dots > i:nth-child(2) { background: rgb(var(--rose-400)); }
+  .month-dots > i:nth-child(3) { background: rgb(var(--sky-400)); }
+}
