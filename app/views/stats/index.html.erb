@@ -31,6 +31,7 @@
           <dd class="font-display text-6xl font-semibold leading-none text-ink-900" data-figure="pain-days"><%= @month.pain_days %></dd>
           <dt class="mt-2 text-sm text-ink-700"><%= t("stats.pain_days", count: @month.pain_days) %></dt>
           <dd class="text-sm text-ink-600"><%= t("stats.of_which_migraine", count: @month.migraine_days) %></dd>
+          <dd class="text-sm text-ink-600" data-figure="severe-days"><%= t("stats.severe_days", count: @month.severe_days) %></dd>
         </div>
         <div>
           <dd class="font-display text-6xl font-semibold leading-none text-ink-900" data-figure="acute-days"><%= @month.any_acute_days %></dd>
@@ -75,6 +76,8 @@
       <% tone = { ok: "border-accent-200 bg-accent-50 text-accent-800", advised: "border-amber-300 bg-amber-100 text-amber-900", over: "border-red-300 bg-red-100 text-red-800", sustained: "border-red-400 bg-red-200 text-red-900" }.fetch(@month.overuse_status) %>
       <p class="mt-6 rounded-2xl border px-4 py-3 text-sm font-medium <%= tone %>" role="status"><%= t("stats.overuse.status_#{@month.overuse_status}") %></p>
     </section>
+
+    <%= render "stats/treatments", insights: @insights, chronic_streak: @chronic_streak, month: @month %>
 
     <%# --- Twelve months, one column per month in the paper's yellow / pink / blue --- %>
     <section>

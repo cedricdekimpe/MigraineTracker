@@ -165,6 +165,64 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/not what causes it/, response.body)
   end
 
+  test "moderate-to-severe days are shown under the pain days" do
+    log(Date.new(2026, 10, 1)) # intensity 5
+    @user.episodes.create!(occurred_on: Date.new(2026, 10, 2), pain_kind: "headache", intensity: 2)
+    visit_stats
+    assert_equal "1 day at 4/10 or more", figure("severe-days")
+  end
+
+  test "each acute drug shows the effects noted and a verdict after 3 rated attacks" do
+    %w[none none good].each_with_index do |effect, i|
+      log(Date.new(2026, 10, i + 1)).medication_intakes.create!(medication: @acute, effect: effect)
+    end
+    visit_stats
+
+    assert_select "[data-acute-efficacy] tr[data-medication='Ibuprofen'][data-verdict=not_working]"
+    assert_match(/No effect on 2 of the last 3 attacks/, response.body)
+  end
+
+  test "no treatment section without any treatment" do
+    log(Date.new(2026, 10, 1))
+    visit_stats
+    assert_select "[data-acute-efficacy]", count: 0
+    assert_select "[data-preventives]", count: 0
+    assert_select "[data-menstrual]", count: 0
+    assert_select "[data-chronic]", count: 0
+  end
+
+  test "a preventive is compared with the 90 days before it" do
+    propranolol = @user.medications.create!(name: "Propranolol", kind: "preventive")
+    start = Date.new(2026, 4, 1)
+    (1..9).each { |i| log(start - 9 * i) }
+    log(start - 95)
+    propranolol.treatment_periods.create!(user: @user, started_on: start)
+    [Date.new(2026, 9, 1), Date.new(2026, 9, 15), Date.new(2026, 10, 1)].each { |date| log(date) }
+    visit_stats
+
+    assert_select "[data-preventives] [data-comparison]", text: /3 days a month before, 1 on the treatment/
+    assert_match(/down 67%/, response.body)
+  end
+
+  test "the chronic pattern is flagged" do
+    (1..15).each { |i| log(Date.new(2026, 10, i), pain: i <= 8 ? "migraine" : "headache") }
+    visit_stats
+    assert_select "[data-chronic]", text: /15 or more headache days/
+  end
+
+  test "the menstrual link only appears with cycle tracking" do
+    [Date.new(2026, 7, 10), Date.new(2026, 8, 7), Date.new(2026, 9, 4)].each do |start|
+      @user.period_days.create!(date: start)
+      log(start)
+    end
+    visit_stats
+    assert_select "[data-menstrual]", count: 0
+
+    @user.update!(track_cycle: true)
+    visit_stats
+    assert_select "[data-menstrual]", text: /3 of the last 3 cycles/
+  end
+
   test "the page is in French under /fr" do
     log(Date.new(2026, 10, 5), medications: [@triptan])
     visit_stats(locale: "fr")

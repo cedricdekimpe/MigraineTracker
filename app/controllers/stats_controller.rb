@@ -6,6 +6,8 @@ class StatsController < ApplicationController
     @month = @overview.current
     @average = @overview.average_pain_days
     @has_data = current_user.episodes.exists?
+    @chronic_streak = @overview.chronic_streak
+    @insights = TreatmentInsights.new(current_user)
 
     # Frequency of the triggers ticked on episodes. Only a list of what comes up: without the days
     # that had no episode it says nothing about cause.
