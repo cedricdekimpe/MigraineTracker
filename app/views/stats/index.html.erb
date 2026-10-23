@@ -114,21 +114,6 @@
     </section>
 
     <%# --- What gets ticked: a list of what comes up, not a verdict --- %>
-    <section data-triggers>
-      <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.triggers_title") %></h2>
-      <% if @trigger_data.any? %>
-        <p class="mt-2 max-w-2xl text-sm text-ink-600"><%= t("stats.triggers_description") %></p>
-        <ul class="mt-5 divide-y divide-ink-200">
-          <% @trigger_data.each do |name, count| %>
-            <li class="flex items-baseline justify-between py-2.5 text-sm">
-              <span class="font-medium text-ink-800"><%= name %></span>
-              <span class="text-ink-600"><%= t("stats.trigger_count", count: count, total: @total_episodes) %></span>
-            </li>
-          <% end %>
-        </ul>
-      <% else %>
-        <p class="mt-2 text-sm text-ink-600"><%= t("stats.no_trigger_data") %></p>
-      <% end %>
-    </section>
+    <%= render "stats/daily_factors", factors: @factors %>
   <% end %>
 </div>

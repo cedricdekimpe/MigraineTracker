@@ -154,15 +154,27 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/Plus 1 day with an aura only/, response.body)
   end
 
-  test "triggers are listed with the honest caveat" do
-    stress = @user.triggers.find_by!(name: "Stress") # seeded at sign-up
-    log(Date.new(2026, 10, 5), triggers: [stress])
-    log(Date.new(2026, 10, 6), triggers: [stress])
-    log(Date.new(2026, 10, 7))
+  test "the check-in invitation shows until there are enough days" do
+    log(Date.new(2026, 10, 5))
+    visit_stats
+    assert_select "[data-daily-factors] a[href=?]", check_path
+    assert_select "[data-daily-factors]", text: /at least 30 days/
+    assert_select "[data-triggers]", count: 0
+  end
+
+  test "once there are enough check-in days, the factors are compared with the other days" do
+    start = Date.new(2026, 8, 1)
+    60.times do |i|
+      date = start + i
+      bad = i % 3 == 0
+      @user.daily_checks.create!(date: date, sleep: bad ? "short" : "good", stress: "low", caffeine: "usual")
+      log(date) if bad # pain the same day after every bad night
+    end
     visit_stats
 
-    assert_select "[data-triggers] li", text: /Stress.*2 episodes of 3/m
-    assert_match(/not what causes it/, response.body)
+    assert_select "[data-factors-summary]", text: /Poor night/
+    assert_select "tr[data-factor=poor_sleep] td[data-lag='0']", text: /100% vs 0%/
+    assert_select "tr[data-factor=high_stress] td[data-lag='0']", text: "–"
   end
 
   test "moderate-to-severe days are shown under the pain days" do

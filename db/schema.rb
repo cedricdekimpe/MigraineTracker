@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_210000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_220000) do
+  create_table "daily_checks", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.date "date", null: false
+    t.string "sleep"
+    t.string "stress"
+    t.boolean "skipped_meal", default: false, null: false
+    t.string "caffeine"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "date"], name: "index_daily_checks_on_user_id_and_date", unique: true
+    t.index ["user_id"], name: "index_daily_checks_on_user_id"
+  end
+
   create_table "episode_triggers", force: :cascade do |t|
     t.integer "episode_id", null: false
     t.integer "trigger_id", null: false
@@ -114,6 +127,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_210000) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "daily_checks", "users"
   add_foreign_key "episode_triggers", "episodes"
   add_foreign_key "episode_triggers", "triggers"
   add_foreign_key "episodes", "users"

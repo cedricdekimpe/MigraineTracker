@@ -103,6 +103,26 @@ en:
       zero: "no migraine"
       one: "of which 1 migraine"
       other: "of which %{count} migraine"
+    factors:
+      title: "What comes before your attacks"
+      not_enough: "The daily check-in compares the days after a factor with the other days. It takes at least %{needed} days of check-ins to start comparing (%{checked} so far)."
+      start: "Do today's check-in"
+      notable: "What stands out so far: %{factors}. It is a link in your journal, not proof of the cause."
+      none: "No clear link yet between these factors and your pain days."
+      factor: "Factor"
+      cell: "%{exposed}% vs %{other}%"
+      days: "over %{count} days"
+      caveat: "Share of days with pain after a day with the factor against after the other days, over %{checked} check-in days. A factor is only flagged from 8 days concerned and a 15-point gap. Attacks also have early signs that look like triggers: these figures are pointers to talk over, not rules."
+      lags:
+        l0: "Same day"
+        l1: "Next day"
+        l2: "2 days later"
+      names:
+        poor_sleep: "Poor night"
+        high_stress: "High stress"
+        stress_drop: "Stress dropping"
+        skipped_meal: "Skipped meal"
+        caffeine_high: "A lot of caffeine"
     severe_days:
       zero: "no day at 4/10 or more"
       one: "1 day at 4/10 or more"
@@ -163,12 +183,6 @@ en:
     legend_headache: "Other headache days"
     table_month: "Month"
     threshold_label: "%{days} days"
-    triggers_title: "What you tick"
-    triggers_description: "How many episodes each trigger was ticked on. It shows what comes up, not what causes it."
-    trigger_count:
-      one: "1 episode of %{total}"
-      other: "%{count} episodes of %{total}"
-    no_trigger_data: "No triggers ticked yet. Tick them when you log an episode and they appear here."
   # Days of week
   days:
     monday: "Monday"
@@ -574,6 +588,36 @@ en:
       created: "Period added."
       updated: "Period updated."
       deleted: "Period deleted."
+
+  daily_check:
+    title: "Daily check-in"
+    hint: "Three questions, 20 seconds, even on days without an attack: it is what lets the good days be compared with the bad ones."
+    save: "Save"
+    saved: "Check-in saved."
+    yesterday: "Fill in yesterday's"
+    today: "Fill in today's"
+    skipped_meal: "I skipped a meal"
+    sleep:
+      question: "How was the night?"
+      good: "Good"
+      fragmented: "Broken, wake-ups"
+      short: "Short (under 6.5 h)"
+    stress:
+      question: "And stress today?"
+      low: "Low"
+      medium: "Medium"
+      high: "High"
+    caffeine:
+      question: "Coffee, tea, caffeinated drinks?"
+      none: "None"
+      usual: "As usual"
+      high: "A lot (3 or more)"
+    premonitory: "Tiredness, craving sweets, a stiff neck or sensitivity to light can be the very start of an attack, not its cause. Do not note them here: note the attack."
+    card:
+      todo: "Daily check-in"
+      todo_hint: "20 seconds, even without an attack"
+      done: "Daily check-in done"
+      edit: "Edit"
 
   theme:
     label: "Appearance"

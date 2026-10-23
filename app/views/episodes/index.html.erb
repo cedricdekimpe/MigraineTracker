@@ -25,6 +25,16 @@
     </nav>
   </header>
 
+  <% todays_check = current_user.daily_checks.find_by(date: Date.current) %>
+  <%= link_to daily_check_path(date: Date.current.iso8601), data: { daily_check_card: todays_check ? "done" : "todo" },
+        class: "flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-sm #{todays_check ? 'border-ink-200 bg-paper text-ink-600' : 'border-accent-300 bg-accent-50 text-accent-900'} hover:border-accent-400" do %>
+    <span>
+      <span class="font-semibold"><%= todays_check ? t("daily_check.card.done") : t("daily_check.card.todo") %></span>
+      <% unless todays_check %><span class="block text-xs text-accent-800"><%= t("daily_check.card.todo_hint") %></span><% end %>
+    </span>
+    <span class="font-medium underline"><%= todays_check ? t("daily_check.card.edit") : "→" %></span>
+  <% end %>
+
   <%# Phone: the selected month as a vertical list of days %>
   <div class="md:hidden">
     <%= render "day_list", month: @month, sheet: @sheet %>

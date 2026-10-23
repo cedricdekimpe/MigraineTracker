@@ -1,0 +1,43 @@
+<%# Days after a factor against the other days, from the daily check-ins. An association, never a verdict. %>
+<section data-daily-factors>
+  <h2 class="text-2xl font-semibold text-ink-900"><%= t("stats.factors.title") %></h2>
+
+  <% if !factors.enough_data? %>
+    <p class="mt-2 max-w-2xl text-sm text-ink-600"><%= t("stats.factors.not_enough", checked: factors.checked_days, needed: DailyFactors::MIN_CHECKED_DAYS) %></p>
+    <%= link_to t("stats.factors.start"), check_path, class: "mt-4 inline-flex rounded-xl border border-accent-300 bg-accent-50 px-4 py-2 text-sm font-semibold text-accent-800 hover:bg-accent-100" %>
+  <% else %>
+    <% notable = factors.notable %>
+    <p class="mt-2 max-w-2xl text-sm text-ink-700" data-factors-summary>
+      <%= notable.any? ? t("stats.factors.notable", factors: notable.map { |row| t("stats.factors.names.#{row.factor}") }.to_sentence) : t("stats.factors.none") %>
+    </p>
+    <div class="mt-4 overflow-x-auto rounded-2xl border border-ink-200 bg-paper">
+      <table class="w-full text-left text-sm">
+        <thead class="text-xs uppercase tracking-wide text-ink-500">
+          <tr>
+            <th class="px-4 py-3 font-semibold"><%= t("stats.factors.factor") %></th>
+            <% DailyFactors::LAGS.each do |lag| %><th class="px-3 py-3 font-semibold"><%= t("stats.factors.lags.l#{lag}") %></th><% end %>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-ink-100">
+          <% DailyFactors::FACTORS.each_key do |factor| %>
+            <tr data-factor="<%= factor %>">
+              <th scope="row" class="px-4 py-3 font-medium text-ink-900"><%= t("stats.factors.names.#{factor}") %></th>
+              <% DailyFactors::LAGS.each do |lag| %>
+                <% row = factors.results.find { |result| result.factor == factor && result.lag == lag } %>
+                <td class="px-3 py-3 <%= 'font-semibold text-amber-800' if row&.notable? %>" data-lag="<%= lag %>">
+                  <% if row && row.exposed_days >= DailyFactors::MIN_EXPOSED_DAYS %>
+                    <%= t("stats.factors.cell", exposed: row.exposed_share, other: row.other_share) %>
+                    <span class="block text-xs font-normal text-ink-500"><%= t("stats.factors.days", count: row.exposed_days) %></span>
+                  <% else %>
+                    <span class="text-ink-400">–</span>
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-3 max-w-2xl text-xs leading-5 text-ink-500"><%= t("stats.factors.caveat", checked: factors.checked_days) %></p>
+  <% end %>
+</section>

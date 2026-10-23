@@ -41,6 +41,10 @@ Rails.application.routes.draw do
     get "now/effects/:episode_id", to: "now#effects", as: :now_effects
     patch "now/intakes/:id/effect", to: "now#effect", as: :now_intake_effect
 
+    # The daily check-in (sleep, stress, meals, caffeine)
+    get "check", to: "daily_checks#today", as: :check
+    resources :daily_checks, path: "check", param: :date, only: %i[show update], constraints: { date: /\d{4}-\d{2}-\d{2}/ }
+
     # Bleeding days of the cycle row, one tap each
     resources :period_days, only: %i[create destroy], param: :date, constraints: { date: /\d{4}-\d{2}-\d{2}/ }
 

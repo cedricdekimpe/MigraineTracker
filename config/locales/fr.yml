@@ -103,6 +103,26 @@ fr:
       zero: "aucune migraine"
       one: "dont 1 de migraine"
       other: "dont %{count} de migraine"
+    factors:
+      title: "Ce qui précède vos crises"
+      not_enough: "Le bilan quotidien compare les jours qui suivent un facteur aux autres jours. Il faut au moins %{needed} jours de bilan pour commencer à comparer (%{checked} jusqu'ici)."
+      start: "Faire le bilan du jour"
+      notable: "Ce qui ressort pour l'instant : %{factors}. C'est un lien dans votre journal, pas une preuve que c'est la cause."
+      none: "Aucun lien net pour l'instant entre ces facteurs et vos jours de douleur."
+      factor: "Facteur"
+      cell: "%{exposed} % contre %{other} %"
+      days: "sur %{count} jours"
+      caveat: "Part des jours avec douleur, après un jour avec le facteur contre après les autres jours, sur %{checked} jours de bilan. Un facteur n'est signalé qu'à partir de 8 jours concernés et de 15 points d'écart. Les crises ont aussi des signes avant-coureurs qui ressemblent à des déclencheurs : ces chiffres restent des repères à discuter, pas des règles."
+      lags:
+        l0: "Le jour même"
+        l1: "Le lendemain"
+        l2: "2 jours après"
+      names:
+        poor_sleep: "Mauvaise nuit"
+        high_stress: "Stress élevé"
+        stress_drop: "Baisse du stress"
+        skipped_meal: "Repas sauté"
+        caffeine_high: "Beaucoup de caféine"
     severe_days:
       zero: "aucun jour à 4/10 ou plus"
       one: "1 jour à 4/10 ou plus"
@@ -163,12 +183,6 @@ fr:
     legend_headache: "Autres jours de mal de tête"
     table_month: "Mois"
     threshold_label: "%{days} jours"
-    triggers_title: "Ce que vous cochez"
-    triggers_description: "Sur combien d'épisodes chaque déclencheur a été coché. Cela montre ce qui revient, pas ce qui cause."
-    trigger_count:
-      one: "1 épisode sur %{total}"
-      other: "%{count} épisodes sur %{total}"
-    no_trigger_data: "Aucun déclencheur coché pour l'instant. Cochez-les en enregistrant un épisode et ils apparaîtront ici."
   # Days of week
   days:
     monday: "Lundi"
@@ -673,6 +687,36 @@ fr:
       created: "Période ajoutée."
       updated: "Période mise à jour."
       deleted: "Période supprimée."
+
+  daily_check:
+    title: "Bilan du jour"
+    hint: "Trois questions, 20 secondes, même les jours sans crise : c'est ce qui permet de comparer les bons jours aux mauvais."
+    save: "Enregistrer"
+    saved: "Bilan enregistré."
+    yesterday: "Remplir celui d'hier"
+    today: "Remplir celui d'aujourd'hui"
+    skipped_meal: "J'ai sauté un repas"
+    sleep:
+      question: "Comment était la nuit ?"
+      good: "Bonne"
+      fragmented: "Hachée, réveils"
+      short: "Courte (moins de 6 h 30)"
+    stress:
+      question: "Et le stress aujourd'hui ?"
+      low: "Faible"
+      medium: "Moyen"
+      high: "Élevé"
+    caffeine:
+      question: "Café, thé, boissons à caféine ?"
+      none: "Aucun"
+      usual: "Comme d'habitude"
+      high: "Beaucoup (3 et plus)"
+    premonitory: "La fatigue, l'envie de sucré, la nuque raide ou la sensibilité à la lumière peuvent être le tout début d'une crise, pas sa cause. Ne les notez pas ici : notez la crise."
+    card:
+      todo: "Bilan du jour"
+      todo_hint: "20 secondes, même sans crise"
+      done: "Bilan du jour fait"
+      edit: "Modifier"
 
   theme:
     label: "Apparence"

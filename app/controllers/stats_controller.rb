@@ -9,14 +9,6 @@ class StatsController < ApplicationController
     @chronic_streak = @overview.chronic_streak
     @insights = TreatmentInsights.new(current_user)
 
-    # Frequency of the triggers ticked on episodes. Only a list of what comes up: without the days
-    # that had no episode it says nothing about cause.
-    @total_episodes = current_user.episodes.count
-    @trigger_data = EpisodeTrigger.joins(:trigger, :episode)
-                                  .where(episodes: { user_id: current_user.id })
-                                  .group("triggers.name")
-                                  .order(Arel.sql("COUNT(*) DESC"), Arel.sql("triggers.name"))
-                                  .count
-                                  .to_a
+    @factors = DailyFactors.new(current_user)
   end
 end
