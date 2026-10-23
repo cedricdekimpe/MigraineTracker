@@ -201,16 +201,10 @@ class EpisodesController < ApplicationController
   end
 
   def send_yearly_pdf
-    pdf = ::Reports::YearlyReportPdf.new(
-      user: current_user,
-      year: @current_year,
-      months: @months,
-      grouped_episodes: @grouped_episodes,
-      days: @days
-    ).render
+    pdf = ::Reports::YearlyReportPdf.new(user: current_user, year: @current_year).render
 
     send_data pdf,
-      filename: "migraine-overview-#{@current_year}.pdf",
+      filename: "migraine-calendar-#{@current_year}.pdf",
       type: "application/pdf",
       disposition: "attachment"
   end

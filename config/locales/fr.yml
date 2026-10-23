@@ -577,6 +577,7 @@ fr:
     night: "Nuit"
 
   sheet:
+    report_hint: "Vos feuilles de calendrier et ces chiffres, sur papier."
     title: "Journal"
     eyebrow: "Votre feuille de calendrier"
     month_summary: "%{pain} jours de douleur · %{treatment} avec traitement"
@@ -596,6 +597,7 @@ fr:
       past_episode: "Enregistrer un épisode passé"
       history: "Historique détaillé"
       year: "Vue annuelle"
+      report: "Rapport pour mon médecin (PDF)"
     legend:
       title: "Légende"
       migraine: "Migraine"
@@ -605,3 +607,42 @@ fr:
       cycle: "Cycle menstruel"
       acute: "Prise de traitement aigu"
       triptan: "Prise de triptan"
+
+  report:
+    title: "Calendrier des migraines"
+    summary_subtitle: "Synthèse : des jours, pas des épisodes. Les feuilles de chaque trimestre suivent."
+    name_label: "Nom :"
+    month_label: "Mois :"
+    average_label: "Moyenne (mois écoulés)"
+    generated_on: "généré le %{date}"
+    columns:
+      month: "Mois"
+      pain_days: "Jours de douleur"
+      migraine_days: "dont migraine"
+      headache_days: "Autres maux de tête"
+      aura_days: "Aura seule"
+      triptan_days: "Jours de triptan (t)"
+      acute_days: "Autre traitement aigu (X)"
+      treatment_days: "Jours de traitement"
+      status: "Traitement aigu"
+    status:
+      ok: "Sous les seuils"
+      watch: "Proche d'un seuil"
+      over: "Seuil atteint"
+    rows:
+      type: "Migraine (M) / Maux de tête (T)"
+      intensity: "Intensité de la douleur"
+      cycle: "Cycle menstruel"
+      treatment: "Traitement aigu"
+    legend:
+      title: "Légende"
+      migraine: "migraine"
+      headache: "maux de tête (autre que migraine)"
+      aura: "aura sans douleur"
+      aura_with_pain: "aura avec la douleur"
+      intensity: "intensité de la douleur (0 = pas de douleur, 10 = insupportable)"
+      cycle: "cycle menstruel"
+      acute: "prise de traitement aigu"
+      triptan: "prise de triptan"
+    overuse_note: "Le statut compte, par mois, les jours avec un triptan (seuil %{triptan}), avec un autre traitement aigu (seuil %{acute}), ou avec les deux mélangés (seuil %{mixed}). Le surusage se juge habituellement sur plus de 3 mois."
+    disclaimer: "Outil de suivi personnel. Ce rapport ne constitue pas un diagnostic."

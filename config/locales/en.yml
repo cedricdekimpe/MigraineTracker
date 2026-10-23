@@ -484,6 +484,7 @@ en:
     night: "Night"
 
   sheet:
+    report_hint: "Your calendar sheets and these figures, on paper."
     title: "Journal"
     eyebrow: "Your calendar sheet"
     month_summary: "%{pain} days with pain · %{treatment} with treatment"
@@ -503,6 +504,7 @@ en:
       past_episode: "Log a past episode"
       history: "Detailed history"
       year: "Year view"
+      report: "Report for my doctor (PDF)"
     legend:
       title: "Legend"
       migraine: "Migraine"
@@ -512,3 +514,42 @@ en:
       cycle: "Menstrual cycle"
       acute: "Acute treatment taken"
       triptan: "Triptan taken"
+
+  report:
+    title: "Migraine calendar"
+    summary_subtitle: "Summary: days, not episodes. The sheets of each quarter follow."
+    name_label: "Name:"
+    month_label: "Month:"
+    average_label: "Average (months so far)"
+    generated_on: "generated on %{date}"
+    columns:
+      month: "Month"
+      pain_days: "Days with pain"
+      migraine_days: "of which migraine"
+      headache_days: "Other headache"
+      aura_days: "Aura only"
+      triptan_days: "Triptan days (t)"
+      acute_days: "Other acute (X)"
+      treatment_days: "Treatment days"
+      status: "Treatment status"
+    status:
+      ok: "Below thresholds"
+      watch: "Close to a threshold"
+      over: "Threshold reached"
+    rows:
+      type: "Migraine (M) / Headache (T)"
+      intensity: "Pain intensity"
+      cycle: "Menstrual cycle"
+      treatment: "Acute treatment"
+    legend:
+      title: "Legend"
+      migraine: "migraine"
+      headache: "headache (other than migraine)"
+      aura: "aura without pain"
+      aura_with_pain: "aura with the pain"
+      intensity: "pain intensity (0 = none, 10 = unbearable)"
+      cycle: "menstrual cycle"
+      acute: "acute treatment taken"
+      triptan: "triptan taken"
+    overuse_note: "Treatment status counts, per month, the days with a triptan (threshold %{triptan}), with another acute treatment (threshold %{acute}), or with both kinds mixed (threshold %{mixed}). Overuse is usually judged over more than 3 months."
+    disclaimer: "Personal tracking tool. This report is not a diagnosis."

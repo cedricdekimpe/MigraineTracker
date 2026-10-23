@@ -69,6 +69,7 @@ end
 
 group :test do
   gem "capybara"
+  gem "pdf-reader", "~> 2.12" # reads the generated PDF back in tests
 end
 
 gem "devise", "~> 5.0"

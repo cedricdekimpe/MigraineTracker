@@ -131,6 +131,11 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     assert_match(/Légende/, response.body)
   end
 
+  test "the journal links to the PDF report for the displayed year" do
+    get episodes_path(month: "2025-06")
+    assert_select "a[href$='/episodes/yearly.pdf?year=2025']", text: /Report for my doctor/
+  end
+
   test "an unreadable month falls back to the current one" do
     get episodes_path(month: "nonsense")
     assert_response :success

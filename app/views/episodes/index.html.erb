@@ -40,6 +40,7 @@
   <%= render "legend" %>
 
   <footer class="flex flex-wrap gap-3 text-sm">
+    <%= link_to t("sheet.links.report"), yearly_episodes_path(year: @month.year, format: :pdf), data: { turbo: false }, class: "rounded-xl border border-accent-200 bg-accent-50 px-4 py-2 font-semibold text-accent-800 hover:bg-accent-100" %>
     <%= link_to t("sheet.links.past_episode"), new_episode_path, class: "rounded-xl border border-ink-200 bg-paper px-4 py-2 font-medium text-ink-700 hover:bg-ink-100" %>
     <%= link_to t("sheet.links.history"), history_episodes_path, class: "rounded-xl border border-ink-200 bg-paper px-4 py-2 font-medium text-ink-700 hover:bg-ink-100" %>
     <%= link_to t("sheet.links.year"), yearly_episodes_path(year: @month.year), class: "rounded-xl border border-ink-200 bg-paper px-4 py-2 font-medium text-ink-700 hover:bg-ink-100" %>

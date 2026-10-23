@@ -6,6 +6,14 @@
     <p class="mt-2 max-w-xl text-ink-600"><%= t("stats.description") %></p>
   </header>
 
+  <% if @has_data %>
+    <p>
+      <%= link_to t("sheet.links.report"), yearly_episodes_path(year: Date.current.year, format: :pdf), data: { turbo: false },
+            class: "inline-flex rounded-xl border border-accent-200 bg-accent-50 px-4 py-2 text-sm font-semibold text-accent-800 hover:bg-accent-100" %>
+      <span class="ml-2 text-sm text-ink-600"><%= t("sheet.report_hint") %></span>
+    </p>
+  <% end %>
+
   <% unless @has_data %>
     <section class="rounded-3xl border border-dashed border-ink-300 px-6 py-14 text-center">
       <p class="font-display text-xl text-ink-800"><%= t("stats.empty_title") %></p>
