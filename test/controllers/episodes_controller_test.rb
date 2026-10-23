@@ -224,6 +224,36 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "headache", episodes(:headache).reload.pain_kind
   end
 
+  test "turning an aura into a migraine without intensity re-renders with usable chips" do
+    patch episode_path(id: episodes(:aura_only)), params: { episode: { pain_kind: "migraine", aura: "1" } }
+
+    assert_response :unprocessable_entity
+    assert_select ".field_with_errors", count: 0
+    # every chip input must stay the direct sibling of its label span, or peer-checked stops working
+    assert_select "input[name='episode[intensity]'] + span", count: 10
+    assert_select "input[name='episode[pain_kind]'] + span", count: 3
+    assert_select "input[name='episode[pain_kind]'][value=migraine][checked]"
+    assert_select "input[name='episode[intensity]'][checked]", count: 0
+    assert_match(/Intensity can&#39;t be blank/, response.body)
+  end
+
+  test "validation errors are in French under /fr" do
+    patch episode_path(id: episodes(:aura_only), locale: "fr"), params: { episode: { pain_kind: "migraine", aura: "1" } }
+
+    assert_response :unprocessable_entity
+    assert_match(/intensité doit être rempli/, response.body)
+    assert_no_match(/can&#39;t be blank/, response.body)
+
+    sign_in @user
+    patch episode_path(id: episodes(:aura_only), locale: "fr"), params: { episode: { pain_kind: "", aura: "0" } }
+    assert_match(/Indiquez une aura/, response.body)
+  end
+
+  test "the locale of one request never leaks into the next" do
+    get episodes_path(locale: "fr")
+    assert_equal :en, I18n.locale
+  end
+
   test "cannot edit or delete another user's episode" do
     other = episodes(:other_users)
     get edit_episode_path(id: other)

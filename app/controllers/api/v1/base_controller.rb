@@ -5,6 +5,9 @@ module Api
     class BaseController < ActionController::API
       include Pagy::Backend
 
+      # The API always answers in the default locale, whatever the thread served before.
+      around_action { |_controller, action| I18n.with_locale(I18n.default_locale, &action) }
+
       before_action :authenticate_user!
 
       rescue_from ActiveRecord::RecordNotFound, with: :render_not_found

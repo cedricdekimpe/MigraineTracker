@@ -294,6 +294,9 @@ GEM
     rails-html-sanitizer (1.7.1)
       loofah (~> 2.25, >= 2.25.2)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
+    rails-i18n (8.1.0)
+      i18n (>= 0.7, < 2)
+      railties (>= 8.0.0, < 9)
     rails_admin (3.3.1)
       activemodel-serializers-xml (>= 1.0)
       csv
@@ -469,6 +472,7 @@ DEPENDENCIES
   rack-attack (~> 6.7)
   rack-cors (~> 2.0)
   rails (~> 8.1.1)
+  rails-i18n (~> 8.0)
   rails_admin (~> 3.3)
   rswag-api (~> 2.16)
   rswag-ui (~> 2.16)

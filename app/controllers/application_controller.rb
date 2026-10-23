@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
-  before_action :set_locale
+  around_action :switch_locale
   before_action :authenticate_user!
 
   # Changes to the importmap will invalidate the etag for HTML responses
@@ -12,8 +12,10 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def set_locale
-    I18n.locale = extract_locale || I18n.default_locale
+  # Scoped to the request: a bare `I18n.locale =` stays on the thread and leaks into the next request
+  # served by it (other web pages, but also the API, which never sets a locale).
+  def switch_locale(&action)
+    I18n.with_locale(extract_locale || I18n.default_locale, &action)
   end
 
   def extract_locale
