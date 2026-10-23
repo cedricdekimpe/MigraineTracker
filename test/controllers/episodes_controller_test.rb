@@ -261,6 +261,19 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     assert_select "ul > li", count: 2
   end
 
+  test "history paginates past 20 episodes with working page links" do
+    25.times { |i| @user.episodes.create!(occurred_on: Date.new(2024, 1, 1) + i, pain_kind: "headache", intensity: 3) }
+
+    get history_episodes_path
+    assert_response :success
+    assert_select "nav[aria-label=Pagination] a[href*='page=2']"
+    assert_select "nav[aria-label=Pagination] a[aria-label=Next]"
+
+    get history_episodes_path(page: 2)
+    assert_response :success
+    assert_select "nav[aria-label=Pagination] a[aria-label=Previous]"
+  end
+
   test "history ignores a malformed date filter" do
     get history_episodes_path(date: "nonsense")
     assert_response :success
