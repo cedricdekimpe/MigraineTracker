@@ -236,6 +236,18 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to now_path(locale: "en")
   end
 
+  test "the tab bar stays on the now screens so you can always get out" do
+    get now_path
+    assert_select "nav[aria-label='Main navigation'] a[href='#{episodes_path}']"
+    assert_select "nav[aria-label='Main navigation'] a[href='#{stats_path}']"
+    assert_select "nav[aria-label='Main navigation'] a[href='#{account_path}']"
+
+    post now_path, params: { pain_kind: "migraine", intensity: "6" }
+    sign_in @user
+    get now_path
+    assert_select "nav[aria-label='Main navigation'] a[href='#{episodes_path}']"
+  end
+
   test "signed-in pages carry the phone shortcut and it turns into 'in progress'" do
     get episodes_path
     assert_select "a[href='#{now_path}']", text: /I have a headache now/
