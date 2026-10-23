@@ -63,7 +63,8 @@ class EpisodeLoggingTest < ApplicationSystemTestCase
     @user.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 5).medication_intakes.create!(medication: @user.medications.first)
 
     visit account_medications_path
-    within "li" do
+    within "li[data-medication-row]" do
+      find("summary", text: "Edit").click
       click_button "Remove"
     end
 
