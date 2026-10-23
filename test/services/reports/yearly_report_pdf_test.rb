@@ -22,6 +22,11 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
     reader.pages[page - 1].text
   end
 
+  # Page number of the first quarter sheet: after the summary and, when there is anything to say, the indicators page
+  def first_sheet(reader)
+    reader.pages.index { |page| page.text =~ /Month:|Mois :/ } + 1
+  end
+
   # Same text with every run of whitespace collapsed: narrow cells wrap their labels over lines.
   def flat(reader, page)
     text(reader, page).gsub(/\s+/, " ")
@@ -72,7 +77,8 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
     episode(Date.new(2025, 1, 10), aura: true, intensity: 9, medications: [@acute, @triptan])
     episode(Date.new(2025, 1, 11), pain: "headache", intensity: 4)
     episode(Date.new(2025, 1, 12), pain: nil, aura: true)
-    sheet = flat(reader, 2)
+    pdf = reader
+    sheet = flat(pdf, first_sheet(pdf))
 
     %w[January February March].each { |month| assert_match(/Month: #{month} 2025/, sheet) }
     assert_match(/Migraine \(M\) \/ Headache \(T\)/, sheet)
@@ -89,10 +95,48 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
   test "the cycle row only appears when cycle tracking is on" do
     episode(Date.new(2025, 1, 10))
     @user.period_days.create!(date: Date.new(2025, 1, 10))
-    assert_no_match(/Menstrual cycle/, text(reader, 2))
+    pdf = reader
+    assert_no_match(/Menstrual cycle/, text(pdf, first_sheet(pdf)))
 
     @user.update!(track_cycle: true)
-    assert_match(/Menstrual cycle/, text(reader, 2))
+    pdf = reader
+    assert_match(/Menstrual cycle/, text(pdf, first_sheet(pdf)))
+  end
+
+  test "no indicators page when there is nothing to show" do
+    episode(Date.new(2025, 1, 10))
+    assert_equal 5, reader.page_count
+    assert_no_match(/Indicators/, text(reader, 2))
+  end
+
+  test "an indicators page follows the summary with the effect of each acute drug" do
+    episode(Date.new(2025, 1, 10), medications: [@acute]).medication_intakes.first.update!(effect: "none")
+    pdf = reader
+    assert_equal 6, pdf.page_count
+    page = flat(pdf, 2)
+    assert_match(/Indicators - 2025/, page)
+    assert_match(/Acute treatments/, page)
+    assert_match(/Ibuprofen 1 1 0 0/, page)
+    assert_match(/Fewer than 3 attacks rated/, page)
+    assert_match(/Pain days at 4\/10 or more: 1/, page)
+  end
+
+  test "the indicators page lists preventive periods and the menstrual link" do
+    propranolol = @user.medications.create!(name: "Propranolol", kind: "preventive")
+    propranolol.treatment_periods.create!(user: @user, started_on: Date.new(2025, 2, 1), ended_on: Date.new(2025, 3, 20), stop_reason: "not_tolerated", dose: "80 mg")
+    @user.update!(track_cycle: true)
+    [Date.new(2025, 1, 5), Date.new(2025, 2, 2), Date.new(2025, 3, 1)].each { |start| @user.period_days.create!(date: start); episode(start) }
+    page = flat(reader, 2)
+
+    assert_match(/Preventive treatments/, page)
+    assert_match(/Propranolol/, page)
+    assert_match(/Not well tolerated/, page)
+    assert_match(/3 of the last 3 cycles/, page)
+  end
+
+  test "a chronic pattern is stated on the indicators page" do
+    (1..15).each { |day| episode(Date.new(2025, 12, day), pain: day <= 8 ? "migraine" : "headache") }
+    assert_match(/chronic migraine pattern/, flat(reader(today: Date.new(2025, 12, 31)), 2))
   end
 
   test "the report speaks French with decimal commas" do

@@ -48,6 +48,7 @@ module Reports
       @document ||= Prawn::Document.new(page_layout: :landscape, margin: PAGE_MARGIN, info: { Title: "#{t('title')} #{year}", Creator: "Migraine Tracker" }) do |pdf|
         pdf.font "Helvetica"
         draw_summary(pdf)
+        draw_indicators(pdf) if indicators?
         quarters.each do |quarter|
           pdf.start_new_page
           draw_quarter(pdf, quarter)
@@ -117,6 +118,101 @@ module Reports
 
     def l_month(date)
       I18n.l(date, format: "%B").capitalize
+    end
+
+    # --- indicators page -------------------------------------------------------
+
+    # Only when there is something to read: treatments taken, a preventive, a pattern worth a line.
+    def indicators?
+      insights.acute_rows.any? || insights.preventive_rows.any? || @overview.chronic_streak.positive? || menstrual_link
+    end
+
+    def insights
+      @insights ||= TreatmentInsights.new(user, today: [@today, Date.new(year, 12, 31)].min, since: Date.new(year, 1, 1), through: Date.new(year, 12, 31))
+    end
+
+    def menstrual_link
+      user.track_cycle? ? insights.menstrual_link : nil
+    end
+
+    def draw_indicators(pdf)
+      pdf.start_new_page
+      pdf.fill_color INK
+      pdf.text "#{t('indicators_title')} - #{year}", size: 20, style: :bold
+      pdf.fill_color MUTED
+      pdf.text t("indicators_subtitle"), size: 10
+      pdf.move_down 10
+
+      done = @overview.months.reject { |month| month.month > @today }
+      severe = done.sum(&:severe_days)
+      pdf.fill_color INK
+      pdf.text t("severe_line", total: severe, threshold: MonthlyOverview::SEVERE_FROM), size: 10
+      pdf.text(t(@overview.chronic_streak >= 3 ? "chronic_sustained" : "chronic_month"), size: 10, style: :bold, color: RED) if @overview.chronic_streak.positive?
+      pdf.move_down 10
+
+      draw_acute_table(pdf) if insights.acute_rows.any?
+      draw_preventive_table(pdf) if insights.preventive_rows.any?
+      draw_menstrual(pdf) if menstrual_link
+
+      pdf.fill_color MUTED
+      pdf.move_down 6
+      pdf.text t("disclaimer"), size: 8.5, style: :italic
+    end
+
+    def draw_acute_table(pdf)
+      pdf.fill_color INK
+      pdf.text t("acute_title"), size: 12, style: :bold
+      pdf.move_down 4
+      rows = [%w[medication intakes none partial good verdict].map { |key| t("acute_columns.#{key}") }] + insights.acute_rows.map do |row|
+        [row.medication.name, row.intakes, row.none, row.partial, row.good, t("verdicts.#{row.verdict}")]
+      end
+      pdf.table(rows, header: true, width: pdf.bounds.width, cell_style: { size: 9, padding: [4, 6], border_color: "E8DFCF", text_color: INK }) do |table|
+        table.row(0).font_style = :bold
+        table.row(0).background_color = "F5EFE3"
+        table.columns(1..4).align = :center
+        table.column(0).width = 170
+        insights.acute_rows.each_with_index { |row, index| table.row(index + 1).column(-1).background_color = "FBE0DC" if row.verdict == :not_working }
+      end
+      if (delay = insights.median_delay)
+        pdf.move_down 4
+        pdf.fill_color MUTED
+        pdf.text t("delay_line", minutes: delay[:minutes], count: delay[:attacks]), size: 9
+      end
+      pdf.move_down 10
+    end
+
+    def draw_preventive_table(pdf)
+      pdf.fill_color INK
+      pdf.text t("preventive_title"), size: 12, style: :bold
+      pdf.move_down 4
+      rows = [%w[medication period dose stop before_after].map { |key| t("preventive_columns.#{key}") }] + insights.preventive_rows.map do |row|
+        period = row.period
+        range = "#{I18n.l(period.started_on, format: :short)} - #{period.current? ? t('ongoing') : I18n.l(period.ended_on, format: :short)}"
+        change = row.before && row.after ? "#{format_number(row.before)} > #{format_number(row.after)}#{" (-#{(row.drop * 100).round} %)" if row.drop && row.drop.positive?}" : "-"
+        [period.medication.name, range, period.dose.to_s, (I18n.t("treatment_periods.reasons.#{period.stop_reason}") if period.stop_reason).to_s, change]
+      end
+      pdf.table(rows, header: true, width: pdf.bounds.width, cell_style: { size: 9, padding: [4, 6], border_color: "E8DFCF", text_color: INK }) do |table|
+        table.row(0).font_style = :bold
+        table.row(0).background_color = "F5EFE3"
+      end
+      pdf.move_down 4
+      pdf.fill_color MUTED
+      pdf.text t("preventive_note"), size: 8.5
+      pdf.move_down 10
+    end
+
+    def draw_menstrual(pdf)
+      link = menstrual_link
+      pdf.fill_color INK
+      pdf.text t("menstrual_title"), size: 12, style: :bold
+      pdf.move_down 2
+      pdf.text t("menstrual_line", with_attack: link.with_attack, cycles: link.cycles), size: 10
+      pdf.text(t("menstrual_pure"), size: 10) if link.pure?
+      pdf.move_down 8
+    end
+
+    def format_number(value)
+      ActiveSupport::NumberHelper.number_to_rounded(value, precision: 1, strip_insignificant_zeros: true, locale: I18n.locale)
     end
 
     # --- sheet pages -----------------------------------------------------------

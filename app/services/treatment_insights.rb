@@ -31,16 +31,17 @@ class TreatmentInsights
     end
   end
 
-  def initialize(user, today: Date.current, since: nil)
+  def initialize(user, today: Date.current, since: nil, through: nil)
     @user = user
     @today = today
     @since = since || today - 1.year
+    @through = through || today
   end
 
   # One row per acute medication used since `since`, the most used first.
   def acute_rows
     @acute_rows ||= all_intakes.group_by(&:medication).map do |medication, intakes|
-      recent = intakes.select { |intake| intake.episode.occurred_on >= @since }
+      recent = intakes.select { |intake| in_scope?(intake) }
       next if recent.empty?
 
       effects = recent.map(&:effect)
@@ -56,7 +57,7 @@ class TreatmentInsights
   def median_delay
     return @median_delay if defined?(@median_delay)
 
-    delays = all_intakes.select { |intake| intake.episode.occurred_on >= @since }
+    delays = all_intakes.select { |intake| in_scope?(intake) }
                         .group_by(&:episode).filter_map do |episode, intakes|
       next unless episode.started_time
 
@@ -88,6 +89,10 @@ class TreatmentInsights
   end
 
   private
+
+  def in_scope?(intake)
+    intake.episode.occurred_on.between?(@since, @through)
+  end
 
   def all_intakes
     @all_intakes ||= MedicationIntake.joins(:medication, :episode).includes(:medication, :episode)
