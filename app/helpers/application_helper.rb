@@ -1,6 +1,14 @@
 module ApplicationHelper
   include Pagy::Frontend
 
+  # The episode started with "I have a headache now" and not closed yet, if any.
+  def ongoing_episode
+    return unless user_signed_in?
+
+    @ongoing_episode = current_user.episodes.ongoing.order(:created_at).last unless defined?(@ongoing_episode)
+    @ongoing_episode
+  end
+
   def pagy_tailwind_nav(pagy)
     return "" if pagy.pages <= 1
 

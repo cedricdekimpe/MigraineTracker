@@ -24,7 +24,16 @@ class Episode < ApplicationRecord
   validate :triggers_belong_to_user
 
   scope :for_month, ->(date) { where(occurred_on: date.beginning_of_month..date.end_of_month) }
+  # Started with "I have a headache now" and not closed yet (older than 2 days = forgotten, ignored).
+  scope :ongoing, -> { where(ongoing: true, occurred_on: 2.days.ago.to_date..) }
   scope :chronological, -> { order(:occurred_on, :started_time, :id) }
+
+  # Start instant, when a start time is known.
+  def started_at
+    return unless started_time
+
+    Time.zone.local(occurred_on.year, occurred_on.month, occurred_on.day, started_time.hour, started_time.min)
+  end
 
   def pain?
     pain_kind.present?

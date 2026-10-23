@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_180000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_190000) do
   create_table "episode_triggers", force: :cascade do |t|
     t.integer "episode_id", null: false
     t.integer "trigger_id", null: false
@@ -33,7 +33,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_180000) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "ongoing", default: false, null: false
     t.index ["user_id", "occurred_on"], name: "index_episodes_on_user_id_and_occurred_on"
+    t.index ["user_id", "ongoing"], name: "index_episodes_on_user_id_and_ongoing"
     t.index ["user_id"], name: "index_episodes_on_user_id"
     t.check_constraint "aura = 1 OR pain_kind IS NOT NULL", name: "episodes_aura_or_pain"
     t.check_constraint "intensity IS NULL OR (intensity >= 1 AND intensity <= 10)", name: "episodes_intensity_range"

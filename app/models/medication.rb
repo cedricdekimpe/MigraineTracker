@@ -1,5 +1,8 @@
 class Medication < ApplicationRecord
-  KINDS = %w[acute preventive other].freeze
+  # acute = "traitement aigu" (X on the paper calendar), triptan = t, preventive = daily treatment.
+  # The acute/triptan split is what the medication-overuse thresholds are counted on.
+  KINDS = %w[acute triptan preventive other].freeze
+  SUGGESTED_KINDS = %w[acute triptan preventive].freeze
 
   belongs_to :user
   has_many :medication_intakes, dependent: :restrict_with_error
@@ -27,6 +30,18 @@ class Medication < ApplicationRecord
     medication.archived_at = nil
     medication.save
     medication
+  end
+
+  # { "triptan" => ["Sumatriptan", ...], ... } in the current locale
+  def self.suggestions
+    SUGGESTED_KINDS.index_with { |kind| I18n.t("medication_suggestions.#{kind}") }
+  end
+
+  # Class of a suggested/typed name (matching a suggestion ignoring case), "acute" otherwise.
+  def self.kind_for(name)
+    clean = name.to_s.strip.downcase
+    suggestions.each { |kind, names| return kind if names.any? { |suggestion| suggestion.downcase == clean } }
+    "acute"
   end
 
   def archived?

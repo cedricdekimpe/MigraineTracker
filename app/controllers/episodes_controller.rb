@@ -102,7 +102,7 @@ class EpisodesController < ApplicationController
     @medications = current_user.medications.active.most_used_first.to_a + in_use
     @triggers = current_user.triggers.alphabetical
     known = (@medications + current_user.medications.archived.to_a).map { |medication| medication.name.downcase }
-    suggestions = I18n.t("medication_suggestions.acute")
+    suggestions = Medication.suggestions.values_at("acute", "triptan").flatten
     @suggested_medications = suggestions.reject { |name| known.include?(name.downcase) }
   end
 
@@ -158,7 +158,7 @@ class EpisodesController < ApplicationController
   def selected_medications(entry)
     chosen = current_user.medications.where(id: Array(entry[:medication_ids])).to_a
     names = split_names(entry[:new_medication_names]) + Array(entry[:suggested_medications]).map(&:to_s)
-    created = names.filter_map { |name| Medication.find_or_create_for(current_user, name) }.select(&:persisted?)
+    created = names.filter_map { |name| Medication.find_or_create_for(current_user, name, kind: Medication.kind_for(name)) }.select(&:persisted?)
     (chosen + created).uniq
   end
 

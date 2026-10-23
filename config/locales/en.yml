@@ -334,7 +334,8 @@ en:
 
   # One-tap suggestions when adding a medication
   medication_suggestions:
-    acute: ["Ibuprofen", "Paracetamol", "Aspirin", "Naproxen", "Diclofenac", "Sumatriptan", "Rizatriptan", "Zolmitriptan", "Eletriptan", "Metoclopramide"]
+    acute: ["Ibuprofen", "Paracetamol", "Aspirin", "Naproxen", "Diclofenac", "Metoclopramide"]
+    triptan: ["Sumatriptan", "Rizatriptan", "Zolmitriptan", "Eletriptan"]
     preventive: ["Propranolol", "Topiramate", "Amitriptyline"]
 
   activerecord:
@@ -407,7 +408,8 @@ en:
     description: "Your medication list. Archived medications stay on past episodes."
     kind: "Type"
     kinds:
-      acute: "For attacks"
+      acute: "Acute treatment (X)"
+      triptan: "Triptan (t)"
       preventive: "Preventive"
       other: "Other"
     default_dose: "Usual dose"
@@ -429,3 +431,24 @@ en:
     saved: "Preferences saved."
     track_cycle: "Track my menstrual cycle"
     track_cycle_hint: "Adds a \"during my period\" option to episodes and a row to the calendars."
+
+  now:
+    nav: "I have a headache now"
+    in_progress: "Episode in progress"
+    start_title: "I have a headache now"
+    start_hint: "Pick the type, then tap the intensity. That's all: it starts the clock."
+    intensity_prompt: "How strong is it?"
+    mild: "1 mild"
+    unbearable: "10 unbearable"
+    aura_only: "Aura only, no pain"
+    fill_form: "Log a past episode with the full form"
+    since: "Since %{time}"
+    intensity_now: "Intensity right now"
+    medication: "Medication taken"
+    finish: "It's over"
+    add_details: "Add details"
+    cancel: "Started by mistake? Cancel"
+    confirm_cancel: "Delete this episode?"
+    flash:
+      finished: "Episode saved (%{duration})."
+      cancelled: "Episode cancelled."

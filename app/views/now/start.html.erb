@@ -1,0 +1,43 @@
+<% content_for :title, t("now.nav") %>
+
+<%# Dark, low-contrast and oversized on purpose: this is used during an attack. %>
+<section class="rounded-2xl bg-slate-900 p-5 text-slate-100 shadow-lg sm:p-8">
+  <h1 class="text-2xl font-semibold"><%= t("now.start_title") %></h1>
+  <p class="mt-1 text-sm text-slate-400"><%= t("now.start_hint") %></p>
+
+  <%= form_with url: now_path, method: :post, data: { turbo: false }, class: "mt-6 space-y-6" do %>
+    <fieldset>
+      <legend class="sr-only"><%= t("episodes.pain") %></legend>
+      <div class="grid grid-cols-2 gap-3">
+        <% [["migraine", t("episodes.pain_migraine")], ["headache", t("episodes.pain_headache")]].each do |value, label| %>
+          <label>
+            <%= radio_button_tag "pain_kind", value, @default_pain_kind == value, class: "peer sr-only" %>
+            <span class="flex min-h-14 cursor-pointer items-center justify-center rounded-xl border border-slate-700 bg-slate-800 px-4 text-lg font-medium text-slate-200 peer-checked:border-emerald-400 peer-checked:bg-emerald-700 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-400"><%= label %></span>
+          </label>
+        <% end %>
+      </div>
+      <label class="mt-3 block">
+        <%= check_box_tag "aura", "1", false, class: "peer sr-only" %>
+        <span class="flex min-h-12 cursor-pointer items-center justify-center rounded-xl border border-slate-700 bg-slate-800 px-4 text-base text-slate-200 peer-checked:border-emerald-400 peer-checked:bg-emerald-700 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-400"><%= t("episodes.aura") %></span>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend class="mb-3 text-lg font-medium"><%= t("now.intensity_prompt") %></legend>
+      <div class="grid grid-cols-5 gap-3">
+        <% (1..10).each do |value| %>
+          <%= button_tag value, type: "submit", name: "intensity", value: value,
+                class: "min-h-16 cursor-pointer rounded-xl border border-slate-700 bg-slate-800 text-2xl font-semibold text-slate-100 transition active:bg-emerald-700 hover:border-emerald-400" %>
+        <% end %>
+      </div>
+      <p class="mt-2 flex justify-between text-xs text-slate-400"><span><%= t("now.mild") %></span><span><%= t("now.unbearable") %></span></p>
+    </fieldset>
+
+    <%= button_tag t("now.aura_only"), type: "submit", name: "aura_only", value: "1",
+          class: "min-h-12 w-full cursor-pointer rounded-xl border border-dashed border-slate-600 px-4 text-base text-slate-300 hover:border-emerald-400" %>
+  <% end %>
+
+  <p class="mt-6 text-center text-sm">
+    <%= link_to t("now.fill_form"), new_episode_path, class: "text-slate-400 underline hover:text-slate-200" %>
+  </p>
+</section>

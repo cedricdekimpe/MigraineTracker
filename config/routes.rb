@@ -28,6 +28,14 @@ Rails.application.routes.draw do
     # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
     # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+    # "I have a headache now"
+    get "now", to: "now#show", as: :now
+    post "now", to: "now#create"
+    delete "now", to: "now#cancel"
+    patch "now/intensity", to: "now#intensity", as: :now_intensity
+    post "now/medication", to: "now#medication", as: :now_medication
+    patch "now/finish", to: "now#finish", as: :now_finish
+
     resources :episodes, only: %i[index new create edit update destroy] do
       collection do
         get :yearly

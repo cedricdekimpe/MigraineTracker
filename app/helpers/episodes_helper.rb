@@ -55,11 +55,19 @@ module EpisodesHelper
     t("episodes.kinds.#{key}")
   end
 
+  # 135 -> "2 h 15", 45 -> "45 min"
+  def duration_label(minutes)
+    hours, rest = minutes.divmod(60)
+    return "#{rest} min" if hours.zero?
+
+    rest.zero? ? "#{hours} h" : "#{hours} h #{rest.to_s.rjust(2, '0')}"
+  end
+
   def episode_time_label(episode)
     return unless episode.started_time
 
     label = l(episode.started_time, format: "%H:%M")
-    label += " · #{episode.duration_minutes} min" if episode.duration_minutes
+    label += " · #{duration_label(episode.duration_minutes)}" if episode.duration_minutes
     label
   end
 

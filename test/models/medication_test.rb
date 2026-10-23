@@ -6,6 +6,19 @@ class MedicationTest < ActiveSupport::TestCase
     assert users(:two).medications.new(name: "Ibuprofen").valid?
   end
 
+  test "triptan and acute treatment are separate classes" do
+    assert_equal %w[acute triptan preventive other], Medication::KINDS
+    assert users(:one).medications.new(name: "Zolmitriptan", kind: "triptan").valid?
+  end
+
+  test "suggestions are grouped by class and classified ignoring case" do
+    assert_includes Medication.suggestions["triptan"], "Sumatriptan"
+    assert_includes Medication.suggestions["acute"], "Ibuprofen"
+    assert_equal "triptan", Medication.kind_for(" sumatriptan ")
+    assert_equal "preventive", Medication.kind_for("Propranolol")
+    assert_equal "acute", Medication.kind_for("Something unknown")
+  end
+
   test "kind must be known" do
     assert_not users(:one).medications.new(name: "X", kind: "magic").valid?
     assert users(:one).medications.new(name: "X", kind: "preventive").valid?

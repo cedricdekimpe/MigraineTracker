@@ -75,4 +75,21 @@ class EpisodeLoggingTest < ApplicationSystemTestCase
     visit new_episode_path
     assert_no_field "Ibuprofen"
   end
+
+  test "headache now: start, take a medication, and close it in a few taps" do
+    visit now_path
+
+    choose "Migraine"
+    click_button "7"
+    assert_text "Episode in progress"
+    assert_text "Migraine"
+
+    click_button "Ibuprofen 400 mg"
+    assert_text "✓ Ibuprofen 400 mg"
+
+    click_button "It's over"
+    assert_text "Episode saved"
+    assert_equal 1, @user.episodes.where(ongoing: false, intensity: 7).count
+    assert_equal 1, @user.episodes.last.medication_intakes.count
+  end
 end

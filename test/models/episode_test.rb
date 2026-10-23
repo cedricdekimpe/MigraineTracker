@@ -97,4 +97,21 @@ class EpisodeTest < ActiveSupport::TestCase
     assert_includes users(:one).episodes.for_month(month), episodes(:migraine_with_aura)
     assert_not_includes users(:one).episodes.for_month(month - 3.months), episodes(:migraine_with_aura)
   end
+
+  test "start time is a wall-clock value, unaffected by the time zone" do
+    episode = users(:one).episodes.create!(occurred_on: "2026-07-01", pain_kind: "migraine", intensity: 4, started_time: "08:30")
+
+    assert_equal "08:30", episode.reload.started_time.strftime("%H:%M")
+    assert_equal Time.zone.local(2026, 7, 1, 8, 30), episode.started_at
+    assert_equal "Brussels", Time.zone.name
+  end
+
+  test "ongoing scope ignores closed and forgotten episodes" do
+    user = users(:one)
+    open_one = user.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 4, ongoing: true)
+    user.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 4)
+    user.episodes.create!(occurred_on: Date.current - 4, pain_kind: "migraine", intensity: 4, ongoing: true)
+
+    assert_equal [open_one], user.episodes.ongoing.to_a
+  end
 end

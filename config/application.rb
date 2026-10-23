@@ -33,7 +33,11 @@ module MyMigraineManager
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    # config.time_zone = "Central Time (US & Canada)"
+    # The app is used in Belgium; "now" and Date.current must be local time.
+    config.time_zone = "Brussels"
+    # `time` columns (episode start, intake time) are wall-clock values typed by the user ("08:30"),
+    # not instants: don't shift them through the time zone.
+    config.active_record.time_zone_aware_types = [:datetime]
     # config.eager_load_paths << Rails.root.join("extras")
 
     # I18n configuration

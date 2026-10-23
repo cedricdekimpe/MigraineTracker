@@ -15,7 +15,8 @@ class AccountController < ApplicationController
     @medications = current_user.medications.active.alphabetical
     @archived_medications = current_user.medications.archived.alphabetical
     known = current_user.medications.map { |medication| medication.name.downcase }
-    @suggestions = (I18n.t("medication_suggestions.acute") + I18n.t("medication_suggestions.preventive")).reject { |name| known.include?(name.downcase) }
+    @suggestions = Medication.suggestions.flat_map { |kind, names| names.map { |name| [name, kind] } }
+                             .reject { |name, _kind| known.include?(name.downcase) }
   end
 
   def triggers

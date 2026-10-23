@@ -56,8 +56,8 @@
           <div class="border-t border-slate-200 pt-6">
             <h3 class="mb-3 text-sm font-medium text-slate-900"><%= t('episodes.common_medications') %></h3>
             <div class="flex flex-wrap gap-2">
-              <% @suggestions.each do |name| %>
-                <%= button_to name, medications_path, params: { medication: { name: name } }, method: :post, form: { data: { turbo: false } },
+              <% @suggestions.each do |name, kind| %>
+                <%= button_to name, medications_path, params: { medication: { name: name, kind: kind } }, method: :post, form: { data: { turbo: false } },
                       class: "cursor-pointer rounded-full border border-dashed border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 transition hover:border-emerald-400 hover:text-emerald-700" %>
               <% end %>
             </div>
