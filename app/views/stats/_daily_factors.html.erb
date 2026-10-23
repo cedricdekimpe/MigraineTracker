@@ -8,7 +8,7 @@
   <% else %>
     <% notable = factors.notable %>
     <p class="mt-2 max-w-2xl text-sm text-ink-700" data-factors-summary>
-      <%= notable.any? ? t("stats.factors.notable", factors: notable.map { |row| t("stats.factors.names.#{row.factor}") }.to_sentence) : t("stats.factors.none") %>
+      <%= notable.any? ? t("stats.factors.notable", factors: notable.map { |row| t("stats.factors.names.#{row.factor}").downcase }.to_sentence) : t("stats.factors.none") %>
     </p>
     <div class="mt-4 overflow-x-auto rounded-2xl border border-ink-200 bg-paper">
       <table class="w-full text-left text-sm">

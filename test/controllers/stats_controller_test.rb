@@ -172,7 +172,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     end
     visit_stats
 
-    assert_select "[data-factors-summary]", text: /Poor night/
+    assert_select "[data-factors-summary]", text: /poor night/
     assert_select "tr[data-factor=poor_sleep] td[data-lag='0']", text: /100% vs 0%/
     assert_select "tr[data-factor=high_stress] td[data-lag='0']", text: "–"
   end
