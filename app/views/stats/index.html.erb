@@ -54,22 +54,25 @@
       <p class="mt-2 max-w-2xl text-sm text-ink-600"><%= t("stats.overuse.hint") %></p>
 
       <div class="mt-6 space-y-6">
-        <% [[:triptan, @month.triptan_days, MonthlyOverview::TRIPTAN_LIMIT], [:combination, @month.combination_days, MonthlyOverview::COMBINATION_LIMIT], [:acute, @month.acute_days, MonthlyOverview::ACUTE_LIMIT]].each do |kind, days, limit| %>
+        <% [[:triptan, @month.triptan_days, MonthlyOverview::TRIPTAN_LIMIT, MonthlyOverview::TRIPTAN_ADVISED], [:combination, @month.combination_days, MonthlyOverview::COMBINATION_LIMIT, MonthlyOverview::COMBINATION_ADVISED], [:acute, @month.acute_days, MonthlyOverview::ACUTE_LIMIT, MonthlyOverview::ACUTE_ADVISED]].each do |kind, days, limit, advised| %>
           <% next if kind == :combination && days.zero? %>
           <div data-meter="<%= kind %>">
             <div class="mb-2 flex items-baseline justify-between text-sm">
               <span class="font-medium text-ink-800"><%= t("stats.overuse.#{kind}") %></span>
               <span class="text-ink-600"><%= t("stats.overuse.days_of_limit", days: days, limit: limit) %></span>
             </div>
-            <%= limit_meter(days: days, limit: limit) %>
+            <%= limit_meter(days: days, limit: limit, advised: advised) %>
           </div>
         <% end %>
         <% if @month.mixed? %>
           <p class="text-sm text-ink-600"><%= t("stats.overuse.mixed", days: @month.any_acute_days, limit: MonthlyOverview::MIXED_LIMIT) %></p>
         <% end %>
+        <% if @month.heavy_weeks.positive? %>
+          <p class="text-sm text-ink-600" data-heavy-weeks><%= t("stats.overuse.heavy_weeks", count: @month.heavy_weeks) %></p>
+        <% end %>
       </div>
 
-      <% tone = { ok: "border-accent-200 bg-accent-50 text-accent-800", watch: "border-amber-300 bg-amber-100 text-amber-900", over: "border-red-300 bg-red-100 text-red-800" }.fetch(@month.overuse_status) %>
+      <% tone = { ok: "border-accent-200 bg-accent-50 text-accent-800", advised: "border-amber-300 bg-amber-100 text-amber-900", over: "border-red-300 bg-red-100 text-red-800", sustained: "border-red-400 bg-red-200 text-red-900" }.fetch(@month.overuse_status) %>
       <p class="mt-6 rounded-2xl border px-4 py-3 text-sm font-medium <%= tone %>" role="status"><%= t("stats.overuse.status_#{@month.overuse_status}") %></p>
     </section>
 

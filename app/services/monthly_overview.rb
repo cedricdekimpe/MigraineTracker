@@ -7,19 +7,32 @@
 # - aura day: an aura without any pain that day
 # - acute / triptan days: days with an intake of an acute treatment (X) / a triptan (t)
 #
-# Overuse follows the ICHD-3 thresholds, counted per month: 10+ days of triptans, 10+ days of combined
-# analgesics or opioids, 15+ days of simple analgesics or NSAIDs, or 10+ days when several classes are
-# mixed (the criterion also asks for more than 3 months of regular use, which is why this is shown as
-# a warning, not a diagnosis). Gepants and ditans have no threshold of their own but count in the mix.
+# Overuse is read on three levels, from the most cautious to the diagnostic one:
+#   advised  above the practical limits of the IHS 2024 recommendations (simple analgesics and NSAIDs
+#            under 10 days a month and 3 a week; triptans and combined analgesics under 8 days a month
+#            and 2 a week): taking treatment more often than that is how overuse starts
+#   over     an ICHD-3 threshold is reached in the month: 10+ days of triptans, 10+ days of combined
+#            analgesics or opioids, 15+ days of simple analgesics or NSAIDs, or 10+ days when several
+#            classes are mixed
+#   sustained  that threshold was reached 3 months in a row, which is what the ICHD-3 criterion asks
+#            for (and still only a reminder to see a doctor, not a diagnosis)
+# Gepants and ditans have no threshold of their own but count in the mix.
 class MonthlyOverview
   TRIPTAN_LIMIT = 10
   COMBINATION_LIMIT = 10
   ACUTE_LIMIT = 15
   MIXED_LIMIT = 10
-  WATCH_RATIO = 0.8
+
+  TRIPTAN_ADVISED = 8
+  COMBINATION_ADVISED = 8
+  ACUTE_ADVISED = 10
+  MIXED_ADVISED = 8
+  # Days of treatment in a Monday-to-Sunday week above which the week counts as a heavy one
+  ACUTE_WEEK_ADVISED = 3
+  TRIPTAN_WEEK_ADVISED = 2
 
   Month = Struct.new(:month, :migraine_days, :headache_days, :aura_days, :triptan_days, :acute_days, :combination_days,
-                     :gepant_days, :non_triptan_days, :any_acute_days, keyword_init: true) do
+                     :gepant_days, :non_triptan_days, :any_acute_days, :heavy_weeks, :streak, keyword_init: true) do
     def pain_days
       migraine_days + headache_days
     end
@@ -28,14 +41,23 @@ class MonthlyOverview
       [triptan_days, acute_days, combination_days, gepant_days].count(&:positive?) > 1
     end
 
-    def overuse_status
-      ratios = [triptan_days.to_f / TRIPTAN_LIMIT, combination_days.to_f / COMBINATION_LIMIT, acute_days.to_f / ACUTE_LIMIT]
-      ratios << any_acute_days.to_f / MIXED_LIMIT if mixed?
+    # An ICHD-3 threshold is reached this month.
+    def threshold_reached?
+      triptan_days >= TRIPTAN_LIMIT || combination_days >= COMBINATION_LIMIT || acute_days >= ACUTE_LIMIT ||
+        (mixed? && any_acute_days >= MIXED_LIMIT)
+    end
 
-      if ratios.max >= 1
-        :over
-      elsif ratios.max >= WATCH_RATIO
-        :watch
+    # Above the practical limits advised by the IHS, by the month or in any week starting in it.
+    def advised_limit_exceeded?
+      triptan_days >= TRIPTAN_ADVISED || combination_days >= COMBINATION_ADVISED || acute_days >= ACUTE_ADVISED ||
+        (mixed? && any_acute_days >= MIXED_ADVISED) || heavy_weeks.positive?
+    end
+
+    def overuse_status
+      if threshold_reached?
+        streak >= 3 ? :sustained : :over
+      elsif advised_limit_exceeded?
+        :advised
       else
         :ok
       end
@@ -71,12 +93,16 @@ class MonthlyOverview
   def build(first, last, count)
     range = first..last.end_of_month
     episodes = @user.episodes.where(occurred_on: range).pluck(:occurred_on, :pain_kind, :aura)
-    intakes = MedicationIntake.joins(:medication, :episode)
-                              .where(episodes: { user_id: @user.id, occurred_on: range }, medications: { kind: Medication::COUNTED_KINDS })
-                              .pluck("episodes.occurred_on", "medications.kind")
+    # Weeks run Monday to Sunday and may start before the first month: load their days too.
+    week_range = first.beginning_of_week..last.end_of_month.end_of_week
+    all_intakes = MedicationIntake.joins(:medication, :episode)
+                                  .where(episodes: { user_id: @user.id, occurred_on: week_range }, medications: { kind: Medication::COUNTED_KINDS })
+                                  .pluck("episodes.occurred_on", "medications.kind")
+    intakes = all_intakes.select { |date, _| range.cover?(date) }
+    kinds_by_day = all_intakes.group_by(&:first).transform_values { |rows| rows.map(&:last).uniq }
 
     by_day = episodes.group_by(&:first)
-    (0...count).map do |offset|
+    months = (0...count).map do |offset|
       month = first.advance(months: offset)
       days = by_day.select { |date, _| date.beginning_of_month == month }
       month_intakes = intakes.select { |date, _| date.beginning_of_month == month }
@@ -91,8 +117,27 @@ class MonthlyOverview
         combination_days: month_intakes.select { |_, kind| kind == "combination" }.map(&:first).uniq.size,
         gepant_days: month_intakes.select { |_, kind| kind == "gepant" }.map(&:first).uniq.size,
         non_triptan_days: month_intakes.reject { |_, kind| kind == "triptan" }.map(&:first).uniq.size,
-        any_acute_days: month_intakes.map(&:first).uniq.size
+        any_acute_days: month_intakes.map(&:first).uniq.size,
+        heavy_weeks: heavy_weeks(month, kinds_by_day),
+        streak: 0
       )
+    end
+
+    previous = 0
+    months.each do |month|
+      previous = month.threshold_reached? ? previous + 1 : 0
+      month.streak = previous
+    end
+    months
+  end
+
+  # Weeks (Monday to Sunday) starting in the month with more days of treatment than the advised weekly limits.
+  def heavy_weeks(month, kinds_by_day)
+    weeks = (month..month.end_of_month).select(&:monday?)
+    weeks.count do |monday|
+      days = (monday..monday + 6).map { |date| kinds_by_day.fetch(date, []) }
+      days.count { |kinds| kinds.include?("acute") } > ACUTE_WEEK_ADVISED ||
+        days.count { |kinds| (kinds & %w[triptan combination]).any? } > TRIPTAN_WEEK_ADVISED
     end
   end
 end

@@ -73,26 +73,77 @@ class MonthlyOverviewTest < ActiveSupport::TestCase
     assert_equal 2, months.sum(&:migraine_days)
   end
 
-  test "overuse is ok, watch, then over for triptans at 10 days a month" do
-    (1..7).each { |day| episode(Date.new(2026, 10, day), medications: [@triptan]) }
+  # October 2026 days that keep within `per_week` treatment days in each Monday-to-Sunday week
+  def calm_days(per_week, count)
+    taken = Hash.new(0)
+    (1..31).filter_map do |day|
+      date = Date.new(2026, 10, day)
+      next if taken[date.beginning_of_week] >= per_week
+
+      taken[date.beginning_of_week] += 1
+      date
+    end.first(count)
+  end
+
+  test "triptans: ok, advised from 8 days a month, over from 10" do
+    calm_days(2, 7).each { |date| episode(date, medications: [@triptan]) }
     assert_equal :ok, overview.current.overuse_status
 
-    episode(Date.new(2026, 10, 8), medications: [@triptan])
-    assert_equal :watch, overview.current.overuse_status
+    calm_days(2, 8).each { |date| episode(date, medications: [@triptan]) unless @user.episodes.exists?(occurred_on: date) }
+    assert_equal :advised, overview.current.overuse_status
 
-    episode(Date.new(2026, 10, 9), medications: [@triptan])
-    episode(Date.new(2026, 10, 10), medications: [@triptan])
+    calm_days(2, 10).each { |date| episode(date, medications: [@triptan]) unless @user.episodes.exists?(occurred_on: date) }
     assert_equal :over, overview.current.overuse_status
   end
 
-  test "other acute treatments only trip the 15 day threshold" do
-    (1..10).each { |day| episode(Date.new(2026, 10, day), medications: [@acute]) }
+  test "simple analgesics: advised from 10 days a month, over only from 15" do
+    calm_days(3, 9).each { |date| episode(date, medications: [@acute]) }
     assert_equal :ok, overview.current.overuse_status
 
-    (11..12).each { |day| episode(Date.new(2026, 10, day), medications: [@acute]) }
-    assert_equal :watch, overview.current.overuse_status
+    calm_days(3, 10).each { |date| episode(date, medications: [@acute]) unless @user.episodes.exists?(occurred_on: date) }
+    assert_equal :advised, overview.current.overuse_status
 
-    (13..15).each { |day| episode(Date.new(2026, 10, day), medications: [@acute]) }
+    calm_days(3, 15).each { |date| episode(date, medications: [@acute]) unless @user.episodes.exists?(occurred_on: date) }
+    assert_equal 15, overview.current.acute_days
+    assert_equal :over, overview.current.overuse_status
+  end
+
+  test "a heavy week is advised even when the month is light" do
+    (5..8).each { |day| episode(Date.new(2026, 10, day), medications: [@acute]) } # four days in the week of the 5th
+    assert_equal 1, overview.current.heavy_weeks
+    assert_equal :advised, overview.current.overuse_status
+
+    calm_week = Date.new(2026, 10, 12)
+    [calm_week, calm_week + 1].each { |date| episode(date, medications: [@triptan]) }
+    assert_equal 1, overview.current.heavy_weeks
+  end
+
+  test "three triptan days in a week is a heavy week, two is not" do
+    [Date.new(2026, 10, 5), Date.new(2026, 10, 6)].each { |date| episode(date, medications: [@triptan]) }
+    assert_equal 0, overview.current.heavy_weeks
+    episode(Date.new(2026, 10, 7), medications: [@triptan])
+    assert_equal 1, overview.current.heavy_weeks
+  end
+
+  test "a week belongs to the month of its Monday and counts all its seven days" do
+    # Week of Monday 28 Sept 2026 runs into October: 3 days in September, 1 in October
+    [Date.new(2026, 9, 29), Date.new(2026, 9, 30), Date.new(2026, 10, 1)].each { |date| episode(date, medications: [@triptan]) }
+    assert_equal [1, 0], [overview.months[-2].heavy_weeks, overview.current.heavy_weeks]
+  end
+
+  test "the threshold three months in a row is sustained overuse" do
+    [Date.new(2026, 8, 1), Date.new(2026, 9, 1), Date.new(2026, 10, 1)].each do |month|
+      (0...10).each { |offset| episode(month + offset, medications: [@triptan]) }
+    end
+    assert_equal [1, 2, 3], overview.months.last(3).map(&:streak)
+    assert_equal [:over, :over, :sustained], overview.months.last(3).map(&:overuse_status)
+  end
+
+  test "a month under the threshold breaks the streak" do
+    [Date.new(2026, 8, 1), Date.new(2026, 10, 1)].each do |month|
+      (0...10).each { |offset| episode(month + offset, medications: [@triptan]) }
+    end
+    assert_equal [1, 0, 1], overview.months.last(3).map(&:streak)
     assert_equal :over, overview.current.overuse_status
   end
 
@@ -109,7 +160,7 @@ class MonthlyOverviewTest < ActiveSupport::TestCase
   test "combined analgesics and opioids trip their own threshold at 10 days" do
     combination = @user.medications.create!(name: "Paracetamol + codeine", kind: "combination")
     9.times { |i| episode(Date.new(2026, 10, i + 1), medications: [combination]) }
-    assert_equal :watch, overview.current.overuse_status
+    assert_equal :advised, overview.current.overuse_status
 
     episode(Date.new(2026, 10, 10), medications: [combination])
     assert_equal :over, overview.current.overuse_status

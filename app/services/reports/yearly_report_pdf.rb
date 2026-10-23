@@ -21,7 +21,7 @@ module Reports
       "sky" => { frame: "429DC2", light: "D7ECF5", dark: "B6DDED" }
     }.freeze
 
-    STATUS_FILL = { ok: nil, watch: "FDF0C8", over: "FBE0DC" }.freeze
+    STATUS_FILL = { ok: nil, advised: "FDF0C8", over: "FBE0DC", sustained: "F6C7C0" }.freeze
 
     attr_reader :user, :year
 
@@ -91,7 +91,7 @@ module Reports
 
       pdf.move_down 12
       pdf.fill_color MUTED
-      pdf.text t("overuse_note", triptan: MonthlyOverview::TRIPTAN_LIMIT, combination: MonthlyOverview::COMBINATION_LIMIT, acute: MonthlyOverview::ACUTE_LIMIT, mixed: MonthlyOverview::MIXED_LIMIT), size: 8.5, leading: 2
+      pdf.text t("overuse_note", triptan: MonthlyOverview::TRIPTAN_LIMIT, combination: MonthlyOverview::COMBINATION_LIMIT, acute: MonthlyOverview::ACUTE_LIMIT, mixed: MonthlyOverview::MIXED_LIMIT, acute_advised: MonthlyOverview::ACUTE_ADVISED, triptan_advised: MonthlyOverview::TRIPTAN_ADVISED), size: 8.5, leading: 2
       pdf.move_down 4
       pdf.text t("disclaimer"), size: 8.5, style: :italic
     end

@@ -81,21 +81,39 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-overuse=ok]"
     assert_select "[data-meter=triptan] [role=meter][aria-valuenow='3'][aria-valuemax='10']"
     assert_select "[data-meter=triptan] .bg-accent-500"
-    assert_match(/Below the thresholds this month/, response.body)
+    assert_match(/Below the advised limits this month/, response.body)
   end
 
   test "treatment meters warn near and at the thresholds" do
     8.times { |i| log(Date.new(2026, 10, i + 1), medications: [@triptan]) }
     visit_stats
-    assert_select "[data-overuse=watch]"
+    assert_select "[data-overuse=advised]"
     assert_select "[data-meter=triptan] .bg-amber-500"
-    assert_match(/Getting close to a threshold/, response.body)
+    assert_match(/Above the advised limits/, response.body)
 
     2.times { |i| log(Date.new(2026, 10, i + 9), medications: [@triptan]) }
     visit_stats
     assert_select "[data-overuse=over]"
     assert_select "[data-meter=triptan] .bg-red-500"
-    assert_match(/This is a reminder, not a diagnosis/, response.body)
+    assert_match(/It is a reminder, not a diagnosis/, response.body)
+  end
+
+  test "a meter marks the advised limit and a heavy week is mentioned" do
+    (5..7).each { |day| log(Date.new(2026, 10, day), medications: [@triptan]) }
+    visit_stats
+
+    assert_select "[data-meter=triptan] [role=meter] span[style*='left: 80%']"
+    assert_select "[data-heavy-weeks]"
+  end
+
+  test "the threshold three months in a row is spelled out" do
+    [Date.new(2026, 8, 1), Date.new(2026, 9, 1), Date.new(2026, 10, 1)].each do |month|
+      10.times { |i| log(month + i, medications: [@triptan]) }
+    end
+    visit_stats
+
+    assert_select "[data-overuse=sustained]"
+    assert_match(/Threshold reached 3 months in a row/, response.body)
   end
 
   test "mixing both kinds shows the combined count" do
@@ -153,7 +171,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
 
     assert_match(/Jours de traitement aigu/, response.body)
     assert_match(/jour de douleur/, response.body)
-    assert_match(/C&#39;est un rappel, pas un diagnostic|Sous les seuils/, response.body)
+    assert_match(/C&#39;est un rappel, pas un diagnostic|Sous les limites conseillées/, response.body)
   end
 
   test "only the user's own data is counted" do

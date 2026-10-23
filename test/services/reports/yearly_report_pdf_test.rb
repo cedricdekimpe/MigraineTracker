@@ -55,8 +55,8 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
     summary = text(reader, 1)
 
     assert_match(/May.*Threshold reached/, summary)
-    assert_match(/January.*Below thresholds/, summary)
-    assert_match(/Treatment status counts, per month/, summary)
+    assert_match(/January.*Below the limits/, summary)
+    assert_match(/Status counts, per month/, summary)
   end
 
   test "future months are left blank in the summary and the average only covers months so far" do
@@ -65,7 +65,7 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
     summary = text(reader(year: 2026, today: Date.new(2026, 1, 20)), 1)
 
     assert_match(/Average \(months so far\) 2\b/, summary.gsub(/\s+/, " "))
-    assert_no_match(/February.*Below thresholds/, summary)
+    assert_no_match(/February.*Below the limits/, summary)
   end
 
   test "the sheet pages reproduce the paper: month frames, letters, intensity and treatment marks" do

@@ -86,15 +86,19 @@ module StatsHelper
   end
 
   # Progress bar towards a monthly limit: calm blue, yellow from 80 %, red at the limit.
-  def limit_meter(days:, limit:)
+  # A bar of days against a limit: green, amber from the advised limit, red from the diagnostic threshold.
+  # A tick marks the advised limit.
+  def limit_meter(days:, limit:, advised: nil)
     ratio = days.to_f / limit
-    fill = if ratio >= 1 then "bg-red-500"
-           elsif ratio >= MonthlyOverview::WATCH_RATIO then "bg-amber-500"
+    fill = if days >= limit then "bg-red-500"
+           elsif advised && days >= advised then "bg-amber-500"
            else "bg-accent-500"
            end
 
-    tag.div(class: "h-3 w-full overflow-hidden rounded-full bg-ink-100", role: "meter", "aria-valuemin": 0, "aria-valuemax": limit, "aria-valuenow": days) do
-      tag.div("", class: "h-3 rounded-full #{fill}", style: "width: #{[(ratio * 100).round, 100].min}%")
+    tag.div(class: "relative h-3 w-full overflow-hidden rounded-full bg-ink-100", role: "meter", "aria-valuemin": 0, "aria-valuemax": limit, "aria-valuenow": days) do
+      bar = tag.div("", class: "h-3 rounded-full #{fill}", style: "width: #{[(ratio * 100).round, 100].min}%")
+      tick = advised ? tag.span("", class: "absolute inset-y-0 w-0.5 bg-ink-500/60", style: "left: #{(advised.to_f / limit * 100).round}%") : "".html_safe
+      bar + tick
     end
   end
 end
