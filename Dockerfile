@@ -8,7 +8,7 @@
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version
-ARG RUBY_VERSION=3.2.3
+ARG RUBY_VERSION=3.4.11
 ARG BUNDLE_WITHOUT=development:test
 FROM docker.io/library/ruby:${RUBY_VERSION}-slim AS base
 ARG BUNDLE_WITHOUT
@@ -57,11 +57,11 @@ RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
 RUN --mount=type=secret,id=RAILS_MASTER_KEY \
   export RAILS_MASTER_KEY="$(cat /run/secrets/RAILS_MASTER_KEY)" && \
-  ./bin/rails tailwindcss:build
+  SECRET_KEY_BASE_DUMMY=1 ./bin/rails tailwindcss:build
 
 RUN --mount=type=secret,id=RAILS_MASTER_KEY \
   export RAILS_MASTER_KEY="$(cat /run/secrets/RAILS_MASTER_KEY)" && \
-  ./bin/rails assets:precompile
+  SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 # Final stage for app image
 FROM base

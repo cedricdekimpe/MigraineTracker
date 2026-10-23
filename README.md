@@ -4,7 +4,7 @@ MyMigraineManager is a modern Rails 8 application that helps people track migrai
 
 ## Local Development
 
-- Install prerequisites: Ruby 3.2.3, Bundler, SQLite 3, and Redis-compatible services if you intend to run Solid Queue accessories.
+- Install prerequisites: Ruby 3.4.11, Bundler, SQLite 3, and Redis-compatible services if you intend to run Solid Queue accessories.
 - Bootstrap the app with `bin/setup`, which installs gems, prepares the database, and installs Tailwind binaries.
 - Run the development stack with `bin/dev` to start Rails, Tailwind, and any background workers.
 

@@ -1,6 +1,6 @@
 # Development/test image: docker build -f Dockerfile.dev -t migraine-dev .
 # Run via bin/docker-dev (mounts the repo, keeps gems in a named volume).
-ARG RUBY_VERSION=3.2.3
+ARG RUBY_VERSION=3.4.11
 FROM docker.io/library/ruby:${RUBY_VERSION}-slim
 
 RUN apt-get update -qq && \

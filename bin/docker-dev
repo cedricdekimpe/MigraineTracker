@@ -9,6 +9,6 @@ exec docker run --rm ${TTY_FLAGS:--it} \
   --user "$(id -u):$(id -g)" \
   -e HOME=/tmp -e BUNDLE_APP_CONFIG=/usr/local/bundle \
   -v "$PWD":/rails \
-  -v migraine-bundle:/usr/local/bundle \
+  -v migraine-bundle-34:/usr/local/bundle \
   -p 3000:3000 \
   "$IMAGE" "${@:-bash}"
