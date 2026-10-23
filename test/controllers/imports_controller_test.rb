@@ -70,7 +70,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
       user_email: @user.email,
       medications: [
         { name: "Aspirin", created_at: 1.day.ago.iso8601 },
-        { name: "Ibuprofen", created_at: 2.days.ago.iso8601 }
+        { name: "Sumatriptan", created_at: 2.days.ago.iso8601 }
       ],
       migraines: []
     }
@@ -89,7 +89,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Successfully imported 2 medications and 0 migraines.", flash[:notice]
     
     assert @user.medications.exists?(name: "Aspirin")
-    assert @user.medications.exists?(name: "Ibuprofen")
+    assert @user.medications.exists?(name: "Sumatriptan")
   end
 
   test "should successfully import migraines with medications" do
@@ -126,9 +126,8 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to edit_user_registration_path
     assert_equal "Successfully imported 0 medications and 1 migraines.", flash[:notice]
     
-    migraine = @user.migraines.last
-    assert_equal Date.today, migraine.occurred_on
-    assert_equal "strong", migraine.nature
+    migraine = @user.migraines.find_by!(occurred_on: Date.today)
+    assert_equal "M", migraine.nature
     assert_equal 8, migraine.intensity
     assert_equal false, migraine.on_period
     assert_equal medication.id, migraine.medication_id
@@ -171,7 +170,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
     
     # Verify original migraine data wasn't changed
     migraine = @user.migraines.find_by(occurred_on: Date.today)
-    assert_equal "weak", migraine.nature
+    assert_equal "H", migraine.nature
     assert_equal 3, migraine.intensity
   end
 

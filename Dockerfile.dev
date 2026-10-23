@@ -1,0 +1,12 @@
+# Development/test image: docker build -f Dockerfile.dev -t migraine-dev .
+# Run via bin/docker-dev (mounts the repo, keeps gems in a named volume).
+ARG RUBY_VERSION=3.2.3
+FROM docker.io/library/ruby:${RUBY_VERSION}-slim
+
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential git curl libyaml-dev pkg-config libvips sqlite3 libsqlite3-dev && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+ENV BUNDLE_PATH=/usr/local/bundle \
+    RAILS_ENV=development
+WORKDIR /rails

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Run any command inside the dev container, e.g. bin/docker-dev bin/rails test
+set -euo pipefail
+cd "$(dirname "$0")/.."
+IMAGE=migraine-dev
+docker image inspect "$IMAGE" >/dev/null 2>&1 || docker build -f Dockerfile.dev -t "$IMAGE" .
+mkdir -p tmp log storage
+exec docker run --rm ${TTY_FLAGS:--it} \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp -e BUNDLE_APP_CONFIG=/usr/local/bundle \
+  -v "$PWD":/rails \
+  -v migraine-bundle:/usr/local/bundle \
+  -p 3000:3000 \
+  "$IMAGE" "${@:-bash}"

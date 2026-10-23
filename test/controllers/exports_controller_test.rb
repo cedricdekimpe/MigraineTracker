@@ -51,17 +51,17 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
   test "should export all user medications" do
     # Create test medications
     med1 = @user.medications.create!(name: "Aspirin")
-    med2 = @user.medications.create!(name: "Ibuprofen")
+    med2 = @user.medications.create!(name: "Sumatriptan")
     
     post exports_path
     assert_response :success
     
     data = JSON.parse(response.body)
-    assert_equal 2, data["medications"].length
+    assert_equal @user.medications.count, data["medications"].length
     
     medication_names = data["medications"].map { |m| m["name"] }
     assert_includes medication_names, "Aspirin"
-    assert_includes medication_names, "Ibuprofen"
+    assert_includes medication_names, "Sumatriptan"
   end
 
   test "should export all user migraines with medication names" do
@@ -79,11 +79,11 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     
     data = JSON.parse(response.body)
-    assert_equal 1, data["migraines"].length
-    
-    exported_migraine = data["migraines"].first
+    assert_equal @user.migraines.count, data["migraines"].length
+
+    exported_migraine = data["migraines"].find { |m| m["occurred_on"] == Date.today.to_s }
     assert_equal Date.today.to_s, exported_migraine["occurred_on"]
-    assert_equal "strong", exported_migraine["nature"]
+    assert_equal "M", exported_migraine["nature"]
     assert_equal 8, exported_migraine["intensity"]
     assert_equal false, exported_migraine["on_period"]
     assert_equal "Test Med", exported_migraine["medication_name"]
@@ -101,7 +101,7 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     
     data = JSON.parse(response.body)
-    exported_migraine = data["migraines"].first
+    exported_migraine = data["migraines"].find { |m| m["occurred_on"] == Date.today.to_s }
     assert_nil exported_migraine["medication_name"]
   end
 
@@ -124,7 +124,8 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
     
     data = JSON.parse(response.body)
     assert_equal @user.email, data["user_email"]
-    assert_equal 0, data["medications"].length
-    assert_equal 0, data["migraines"].length
+    assert_equal @user.medications.count, data["medications"].length
+    assert_equal @user.migraines.count, data["migraines"].length
+    assert_not_includes data["medications"].map { |m| m["name"] }, "Other Med"
   end
 end

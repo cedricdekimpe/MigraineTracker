@@ -1,6 +1,8 @@
 require "test_helper"
 
 class AdminAccessTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @regular_user = users(:one)
     @admin_user = User.create!({
@@ -18,7 +20,8 @@ class AdminAccessTest < ActionDispatch::IntegrationTest
   test "non admin users are redirected home" do
     sign_in @regular_user, scope: :user
     get rails_admin_path
-    assert_redirected_to root_path
+    assert_response :redirect
+    assert_equal "/#{I18n.locale}", URI(response.location).path
     assert_equal I18n.t('admin.access_denied'), flash[:alert]
   end
 

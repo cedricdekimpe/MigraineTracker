@@ -313,18 +313,19 @@ Devise.setup do |config|
 
   # ==> Configuration for :jwt_authenticatable
   # JWT configuration for API authentication
-  jwt_secret = ENV["DEVISE_JWT_SECRET_KEY"].presence
-  if jwt_secret
-    config.jwt do |jwt|
-      jwt.secret = jwt_secret
+  # Always configured: without it Devise::JWT never registers the dispatch/revocation
+  # routes and /api/v1/auth/login silently returns no token. Falls back to a key derived
+  # from secret_key_base when DEVISE_JWT_SECRET_KEY is not provided.
+  config.jwt do |jwt|
+    jwt.secret = ENV["DEVISE_JWT_SECRET_KEY"].presence ||
+                 Rails.application.key_generator.generate_key("devise-jwt").unpack1("H*")
 
-      jwt.dispatch_requests = [
-        ["POST", %r{^/api/v1/auth/login$}]
-      ]
-      jwt.revocation_requests = [
-        ["DELETE", %r{^/api/v1/auth/logout$}]
-      ]
-      jwt.expiration_time = 1.hour.to_i
-    end
+    jwt.dispatch_requests = [
+      ["POST", %r{^/api/v1/auth/login$}]
+    ]
+    jwt.revocation_requests = [
+      ["DELETE", %r{^/api/v1/auth/logout$}]
+    ]
+    jwt.expiration_time = 1.hour.to_i
   end
 end

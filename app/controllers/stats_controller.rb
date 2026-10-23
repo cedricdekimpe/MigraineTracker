@@ -10,7 +10,7 @@ class StatsController < ApplicationController
     @migraines_without_medication = @total_migraines - @migraines_with_medication
     
     # Migraines over time (last 12 months)
-    start_date = 12.months.ago.beginning_of_month
+    start_date = 11.months.ago.beginning_of_month
     end_date = Date.today.end_of_month
     
     # Group migraines by month
@@ -28,11 +28,10 @@ class StatsController < ApplicationController
     
     # Distribution by day of week
     day_order = %w[monday tuesday wednesday thursday friday saturday sunday]
-    @day_of_week_data = @migraines
-      .group_by { |m| m.occurred_on.wday }
-      .transform_values(&:count)
-      .sort_by { |wday, _| wday }
-      .map { |wday, count| [I18n.t("days.#{day_order[wday == 0 ? 6 : wday - 1]}"), count] }
+    counts_by_day = @migraines.group_by { |m| m.occurred_on.cwday }.transform_values(&:count)
+    @day_of_week_data = day_order.each_with_index.map do |day, index|
+      [I18n.t("days.#{day}"), counts_by_day.fetch(index + 1, 0)]
+    end
     
     # Medication usage
     @medication_data = @migraines
