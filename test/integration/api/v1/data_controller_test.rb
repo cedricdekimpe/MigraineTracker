@@ -191,4 +191,52 @@ class Api::V1::DataControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unauthorized
   end
+
+  test "import is all-or-nothing and reports the faulty row" do
+    import_data = {
+      data: {
+        migraines: [
+          { occurred_on: (Date.current - 200.days).iso8601, nature: "M", intensity: 3 },
+          { occurred_on: "not-a-date", nature: "M", intensity: 3 }
+        ]
+      }
+    }
+    user = users(:one)
+
+    assert_no_difference "user.migraines.count" do
+      post "/api/v1/data/import", params: import_data.to_json, headers: api_headers(authenticated_token)
+    end
+
+    assert_response :unprocessable_entity
+    assert_match(/Migraine #2/, json_response[:errors].first[:detail])
+  end
+
+  test "import rejects malformed collections" do
+    post "/api/v1/data/import",
+      params: { data: { migraines: "nope" } }.to_json,
+      headers: api_headers(authenticated_token)
+    assert_response :unprocessable_entity
+
+    post "/api/v1/data/import",
+      params: { data: { migraines: ["2020-01-01"] } }.to_json,
+      headers: api_headers(authenticated_token)
+    assert_response :unprocessable_entity
+  end
+
+  test "import ignores unknown attributes instead of mass-assigning them" do
+    user = users(:one)
+    post "/api/v1/data/import",
+      params: { data: { migraines: [{ occurred_on: (Date.current - 300.days).iso8601, nature: "M", intensity: 4, user_id: users(:two).id, id: 1 }] } }.to_json,
+      headers: api_headers(authenticated_token)
+
+    assert_response :success
+    assert user.migraines.exists?(occurred_on: Date.current - 300.days)
+    assert_not users(:two).migraines.exists?(occurred_on: Date.current - 300.days)
+  end
+
+  test "import rejects oversized payloads" do
+    big = { data: { migraines: [], padding: "x" * (Api::V1::DataController::MAX_IMPORT_BYTES + 1) } }
+    post "/api/v1/data/import", params: big.to_json, headers: api_headers(authenticated_token)
+    assert_response :payload_too_large
+  end
 end

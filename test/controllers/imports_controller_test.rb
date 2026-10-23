@@ -272,4 +272,41 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
     migraine = @user.migraines.last
     assert_equal medication.id, migraine.medication_id
   end
+
+  test "should reject a file field that is not an uploaded file" do
+    post imports_path, params: { file: "not-a-file" }
+    assert_redirected_to new_import_path
+    assert_equal I18n.t("flash.export_file_missing"), flash[:alert]
+  end
+
+  test "should reject files above the size limit" do
+    big = Rack::Test::UploadedFile.new(
+      StringIO.new("{" + " " * (ImportsController::MAX_FILE_SIZE + 1) + "}"),
+      "application/json",
+      original_filename: "big.json"
+    )
+
+    assert_no_difference "@user.migraines.count" do
+      post imports_path, params: { file: big }
+    end
+    assert_redirected_to new_import_path
+    assert_match(/too large/, flash[:alert])
+  end
+
+  test "should reject JSON that is not a backup structure" do
+    file = Rack::Test::UploadedFile.new(StringIO.new("[1, 2, 3]"), "application/json", original_filename: "x.json")
+    post imports_path, params: { file: file }
+    assert_redirected_to new_import_path
+    assert_match(/valid backup data/, flash[:alert])
+  end
+
+  test "should not leak exception details for invalid dates" do
+    export_data = { migraines: [{ occurred_on: "31/12/2020", nature: "M", intensity: 3 }] }
+    file = Rack::Test::UploadedFile.new(StringIO.new(export_data.to_json), "application/json", original_filename: "x.json")
+
+    post imports_path, params: { file: file }
+    assert_redirected_to new_import_path
+    assert_match(/Migraine #1/, flash[:alert])
+    assert_no_match(/Date::Error|invalid date\b|ActiveRecord|NoMethodError/, flash[:alert])
+  end
 end

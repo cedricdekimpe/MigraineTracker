@@ -196,6 +196,18 @@ fr:
     warning_title: "Important :"
     warning_duplicates: "Les entrées en double (basées sur la date) seront automatiquement ignorées"
     warning_format: "Seuls les fichiers JSON exportés depuis Migraine Tracker sont pris en charge"
+    errors:
+      invalid_structure: "Le fichier ne contient pas de données de sauvegarde valides."
+      too_many: "Le fichier contient trop de %{what} (maximum %{max})."
+      medications_label: "médicaments"
+      migraines_label: "migraines"
+      medication_kind: "Médicament"
+      migraine_kind: "Migraine"
+      invalid_row: "%{kind} n°%{index} : %{details}"
+      invalid_row_shape: "format inattendu"
+      invalid_name: "nom de médicament invalide"
+      invalid_date: "date invalide ou manquante (format attendu : AAAA-MM-JJ)"
+      file_too_large: "Le fichier est trop volumineux (maximum %{max})."
     
   # Flash messages
   flash:

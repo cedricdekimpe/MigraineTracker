@@ -42,62 +42,36 @@ module Api
         render json: export_data, status: :ok
       end
 
+      MAX_IMPORT_BYTES = 2.megabytes
+
       # POST /api/v1/data/import
       def import
-        import_data = params.require(:data).permit!
+        if request.content_length.to_i > MAX_IMPORT_BYTES
+          max = ActiveSupport::NumberHelper.number_to_human_size(MAX_IMPORT_BYTES)
+          return render_import_error("413", "Payload Too Large", I18n.t("import.errors.file_too_large", max: max), :payload_too_large)
+        end
+
+        raw = params.require(:data)
+        %i[medications migraines].each do |key|
+          next if raw[key].nil? || (raw[key].is_a?(Array) && raw[key].all?(ActionController::Parameters))
+
+          return render_import_error("422", "Unprocessable Entity", I18n.t("import.errors.invalid_structure"), :unprocessable_entity)
+        end
+
+        import_data = raw.permit(
+          :user_email,
+          medications: %i[name created_at],
+          migraines: %i[occurred_on nature intensity on_period medication_name created_at]
+        ).to_h
 
         # Validate email matches
-        if import_data[:user_email].present? && import_data[:user_email] != current_user.email
-          return render json: {
-            errors: [{
-              status: "422",
-              title: "Unprocessable Entity",
-              detail: "This export file does not match your account email (#{import_data[:user_email]})."
-            }]
-          }, status: :unprocessable_entity
+        if import_data["user_email"].present? && import_data["user_email"] != current_user.email
+          return render_import_error("422", "Unprocessable Entity", "This export file does not match your account email.", :unprocessable_entity)
         end
 
-        imported_medications = 0
-        imported_migraines = 0
-
-        ActiveRecord::Base.transaction do
-          # Import medications
-          if import_data[:medications].present?
-            import_data[:medications].each do |med_data|
-              med = current_user.medications.find_or_initialize_by(name: med_data[:name])
-              if med.new_record? && med.save
-                imported_medications += 1
-              end
-            end
-          end
-
-          # Import migraines
-          if import_data[:migraines].present?
-            import_data[:migraines].each do |migraine_data|
-              occurred_on = Date.parse(migraine_data[:occurred_on])
-
-              # Skip if migraine already exists for this date
-              next if current_user.migraines.exists?(occurred_on: occurred_on)
-
-              medication = nil
-              if migraine_data[:medication_name].present?
-                medication = current_user.medications.find_or_create_by(name: migraine_data[:medication_name])
-              end
-
-              migraine = current_user.migraines.new(
-                occurred_on: occurred_on,
-                nature: migraine_data[:nature],
-                intensity: migraine_data[:intensity],
-                on_period: migraine_data[:on_period] || false,
-                medication: medication
-              )
-
-              if migraine.save
-                imported_migraines += 1
-              end
-            end
-          end
-        end
+        result = DataImporter.new(current_user, import_data.merge("migraines" => import_data["migraines"] || [])).call
+        imported_medications = result.medications
+        imported_migraines = result.migraines
 
         render json: {
           data: {
@@ -113,14 +87,14 @@ module Api
             message: "Successfully imported #{imported_medications} medications and #{imported_migraines} migraines."
           }
         }, status: :ok
-      rescue JSON::ParserError, ArgumentError => e
-        render json: {
-          errors: [{
-            status: "400",
-            title: "Bad Request",
-            detail: "Invalid import data format: #{e.message}"
-          }]
-        }, status: :bad_request
+      rescue DataImporter::InvalidData => e
+        render_import_error("422", "Unprocessable Entity", e.message, :unprocessable_entity)
+      end
+
+      private
+
+      def render_import_error(status, title, detail, http_status)
+        render json: { errors: [{ status: status, title: title, detail: detail }] }, status: http_status
       end
     end
   end
