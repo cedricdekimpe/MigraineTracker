@@ -71,7 +71,7 @@ group :test do
   gem "capybara"
 end
 
-gem "devise", "~> 4.9"
+gem "devise", "~> 5.0"
 gem "devise-jwt", "~> 0.12"
 gem "rails_admin", "~> 3.3"
 gem "dartsass-sprockets", "~> 3.1"  # Modern Sass compiler for RailsAdmin SCSS
