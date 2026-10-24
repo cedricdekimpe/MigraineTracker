@@ -78,6 +78,9 @@ class PwaControllerTest < ActionDispatch::IntegrationTest
     get account_profile_path
 
     assert_select "section[data-controller=install][hidden]"
+    assert_select "section[data-controller=install] [data-install-target=button][hidden]"
+    assert_select "section[data-controller=install] [data-install-target=ios][hidden]"
+    assert_select "section[data-controller=install] [data-install-target=menu][hidden]"
   end
 
   test "sign-in remembers by default, for three months renewed at each return" do

@@ -76,6 +76,9 @@
   html:has(body[data-theme="night"]) { background-color: rgb(20 19 26); }
   body { @apply bg-page font-sans text-fg antialiased; }
 
+  /* The hidden attribute must win over a display class (flex, grid...), or a "hidden" block still shows */
+  [hidden] { display: none !important; }
+
   /* One visible focus for everything (WCAG 2.4.7), solid and at least 3:1 in both themes */
   :focus-visible { outline: 2px solid rgb(var(--focus)); outline-offset: 2px; }
   /* Placeholders are text: the muted role, never lighter (Tailwind's default grey is 2.5:1 on paper) */

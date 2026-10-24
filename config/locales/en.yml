@@ -679,6 +679,7 @@ en:
     title: "Install the app"
     button: "Install"
     ios: "In Safari: Share, then \"Add to Home Screen\"."
+    menu: "In your browser's menu: \"Install app\" or \"Add to Home screen\"."
 
   sessions:
     remember_me: "Remember me"

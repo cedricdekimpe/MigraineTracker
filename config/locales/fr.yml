@@ -778,6 +778,7 @@ fr:
     title: "Installer l'application"
     button: "Installer"
     ios: "Dans Safari : Partager, puis « Sur l'écran d'accueil »."
+    menu: "Dans le menu de votre navigateur : « Installer l'application » ou « Ajouter à l'écran d'accueil »."
 
   sessions:
     remember_me: "Se souvenir de moi"
