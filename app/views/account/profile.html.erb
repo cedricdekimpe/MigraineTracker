@@ -60,14 +60,15 @@
       <section class="mt-10 border-t border-line pt-8">
         <h2 class="text-lg font-semibold text-fg"><%= t('preferences.title') %></h2>
         <%= form_with model: current_user, scope: :user, url: account_preferences_path, method: :patch, data: { turbo: false }, class: "mt-4 space-y-4" do |form| %>
-          <div class="flex items-start gap-3">
-            <%= form.check_box :track_cycle, class: "mt-1 h-6 w-6 rounded border-line-control text-link focus:ring-focus" %>
-            <div>
-              <%= form.label :track_cycle, t('preferences.track_cycle'), class: "text-sm font-medium text-fg-secondary" %>
-              <%= render "shared/info", text: t('preferences.track_cycle_hint') %>
-            </div>
+          <%# Checkbox, label and "i" on one line; the explanation unfolds below, from the left edge %>
+          <div class="relative flex items-center gap-3">
+            <%= form.check_box :track_cycle, class: "h-6 w-6 shrink-0 rounded border-line-control text-link focus:ring-focus" %>
+            <%= form.label :track_cycle, t('preferences.track_cycle'), class: "text-sm font-medium text-fg-secondary" %>
+            <%= render "shared/info", text: t('preferences.track_cycle_hint'), row: true %>
           </div>
-          <%= form.submit t('common.save'), class: "cursor-pointer rounded-lg border border-line-control bg-surface px-4 py-2 text-sm font-medium text-fg-secondary transition hover:border-accent-400 hover:text-link" %>
+          <div class="flex justify-end">
+            <%= form.submit t('common.save'), class: "cursor-pointer rounded-lg border border-line-control bg-surface px-4 py-2 text-sm font-medium text-fg-secondary transition hover:border-accent-400 hover:text-link" %>
+          </div>
         <% end %>
       </section>
     </div>

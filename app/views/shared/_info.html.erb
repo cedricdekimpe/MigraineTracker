@@ -1,8 +1,9 @@
 <%# A small "i" that unfolds an explanation in place. Everything that is not needed at a glance goes here.
-    24px circle, 44px touch area. locals: text (String), more (optional path to "Understand my figures") %>
-<details class="group relative inline-block align-middle" data-info>
+    24px circle, 44px touch area. locals: text (String), more (optional path to "Understand my figures"), row (optional: the
+    bubble floats under the whole line, the nearest "relative" ancestor, instead of sitting in the flow) %>
+<details class="group <%= "relative" unless local_assigns[:row] %> inline-block align-middle" data-info>
   <summary class="relative inline-flex h-6 w-6 cursor-pointer list-none items-center justify-center rounded-full border border-line-control font-sans text-sm font-semibold leading-none text-fg-muted after:absolute after:-inset-2.5 after:content-[''] hover:border-fg-muted hover:text-fg [&::-webkit-details-marker]:hidden" aria-label="<%= t("info.label") %>" title="<%= t("info.label") %>">i</summary>
-  <div class="mt-2 max-w-md rounded-xl border border-line bg-surface p-3 font-sans text-sm font-normal normal-case leading-5 tracking-normal text-fg-secondary shadow-sm sm:absolute sm:left-0 sm:z-10 sm:w-80">
+  <div class="mt-2 rounded-xl border border-line bg-surface p-3 font-sans text-sm font-normal normal-case leading-5 tracking-normal text-fg-secondary shadow-sm <%= local_assigns[:row] ? "absolute inset-x-0 top-full z-10 max-w-md" : "max-w-md sm:absolute sm:left-0 sm:z-10 sm:w-80" %>">
     <%= text %>
     <% if local_assigns[:more] %>
       <%= link_to t("info.more"), more, class: "mt-2 block text-sm font-medium text-link underline" %>
