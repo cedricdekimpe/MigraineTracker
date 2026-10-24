@@ -9,7 +9,7 @@ class PwaController < ApplicationController
   skip_forgery_protection only: :service_worker
 
   # Bump when the offline or urgent pages change while no stylesheet does, so phones fetch them again
-  CACHE_REVISION = 1
+  CACHE_REVISION = 2
   ICONS = %w[/icon.png /icon-192.png /icon.svg /apple-touch-icon.png].freeze
   # The app opens on "I have a headache now", which is always in the Night theme: no white flash
   NIGHT = "#14131a"

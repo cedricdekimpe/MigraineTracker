@@ -371,4 +371,73 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     get episodes_path
     assert_select "a[href='#{now_path}']", text: /Episode in progress/
   end
+
+  # --- crises noted without network -------------------------------------------
+
+  def send_offline(*crises)
+    post now_offline_path, params: { crises: crises }, as: :json
+    response.parsed_body
+  end
+
+  def offline_crisis(at, **fields)
+    { id: "c#{at.to_i}", at: at.utc.iso8601, pain_kind: "migraine", intensity: "6", aura: nil, aura_only: nil }.merge(fields)
+  end
+
+  test "a crisis noted without network joins the journal at its own time, still going on when recent" do
+    body = travel_to(@now + 3.hours) { send_offline(offline_crisis(@now)) }
+
+    assert_equal [ [ "c#{@now.to_i}" ], 1 ], [ body["handled"], body["saved"] ]
+    assert body["location"].end_with?("/now")
+    episode = @user.episodes.order(:id).last
+    assert_equal [ Date.new(2026, 10, 24), "14:32", "migraine", 6, false, true ],
+                 [ episode.occurred_on, episode.started_time.strftime("%H:%M"), episode.pain_kind, episode.intensity, episode.aura, episode.ongoing ]
+    assert_match(/joined the journal|rejoint le journal/, flash[:notice])
+  end
+
+  test "an older one is saved as over, an aura alone as an aura" do
+    body = travel_to(@now) { send_offline(offline_crisis(@now - 2.days), offline_crisis(@now - 1.day, pain_kind: nil, intensity: nil, aura_only: "1")) }
+
+    assert_equal 2, body["saved"]
+    assert_nil body["location"]
+    old, aura = @user.episodes.order(:id).last(2)
+    assert_equal [ Date.new(2026, 10, 22), false ], [ old.occurred_on, old.ongoing ]
+    assert_equal [ true, nil, nil ], [ aura.aura, aura.pain_kind, aura.intensity ]
+  end
+
+  test "the same crisis sent twice is saved once, and forgotten by the phone both times" do
+    crisis = offline_crisis(@now - 1.day)
+    travel_to(@now) do
+      assert_difference -> { @user.episodes.count }, 1 do
+        send_offline(crisis)
+        body = send_offline(crisis)
+        assert_equal [ [ crisis[:id] ], 0 ], [ body["handled"], body["saved"] ]
+      end
+    end
+  end
+
+  test "unusable crises are forgotten without being saved" do
+    travel_to(@now) do
+      assert_no_difference -> { @user.episodes.count } do
+        body = send_offline(
+          offline_crisis(@now - 1.day, id: "no-intensity", intensity: "0"),
+          offline_crisis(@now - 1.day, id: "bad-time", at: "nonsense"),
+          offline_crisis(@now + 1.day, id: "future"),
+          offline_crisis(Time.zone.local(1899, 12, 31, 12), id: "too-old")
+        )
+        assert_equal [ %w[no-intensity bad-time future too-old], 0 ], [ body["handled"], body["saved"] ]
+        assert_nil flash[:notice]
+      end
+    end
+  end
+
+  test "crises wait on the phone while signed out, and come by 20 at most" do
+    sign_out @user
+    post now_offline_path, params: { crises: [ offline_crisis(@now) ] }, as: :json
+    assert_response :unauthorized
+
+    sign_in @user
+    crises = (1..25).map { |i| offline_crisis(@now - i.days, id: "c#{i}") }
+    body = travel_to(@now) { send_offline(*crises) }
+    assert_equal 20, body["handled"].size
+  end
 end

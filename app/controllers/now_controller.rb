@@ -94,9 +94,40 @@ class NowController < ApplicationController
     redirect_to now_path, notice: t("now.flash.cancelled")
   end
 
+  # Crises noted on the "no connection" page, sent by the phone once the network is back. Each is the
+  # same form as "J'ai mal" plus the time of the tap, saved like a guest crisis; one already in the journal
+  # is skipped. Answers which ones were handled, so the phone forgets them, and where to go next.
+  def offline
+    crises = params[:crises].is_a?(Array) ? params[:crises].first(OFFLINE_BATCH) : []
+    handled = []
+    saved = []
+
+    crises.each do |crisis|
+      next unless crisis.is_a?(ActionController::Parameters)
+
+      handled << crisis[:id].to_s.first(64)
+      at = offline_time(crisis[:at]) or next
+      attributes = GuestEpisode.build(crisis, now: at) or next
+      episode = GuestEpisode.save(attributes, current_user)
+      saved << episode if episode
+    end
+
+    flash[:notice] = t("now.offline.saved", count: saved.size) if saved.any?
+    render json: { handled: handled, saved: saved.size, location: (now_path if saved.any?(&:ongoing?)) }
+  end
+
   private
 
   TYPED_KINDS = %w[acute combination triptan gepant other].freeze
+  OFFLINE_BATCH = 20
+
+  # The phone's clock, a few minutes ahead at most
+  def offline_time(value)
+    at = Time.zone.iso8601(value.to_s)
+    [ at, Time.current ].min if at <= 5.minutes.from_now
+  rescue ArgumentError
+    nil
+  end
 
   def load_progress
     @medications = current_user.medications.active.where.not(kind: "preventive").most_used_first

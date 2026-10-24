@@ -572,6 +572,10 @@ fr:
       sign_in: "J'ai déjà un compte"
       forget: "Ne pas le garder"
       saved: "Votre épisode est enregistré. Il est en cours : dites-nous quand c'est passé."
+    offline:
+      saved:
+        one: "Une crise notée sans réseau a rejoint le journal."
+        other: "%{count} crises notées sans réseau ont rejoint le journal."
     flash:
       finished: "Épisode enregistré (%{duration})."
       cancelled: "Épisode annulé."
@@ -712,6 +716,7 @@ fr:
           - "Un cookie de session, indispensable pour rester connecté ; si vous cochez « Se souvenir de moi » (coché par défaut), un second cookie qui dure trois mois et se prolonge à chaque retour. Aucun cookie de mesure ou de publicité."
           - "Votre choix de thème (Auto, Papier, Nuit) reste dans votre navigateur."
           - "Installée sur un téléphone ou un ordinateur, l'application garde sur l'appareil ses fichiers techniques (styles, icônes) et deux pages publiques, « Pas de connexion » et « Quand consulter en urgence ». Jamais une page de votre journal."
+          - "Une crise notée sans réseau reste dans le navigateur de l'appareil jusqu'au retour du réseau, puis elle est envoyée et effacée de l'appareil."
           - "Pour bloquer les attaques sur les mots de passe, l'adresse IP et l'adresse e-mail des tentatives de connexion sont comptées pendant une heure au plus."
           - "Les journaux techniques du serveur notent les pages demandées et l'adresse IP ; vos données de santé en sont filtrées."
       purpose:
@@ -749,7 +754,8 @@ fr:
 
   offline:
     title: "Pas de connexion"
-    body: "Votre journal est en sécurité sur le serveur. Il revient dès que le réseau revient."
+    body: "Notez quand même votre crise : elle rejoindra le journal au retour du réseau."
+    noted: "Noté à %{time}. Ajouté au journal dès le retour du réseau."
     retry: "Réessayer"
     emergency: "Un signe vous inquiète ? Appelez le 112."
 
@@ -792,7 +798,7 @@ fr:
         answer: "Le lien « Rapport médecin (PDF) », dans le journal ou les statistiques, produit l'année : une page de synthèse, une page d'indicateurs et vos feuilles de calendrier, comme celles de votre neurologue."
       install:
         question: "Puis-je installer l'application sur mon téléphone ?"
-        answer: "Oui : elle s'ouvre alors comme une application, sans barre de navigateur. Sur Android, Compte › « Installer », ou le menu de Chrome › « Installer l'application » ; un appui long sur l'icône propose ensuite « J'ai mal » directement. Sur iPhone, dans Safari : Partager › « Sur l'écran d'accueil »."
+        answer: "Oui : elle s'ouvre alors comme une application, sans barre de navigateur. Sur Android, Compte › « Installer », ou le menu de Chrome › « Installer l'application » ; un appui long sur l'icône propose ensuite « J'ai mal » directement. Sur iPhone, dans Safari : Partager › « Sur l'écran d'accueil ». Sans réseau, l'application permet quand même de noter une crise : elle rejoint le journal au retour du réseau."
       export:
         question: "Comment exporter mes données ?"
         answer: "Compte › Gestion des données › « Exporter toutes les données » télécharge un fichier JSON avec tout votre journal : épisodes, médicaments et périodes de traitement, déclencheurs, jours de règles et bilans du jour."

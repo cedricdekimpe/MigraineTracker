@@ -34,14 +34,20 @@ class GuestEpisode
   def self.claim(session, user, now: Time.current)
     data = read(session)
     clear(session)
-    return unless data
+    save(data, user, now: now) if data
+  end
 
-    at = Time.zone.parse(data["at"]) or return
+  # Turns crisis attributes (as made by build) into an episode of +user+: still going on if it began
+  # less than 12 hours ago and no other is. Also used for the crises noted without network.
+  # Returns the episode, or nil when it is invalid or already in the journal (the same crisis sent twice).
+  def self.save(data, user, now: Time.current)
+    at = Time.zone.parse(data["at"].to_s) or return
+    attributes = { occurred_on: at.to_date, started_time: at.strftime("%H:%M"), aura: data["aura"] == true,
+                   pain_kind: data["pain_kind"], intensity: data["intensity"] }
+    return if user.episodes.exists?(attributes)
+
     ongoing = (now - at) < STILL_ONGOING_FOR && !user.episodes.ongoing.exists?
-    episode = user.episodes.new(
-      occurred_on: at.to_date, started_time: at.strftime("%H:%M"), ongoing: ongoing,
-      aura: data["aura"] == true, pain_kind: data["pain_kind"], intensity: data["intensity"]
-    )
+    episode = user.episodes.new(attributes.merge(ongoing: ongoing))
     episode if episode.save
   end
 end

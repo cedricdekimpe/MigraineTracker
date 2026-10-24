@@ -1,29 +1,72 @@
 <!DOCTYPE html>
-<%# Shown by the service worker when there is no network. Cached without cookies: no personal data. %>
+<%# Shown by the service worker when there is no network. Cached without cookies: nothing personal on it.
+    A crisis can still be noted: the "J'ai mal" form, kept in the browser (localStorage, "pendingCrises")
+    until a page of the app is opened online, where the offline-queue controller sends it. %>
 <html lang="<%= I18n.locale %>">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <meta name="robots" content="noindex">
     <title><%= t("offline.title") %> · Migraine Tracker</title>
-    <meta name="theme-color" content="#fbf7ef" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#14131a" media="(prefers-color-scheme: dark)">
-    <script>
-      try { var t = localStorage.getItem("theme"); if (t === "light" || t === "night") document.documentElement.dataset.theme = t } catch (e) {}
-    </script>
+    <meta name="theme-color" content="#14131a">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   </head>
-  <body class="flex min-h-screen flex-col pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]" data-offline>
-    <main class="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 px-5 py-10 pt-[max(2.5rem,env(safe-area-inset-top))]">
-      <span class="month-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-      <h1 class="font-display text-3xl font-semibold text-fg"><%= t("offline.title") %></h1>
-      <p class="text-fg-secondary"><%= t("offline.body") %></p>
-      <a href="<%= root_path %>" class="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-primary px-5 py-3 font-semibold text-primary-on"><%= t("offline.retry") %></a>
-      <p class="rounded-xl border border-line bg-surface p-4 text-sm text-fg-secondary">
+  <%# Night, like the "J'ai mal" screen it stands in for %>
+  <body class="flex min-h-screen flex-col pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]" data-theme="night" data-offline>
+    <main class="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-5 pb-[max(2.5rem,env(safe-area-inset-bottom))] pt-[max(2.5rem,env(safe-area-inset-top))]">
+      <header class="space-y-2">
+        <span class="month-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <h1 class="font-display text-3xl font-semibold text-fg"><%= t("offline.title") %></h1>
+        <p class="text-fg-secondary"><%= t("offline.body") %></p>
+      </header>
+
+      <div data-offline-form>
+        <%= render "now/form", url: now_path, default_pain_kind: "migraine" %>
+      </div>
+
+      <p class="rounded-2xl border border-line bg-surface p-4 text-lg text-fg" role="status" data-offline-noted hidden
+         data-template="<%= t("offline.noted", time: "__TIME__") %>"></p>
+
+      <a href="<%= root_path %>" class="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-line-control px-5 py-3 font-medium text-fg-secondary"><%= t("offline.retry") %></a>
+      <p class="text-sm text-fg-secondary">
         <%= t("offline.emergency") %>
         <a href="<%= urgent_path %>" class="font-medium text-link underline"><%= t("urgent.link") %></a>
       </p>
     </main>
+
+    <script>
+      (function () {
+        var KEY = "pendingCrises"
+        var wrapper = document.querySelector("[data-offline-form]")
+        var form = wrapper && wrapper.querySelector("form")
+        var noted = document.querySelector("[data-offline-noted]")
+        if (!form || !noted) return
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault()
+          var data = new FormData(form, event.submitter)
+          var crisis = {
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+            at: new Date().toISOString(),
+            pain_kind: data.get("pain_kind"),
+            intensity: data.get("intensity"),
+            aura: data.get("aura"),
+            aura_only: data.get("aura_only")
+          }
+          try {
+            var pending = JSON.parse(localStorage.getItem(KEY) || "[]")
+            pending.push(crisis)
+            localStorage.setItem(KEY, JSON.stringify(pending))
+          } catch (error) {
+            return
+          }
+          var time = new Date().toLocaleTimeString(document.documentElement.lang, { hour: "2-digit", minute: "2-digit" })
+          noted.textContent = noted.dataset.template.replace("__TIME__", time)
+          noted.hidden = false
+          wrapper.hidden = true
+        })
+      })()
+    </script>
   </body>
 </html>

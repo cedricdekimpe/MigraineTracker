@@ -88,4 +88,23 @@ class PwaControllerTest < ActionDispatch::IntegrationTest
     assert_equal 3.months, Devise.remember_for
     assert Devise.extend_remember_period
   end
+
+  test "without network the offline page still takes a crisis, in Night, with the same form" do
+    get offline_path(locale: :fr)
+
+    assert_select "body[data-theme=night][data-offline]"
+    assert_select "[data-offline-form] form input[name=pain_kind]", count: 2
+    assert_select "[data-offline-form] form button[name=intensity]", count: 10
+    assert_select "[data-offline-form] form button[name=aura_only]"
+    assert_select "[data-offline-noted][hidden][data-template*='__TIME__']"
+  end
+
+  test "signed-in pages send the crises noted offline; visitors' pages do not" do
+    get root_path(locale: :fr)
+    assert_select "body[data-controller~=offline-queue]", count: 0
+
+    sign_in users(:one)
+    get episodes_path(locale: :fr)
+    assert_select "body[data-controller~=offline-queue]"
+  end
 end
