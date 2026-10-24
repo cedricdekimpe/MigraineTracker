@@ -15,6 +15,27 @@ class TriggersControllerTest < ActionDispatch::IntegrationTest
     assert_select "li", text: /Stress/
   end
 
+  test "common examples are offered, except those already in the list" do
+    @user.triggers.destroy_all
+    @user.triggers.create!(name: "Noise")
+    get account_triggers_path(locale: :en)
+
+    assert_select "[data-examples] button", text: "Stress"
+    assert_select "[data-examples] button", text: "Bright light"
+    assert_select "[data-examples] button", text: "Noise", count: 0
+    assert_select "[data-examples] button", Trigger::EXAMPLE_KEYS.size - 1
+  end
+
+  test "one tap on an example adds it, and the default ones keep their key" do
+    @user.triggers.destroy_all
+    assert_difference "@user.triggers.count", 1 do
+      post triggers_path(locale: :en), params: { trigger: { name: "Stress" } }
+    end
+    assert_equal "stress", @user.triggers.first.key
+    get account_triggers_path(locale: :en)
+    assert_select "[data-examples] button", text: "Stress", count: 0
+  end
+
   test "create adds a trigger and rejects duplicates" do
     assert_difference "@user.triggers.count", 1 do
       post triggers_path, params: { trigger: { name: "Chocolate" } }

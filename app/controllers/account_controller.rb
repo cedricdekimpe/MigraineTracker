@@ -21,6 +21,9 @@ class AccountController < ApplicationController
 
   def triggers
     @triggers = current_user.triggers.sort_by { |trigger| trigger.display_name.downcase }
+    # Common examples not already in the list, in the language of the page
+    owned = @triggers.map { |trigger| trigger.display_name.downcase }
+    @examples = Trigger::EXAMPLE_KEYS.map { |key| I18n.t("triggers.defaults.#{key}") }.reject { |name| owned.include?(name.downcase) }
   end
 
   def update_preferences

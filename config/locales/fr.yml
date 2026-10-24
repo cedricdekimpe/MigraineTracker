@@ -197,7 +197,7 @@ fr:
     nav:
       profile: "Profil"
       medications: "Médicaments"
-      data: "Gestion des données"
+      data: "Données"
     profile_title: "Paramètres du profil"
     profile_description: "Mettez à jour votre adresse e-mail ou changez votre mot de passe"
     medications_page_title: "Mes médicaments"
@@ -383,6 +383,8 @@ fr:
       weather: "Changement de météo"
       screens: "Écrans"
       strong_smells: "Odeurs fortes"
+      bright_light: "Lumière vive"
+      noise: "Bruit"
 
   # Suggestions en un tap lors de l'ajout d'un médicament
   medication_suggestions:
@@ -536,6 +538,7 @@ fr:
     nav: "Déclencheurs"
     title: "Déclencheurs"
     name: "Nouveau déclencheur"
+    examples: "Exemples courants"
     confirm_delete: "Supprimer %{name} ? Il est aussi retiré de vos épisodes passés."
 
   preferences:

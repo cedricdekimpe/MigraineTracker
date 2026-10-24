@@ -3,6 +3,8 @@ class Trigger < ApplicationRecord
   # The ones the evidence points to (stress and its let-down, sleep, fasting, caffeine, weather, alcohol
   # by report); the daily check-in covers sleep, stress, meals and caffeine day by day.
   DEFAULT_KEYS = %w[stress lack_of_sleep alcohol skipped_meal caffeine weather].freeze
+  # Offered as one-tap examples on the triggers page, with a few more that people often report
+  EXAMPLE_KEYS = (DEFAULT_KEYS + %w[screens strong_smells bright_light noise]).freeze
 
   belongs_to :user
   has_many :episode_triggers, dependent: :destroy

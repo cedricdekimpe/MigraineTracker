@@ -197,7 +197,7 @@ en:
     nav:
       profile: "Profile"
       medications: "Medications"
-      data: "Data Management"
+      data: "Data"
     profile_title: "Profile Settings"
     profile_description: "Update your email address or change your password"
     medications_page_title: "My Medications"
@@ -335,6 +335,8 @@ en:
       weather: "Weather change"
       screens: "Screens"
       strong_smells: "Strong smells"
+      bright_light: "Bright light"
+      noise: "Noise"
 
   # One-tap suggestions when adding a medication
   medication_suggestions:
@@ -437,6 +439,7 @@ en:
     nav: "Triggers"
     title: "Triggers"
     name: "New trigger"
+    examples: "Common examples"
     confirm_delete: "Delete %{name}? It is removed from your past episodes too."
 
   preferences:

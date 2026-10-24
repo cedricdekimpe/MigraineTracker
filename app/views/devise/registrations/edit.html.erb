@@ -115,35 +115,21 @@
 
 <%# Danger Zone - Account Deletion %>
 <section class="mx-auto mt-8 w-full max-w-4xl" data-controller="account-deletion" data-account-deletion-confirmation-phrase-value="<%= t('account.delete_confirmation_phrase') %>">
-  <div class="rounded-2xl border border-red-200 bg-red-50 p-8">
-    <header class="mb-6">
-      <h2 class="flex items-center gap-2 text-xl font-semibold text-red-900">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-        </svg>
-        <%= t('account.danger_zone_title') %>
-      </h2>
-    </header>
-
-    <div class="rounded-xl border border-red-200 bg-surface p-6">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h3 class="font-medium text-red-900"><%= t('account.delete_account_title') %></h3>
-          <p class="mt-1 text-sm text-red-600"><%= t('account.delete_account_warning') %></p>
-          <p class="mt-2 text-sm text-fg-secondary">
-            <%= t('account.data_to_delete') %>
-            <strong><%= t('account.migraines_count', count: current_user.episodes.count) %></strong>,
-            <strong><%= t('account.medications_count', count: current_user.medications.count) %></strong>,
-            <%= t('account.rest_of_journal') %>
-          </p>
-        </div>
-        <button type="button" 
-                data-action="click->account-deletion#open"
-                class="shrink-0 rounded-lg border border-red-300 bg-surface px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 hover:border-red-400">
-          <%= t('account.delete_my_account') %>
-        </button>
-      </div>
-    </div>
+  <%# One tinted card: the warning and the button directly in it %>
+  <div class="rounded-2xl border border-red-300 bg-over-surface p-5 sm:p-8">
+    <h2 class="text-xl font-semibold text-over-text"><%= t('account.danger_zone_title') %></h2>
+    <h3 class="mt-4 font-medium text-over-text"><%= t('account.delete_account_title') %></h3>
+    <p class="mt-1 text-sm text-over-text"><%= t('account.delete_account_warning') %></p>
+    <p class="mt-2 text-sm text-over-text">
+      <%= t('account.data_to_delete') %>
+      <strong><%= t('account.migraines_count', count: current_user.episodes.count) %></strong>,
+      <strong><%= t('account.medications_count', count: current_user.medications.count) %></strong>,
+      <%= t('account.rest_of_journal') %>
+    </p>
+    <button type="button" data-action="click->account-deletion#open"
+            class="mt-4 min-h-11 w-full cursor-pointer rounded-lg border border-red-400 bg-surface px-4 py-2 text-sm font-semibold text-over-text transition hover:bg-surface-soft sm:w-auto">
+      <%= t('account.delete_my_account') %>
+    </button>
   </div>
 
   <%# Account Deletion Modal %>

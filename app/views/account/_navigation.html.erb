@@ -1,5 +1,5 @@
-<%# Account navigation: a scrolling row of tabs on phones, a sidebar from lg %>
-<nav class="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:pb-0">
+<%# Account navigation: tabs that wrap onto a second line on phones (nothing hidden off-screen), a sidebar from lg %>
+<nav class="flex flex-wrap gap-1 lg:flex-col">
   <%= link_to account_profile_path, 
       class: "flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-xl px-3 py-2 text-sm font-medium transition lg:gap-3 #{current_page?(account_profile_path) ? 'bg-ok-surface text-link' : 'text-fg-secondary hover:bg-page hover:text-fg'}" do %>
     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,7 +32,7 @@
     <%= t('account.nav.data') %>
   <% end %>
 
-  <%= button_to destroy_user_session_path, method: :delete, form: { class: "shrink-0 lg:mt-4 lg:border-t lg:border-line lg:pt-4" },
+  <%= button_to destroy_user_session_path, method: :delete, form: { class: "lg:mt-4 lg:border-t lg:border-line lg:pt-4" },
         class: "flex min-h-11 w-full items-center gap-2 whitespace-nowrap rounded-xl px-3 py-2 text-sm font-medium text-fg-secondary transition hover:bg-surface-soft hover:text-fg lg:gap-3" do %>
     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/>
