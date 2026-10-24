@@ -3,7 +3,7 @@
 
 # This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
 # docker build -t my_migraine_manager .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name my_migraine_manager my_migraine_manager
+# docker run -d -p 80:80 -e SECRET_KEY_BASE=<a long random value> --name my_migraine_manager my_migraine_manager
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
@@ -55,13 +55,11 @@ RUN test "${RUBY_VERSION}" = "$(sed 's/ruby-//' .ruby-version)" || (echo "RUBY_V
 # -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
-RUN --mount=type=secret,id=RAILS_MASTER_KEY \
-  export RAILS_MASTER_KEY="$(cat /run/secrets/RAILS_MASTER_KEY)" && \
-  SECRET_KEY_BASE_DUMMY=1 ./bin/rails tailwindcss:build
+# No credentials are needed to build: the app reads nothing from them, and the runtime key
+# (SECRET_KEY_BASE) is only given to the running container.
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails tailwindcss:build
 
-RUN --mount=type=secret,id=RAILS_MASTER_KEY \
-  export RAILS_MASTER_KEY="$(cat /run/secrets/RAILS_MASTER_KEY)" && \
-  SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 # Final stage for app image
 FROM base

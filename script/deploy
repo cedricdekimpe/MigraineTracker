@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+# Deploys with Kamal. The secret comes from a file of KEY=VALUE lines, read literally:
+# script/deploy [kamal arguments, default: deploy]
+file = ENV.fetch("APP_ENV_FILE", File.join(Dir.home, ".config", "migrainetracker", "app.env"))
+abort "Missing #{file} (SECRET_KEY_BASE)" unless File.file?(file)
+
+File.foreach(file) do |line|
+  key, sep, value = line.chomp.partition("=")
+  ENV[key] = value if sep == "=" && key.match?(/\A[A-Z][A-Z0-9_]*\z/)
+end
+abort "SECRET_KEY_BASE is empty in #{file}" if ENV["SECRET_KEY_BASE"].to_s.empty?
+
+args = ARGV.empty? ? [ "deploy" ] : ARGV
+exec("kamal", *args)

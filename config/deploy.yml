@@ -29,18 +29,10 @@ registry:
   # Alternatives: hub.docker.com / registry.digitalocean.com / ghcr.io / ...
   server: localhost:5555
 
-  # Needed for authenticated registries.
-  username:
-    - KAMAL_REGISTRY_USERNAME
-  # 
-  # Always use an access token rather than real password when possible.
-  password:
-    - KAMAL_REGISTRY_PASSWORD
-
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 env:
   secret:
-    - RAILS_MASTER_KEY
+    - SECRET_KEY_BASE
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
@@ -88,12 +80,10 @@ builder:
   # # Pass arguments and secrets to the Docker build process
   # args:
   #   RUBY_VERSION: ruby-3.4.11
-  secrets:
-    - RAILS_MASTER_KEY
 
-# Use a different ssh user than root
-# ssh:
-#   user: app
+# The server is reached as "deploy" (docker group, no sudo)
+ssh:
+  user: <%= ENV.fetch("DEPLOY_USER", "deploy") %>
 
 # Use accessory services (secrets come from .kamal/secrets).
 # accessories:
