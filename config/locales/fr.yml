@@ -695,7 +695,7 @@ fr:
   privacy:
     title: "Politique de confidentialité"
     description: "Ce que Migraine Tracker conserve, pourquoi, combien de temps, avec qui, et vos droits."
-    updated: "Dernière mise à jour : 23 octobre 2026"
+    updated: "Dernière mise à jour : 24 octobre 2026"
     intro: "Migraine Tracker conserve uniquement ce que vous y notez. Il n'y a ni publicité, ni pistage, ni script, police ou outil de mesure chargé depuis un autre site."
     sections:
       data:
@@ -709,8 +709,9 @@ fr:
       technical:
         title: "Cookies et données techniques"
         points:
-          - "Un cookie de session, indispensable pour rester connecté ; si vous cochez « Se souvenir de moi », un second cookie qui dure deux semaines. Aucun cookie de mesure ou de publicité."
+          - "Un cookie de session, indispensable pour rester connecté ; si vous cochez « Se souvenir de moi » (coché par défaut), un second cookie qui dure trois mois et se prolonge à chaque retour. Aucun cookie de mesure ou de publicité."
           - "Votre choix de thème (Auto, Papier, Nuit) reste dans votre navigateur."
+          - "Installée sur un téléphone ou un ordinateur, l'application garde sur l'appareil ses fichiers techniques (styles, icônes) et deux pages publiques, « Pas de connexion » et « Quand consulter en urgence ». Jamais une page de votre journal."
           - "Pour bloquer les attaques sur les mots de passe, l'adresse IP et l'adresse e-mail des tentatives de connexion sont comptées pendant une heure au plus."
           - "Les journaux techniques du serveur notent les pages demandées et l'adresse IP ; vos données de santé en sont filtrées."
       purpose:
@@ -746,6 +747,21 @@ fr:
     contact_address_label: "Responsable"
     contact_address: "[Nom, ville, pays]"
 
+  offline:
+    title: "Pas de connexion"
+    body: "Votre journal est en sécurité sur le serveur. Il revient dès que le réseau revient."
+    retry: "Réessayer"
+    emergency: "Un signe vous inquiète ? Appelez le 112."
+
+  install:
+    title: "Installer l'application"
+    button: "Installer"
+    ios: "Dans Safari : Partager, puis « Sur l'écran d'accueil »."
+
+  sessions:
+    remember_me: "Se souvenir de moi"
+    forgot_password: "Mot de passe oublié ?"
+
   faq:
     title: "Questions fréquentes"
     subtitle: "Utiliser Migraine Tracker, gérer vos données, protéger votre vie privée."
@@ -774,6 +790,9 @@ fr:
       report:
         question: "Comment préparer ma consultation ?"
         answer: "Le lien « Rapport médecin (PDF) », dans le journal ou les statistiques, produit l'année : une page de synthèse, une page d'indicateurs et vos feuilles de calendrier, comme celles de votre neurologue."
+      install:
+        question: "Puis-je installer l'application sur mon téléphone ?"
+        answer: "Oui : elle s'ouvre alors comme une application, sans barre de navigateur. Sur Android, Compte › « Installer », ou le menu de Chrome › « Installer l'application » ; un appui long sur l'icône propose ensuite « J'ai mal » directement. Sur iPhone, dans Safari : Partager › « Sur l'écran d'accueil »."
       export:
         question: "Comment exporter mes données ?"
         answer: "Compte › Gestion des données › « Exporter toutes les données » télécharge un fichier JSON avec tout votre journal : épisodes, médicaments et périodes de traitement, déclencheurs, jours de règles et bilans du jour."

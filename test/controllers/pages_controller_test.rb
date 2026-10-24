@@ -78,7 +78,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     get faq_path(locale: :fr)
     assert_response :success
     assert_select "[data-faq-section]", 3
-    assert_select "[data-faq] details", 12
+    assert_select "[data-faq] details", 13
     assert_match(/J&#39;ai mal|J'ai mal/, response.body)
     assert_no_match(/Nouvelle entrée|jour de la semaine|Enregistrer la migraine/, response.body)
     assert_select "a[href=?]", privacy_path(locale: :fr, anchor: "contact")
@@ -86,7 +86,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
     data = JSON.parse(css_select("script[type='application/ld+json']").last.text)
     assert_equal "FAQPage", data["@type"]
-    assert_equal 12, data["mainEntity"].size
+    assert_equal 13, data["mainEntity"].size
     assert_equal "Comment noter une crise ?", data["mainEntity"].first["name"]
   end
 

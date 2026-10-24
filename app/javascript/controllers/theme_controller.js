@@ -28,5 +28,22 @@ export default class extends Controller {
     this.buttonTargets.forEach((button) => {
       button.setAttribute("aria-pressed", String(button.dataset.themeValueParam === current))
     })
+    this.syncBrowserBar(current)
+  }
+
+  // The phone's status bar (and the installed app's title bar) takes the colour of the pinned theme;
+  // in "auto" each meta keeps its own media query. The crisis screen has a single Night meta, untouched.
+  syncBrowserBar(current) {
+    const metas = document.querySelectorAll('meta[name="theme-color"][data-theme-color]')
+    metas.forEach((meta) => {
+      meta.dataset.media ||= meta.getAttribute("media")
+      if (current === "auto") {
+        meta.setAttribute("media", meta.dataset.media)
+      } else if (meta.dataset.themeColor === current) {
+        meta.removeAttribute("media")
+      } else {
+        meta.setAttribute("media", "not all")
+      }
+    })
   }
 }

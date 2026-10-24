@@ -596,7 +596,7 @@ en:
   privacy:
     title: "Privacy policy"
     description: "What Migraine Tracker keeps, why, for how long, with whom, and your rights."
-    updated: "Last updated: 23 October 2026"
+    updated: "Last updated: 24 October 2026"
     intro: "Migraine Tracker keeps only what you write in it. There is no advertising, no tracking, and no script, font or analytics tool loaded from another site."
     sections:
       data:
@@ -610,8 +610,9 @@ en:
       technical:
         title: "Cookies and technical data"
         points:
-          - "A session cookie, needed to stay signed in; if you tick \"Remember me\", a second cookie that lasts two weeks. No analytics or advertising cookie."
+          - "A session cookie, needed to stay signed in; if you tick \"Remember me\" (ticked by default), a second cookie that lasts three months and is renewed each time you come back. No analytics or advertising cookie."
           - "Your theme choice (Auto, Paper, Night) stays in your browser."
+          - "Installed on a phone or a computer, the app keeps its technical files (styles, icons) on the device, plus two public pages, \"No connection\" and \"When to seek urgent care\". Never a page of your journal."
           - "To block attacks on passwords, the IP address and email address of sign-in attempts are counted for one hour at most."
           - "The server's technical logs record the pages requested and the IP address; your health data is filtered out of them."
       purpose:
@@ -647,6 +648,21 @@ en:
     contact_address_label: "Controller"
     contact_address: "[Name, city, country]"
 
+  offline:
+    title: "No connection"
+    body: "Your journal is safe on the server. It comes back as soon as the network does."
+    retry: "Try again"
+    emergency: "A sign worries you? Call 112."
+
+  install:
+    title: "Install the app"
+    button: "Install"
+    ios: "In Safari: Share, then \"Add to Home Screen\"."
+
+  sessions:
+    remember_me: "Remember me"
+    forgot_password: "Forgot password?"
+
   faq:
     title: "Frequently asked questions"
     subtitle: "Using Migraine Tracker, managing your data, protecting your privacy."
@@ -675,6 +691,9 @@ en:
       report:
         question: "How do I prepare my appointment?"
         answer: "The \"Doctor report (PDF)\" link, in the journal or the statistics, produces the year: a summary page, an indicators page and your calendar sheets, like your neurologist's."
+      install:
+        question: "Can I install the app on my phone?"
+        answer: "Yes: it then opens like an app, without the browser bar. On Android, Account › \"Install\", or Chrome's menu › \"Install app\"; a long press on the icon then offers \"I have a headache\" directly. On iPhone, in Safari: Share › \"Add to Home Screen\"."
       export:
         question: "How do I export my data?"
         answer: "Account › Data management › \"Export all data\" downloads a JSON file with your whole journal: episodes, medications and treatment periods, triggers, period days and daily check-ins."

@@ -1,0 +1,61 @@
+// Migraine Tracker service worker.
+// It keeps the app's own files (styles, icons) and two public pages, "offline" and "when to seek urgent
+// care", nothing else: no page of the journal is ever cached, so no health data stays on the device
+// through it and signing out has nothing to wipe.
+const VERSION = <%= raw @version.to_json %>
+const CACHE = `migraine-tracker-${VERSION}`
+const OFFLINE_PAGES = <%= raw @offline_pages.to_json %>
+const CACHED_PAGES = <%= raw @cached_pages.to_json %>
+const CACHED_FILES = <%= raw @cached_files.to_json %>
+
+self.addEventListener("install", (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE)
+    // Fetched without cookies: the cached pages are the ones a visitor sees, never a signed-in page
+    await cache.addAll([...CACHED_PAGES, ...CACHED_FILES].map((url) => new Request(url, { credentials: "omit" })))
+    await self.skipWaiting()
+  })())
+})
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    const names = await caches.keys()
+    await Promise.all(names.filter((name) => name.startsWith("migraine-tracker-") && name !== CACHE).map((name) => caches.delete(name)))
+    await self.clients.claim()
+  })())
+})
+
+self.addEventListener("fetch", (event) => {
+  const request = event.request
+  if (request.method !== "GET") return
+
+  const url = new URL(request.url)
+  if (url.origin !== self.location.origin) return
+
+  // Pages, including Turbo visits: always from the network; the offline page when there is none
+  if (request.mode === "navigate" || (request.headers.get("Accept") || "").includes("text/html")) {
+    event.respondWith(fetch(request).catch(() => withoutNetwork(url)))
+    return
+  }
+
+  // Asset file names carry a digest of their content: a cached copy is never stale
+  if (url.pathname.startsWith("/assets/") || CACHED_FILES.includes(url.pathname)) {
+    event.respondWith(cacheFirst(request))
+  }
+})
+
+async function withoutNetwork(url) {
+  const cache = await caches.open(CACHE)
+  const locale = url.pathname.startsWith("/en") ? "en" : "fr"
+  return (await cache.match(url.pathname)) || (await cache.match(OFFLINE_PAGES[locale])) || Response.error()
+}
+
+async function cacheFirst(request) {
+  const cache = await caches.open(CACHE)
+  const cached = await cache.match(request)
+  if (cached) return cached
+
+  const response = await fetch(request)
+  if (response.ok) cache.put(request, response.clone())
+  return response
+}

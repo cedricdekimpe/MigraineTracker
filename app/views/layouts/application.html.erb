@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title><%= seo_title(content_for(:title)) %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     
     <%# SEO Meta Tags %>
     <meta name="description" content="<%= seo_description %>">
@@ -48,10 +48,16 @@
     
     <%# Mobile App Meta Tags %>
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Migraine">
     <meta name="application-name" content="<%= t('seo.site_name', default: 'Migraine Tracker') %>">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#fbf7ef" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#14131a" media="(prefers-color-scheme: dark)">
+    <%# The crisis screen is always Night; elsewhere the bar follows the system, or the pinned theme (theme controller) %>
+    <% if controller_name == "now" %>
+      <meta name="theme-color" content="#14131a">
+    <% else %>
+      <meta name="theme-color" content="#fbf7ef" media="(prefers-color-scheme: light)" data-theme-color="light">
+      <meta name="theme-color" content="#14131a" media="(prefers-color-scheme: dark)" data-theme-color="night">
+    <% end %>
     
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -81,8 +87,8 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="flex min-h-screen flex-col" data-controller="theme" <%= 'data-theme=night' if controller_name == 'now' %>>
-    <header class="border-b border-line bg-surface/80">
+  <body class="flex min-h-screen flex-col pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]" data-controller="theme" <%= 'data-theme=night' if controller_name == 'now' %>>
+    <header class="border-b border-line bg-surface/80 pt-[env(safe-area-inset-top)]">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
         <%= link_to root_path, class: "flex min-w-0 items-center gap-3" do %>
           <span class="month-dots shrink-0" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -117,7 +123,7 @@
       <%= yield %>
     </main>
 
-    <footer class="border-t border-line <%= 'pb-24 md:pb-0' if user_signed_in? %>">
+    <footer class="border-t border-line <%= user_signed_in? ? 'pb-[var(--tab-bar)] md:pb-0' : 'pb-[env(safe-area-inset-bottom)]' %>">
       <div class="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-5 text-xs text-fg-muted sm:flex-row sm:items-center sm:justify-between">
         <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
           <span>© <%= Time.current.year %> Migraine Tracker</span>

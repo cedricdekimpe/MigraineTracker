@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<%# Shown by the service worker when there is no network. Cached without cookies: no personal data. %>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="robots" content="noindex">
+    <title><%= t("offline.title") %> · Migraine Tracker</title>
+    <meta name="theme-color" content="#fbf7ef" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#14131a" media="(prefers-color-scheme: dark)">
+    <script>
+      try { var t = localStorage.getItem("theme"); if (t === "light" || t === "night") document.documentElement.dataset.theme = t } catch (e) {}
+    </script>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  </head>
+  <body class="flex min-h-screen flex-col pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]" data-offline>
+    <main class="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 px-5 py-10 pt-[max(2.5rem,env(safe-area-inset-top))]">
+      <span class="month-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <h1 class="font-display text-3xl font-semibold text-fg"><%= t("offline.title") %></h1>
+      <p class="text-fg-secondary"><%= t("offline.body") %></p>
+      <a href="<%= root_path %>" class="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-primary px-5 py-3 font-semibold text-primary-on"><%= t("offline.retry") %></a>
+      <p class="rounded-xl border border-line bg-surface p-4 text-sm text-fg-secondary">
+        <%= t("offline.emergency") %>
+        <a href="<%= urgent_path %>" class="font-medium text-link underline"><%= t("urgent.link") %></a>
+      </p>
+    </main>
+  </body>
+</html>

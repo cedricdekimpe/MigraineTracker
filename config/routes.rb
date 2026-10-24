@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  # Installable app (add to home screen); the manifest is rendered from app/views/pwa
-  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest, defaults: { format: :json }
+  # Installable app: the service worker sits at the root so that it covers both languages
+  get "service-worker" => "pwa#service_worker", as: :pwa_service_worker, defaults: { format: :js }
 
   # Sitemap (no locale scope, but accessible from any locale)
   get 'sitemap.xml', to: 'sitemap#index', format: :xml, as: :sitemap
@@ -29,9 +29,9 @@ Rails.application.routes.draw do
     # Can be used by load balancers and uptime monitors to verify that the app is live.
     get "up" => "rails/health#show", as: :rails_health_check
 
-    # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-    # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-    # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+    # Installable app: manifest and offline page in the visitor's language
+    get "manifest" => "pwa#manifest", as: :pwa_manifest, defaults: { format: :json }
+    get "offline" => "pwa#offline", as: :offline
 
     # "I have a headache now"
     get "now", to: "now#show", as: :now

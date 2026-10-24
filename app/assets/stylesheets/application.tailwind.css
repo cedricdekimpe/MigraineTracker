@@ -63,7 +63,7 @@
     /* The month panel of the statistics: tinted in Papier, plain surface in Nuit (a dark tint reads muddy) */
     --panel-amber: var(--amber-100); --panel-rose: var(--rose-100); --panel-sky: var(--sky-100);
     /* Space kept under the content on phones for the bottom tab bar */
-    --tab-bar: 6rem;
+    --tab-bar: calc(6rem + env(safe-area-inset-bottom));
   }
 
   /* Nuit: automatic with the system, unless the user pinned "Papier" (data-theme="light") */

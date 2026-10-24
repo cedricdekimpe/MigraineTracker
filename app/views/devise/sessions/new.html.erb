@@ -23,16 +23,17 @@
       <% if devise_mapping.rememberable? %>
         <div class="flex items-center justify-between text-sm">
           <label class="flex items-center gap-2 text-fg-secondary">
-            <%= form.check_box :remember_me, class: "h-6 w-6 rounded border-line-control text-link focus:ring-focus" %>
-            <span>Remember me</span>
+            <%# Ticked by default: the journal is meant to live on a personal phone %>
+            <%= form.check_box :remember_me, { checked: true, class: "h-6 w-6 rounded border-line-control text-link focus:ring-focus" } %>
+            <span><%= t("sessions.remember_me") %></span>
           </label>
           <% if devise_mapping.recoverable? %>
-            <%= link_to "Forgot password?", new_password_path(resource_name), class: "font-medium text-link hover:text-accent-800" %>
+            <%= link_to t("sessions.forgot_password"), new_password_path(resource_name), class: "font-medium text-link hover:text-accent-800" %>
           <% end %>
         </div>
       <% elsif devise_mapping.recoverable? %>
         <div class="text-right text-sm">
-          <%= link_to "Forgot password?", new_password_path(resource_name), class: "font-medium text-link hover:text-accent-800" %>
+          <%= link_to t("sessions.forgot_password"), new_password_path(resource_name), class: "font-medium text-link hover:text-accent-800" %>
         </div>
       <% end %>
 
