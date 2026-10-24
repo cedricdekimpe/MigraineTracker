@@ -1,6 +1,6 @@
 <% if resource.errors.any? %>
   <div class="rounded-lg bg-over-surface px-4 py-3 text-left text-sm text-over-text" role="alert">
-    <p class="font-semibold">We could not save your changes:</p>
+    <p class="font-semibold"><%= t("auth.errors_title") %></p>
     <ul class="mt-2 list-disc space-y-1 pl-5">
       <% resource.errors.full_messages.each do |message| %>
         <li><%= message %></li>

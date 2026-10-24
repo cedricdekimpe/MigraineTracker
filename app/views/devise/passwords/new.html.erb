@@ -1,0 +1,25 @@
+<% content_for :title, t("auth.forgot_title") %>
+
+<section class="mx-auto w-full max-w-md">
+  <div class="rounded-2xl border border-line bg-surface p-8">
+    <h1 class="text-2xl font-semibold text-fg"><%= t("auth.forgot_title") %></h1>
+    <p class="mt-2 text-sm text-fg-muted"><%= t("auth.forgot_intro") %></p>
+
+    <div class="mt-6">
+      <%= render "devise/shared/error_messages" %>
+    </div>
+
+    <%= form_with model: resource, scope: resource_name, url: password_path(resource_name), method: :post, data: { turbo: false }, html: { class: "mt-6 space-y-5" } do |form| %>
+      <div class="space-y-2">
+        <%= form.label :email, t("auth.email"), class: "block text-sm font-medium text-fg-secondary" %>
+        <%= form.email_field :email, autofocus: true, autocomplete: "email", class: "block w-full rounded-lg border border-line-control px-3 py-2 text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus" %>
+      </div>
+
+      <%= form.submit t("auth.forgot_submit"), class: "w-full cursor-pointer rounded-lg bg-primary px-4 py-2 text-base font-semibold text-primary-on transition hover:bg-primary-hover" %>
+    <% end %>
+
+    <div class="mt-6 text-center text-sm">
+      <%= link_to t("auth.back_to_sign_in"), new_session_path(resource_name), class: "font-medium text-link hover:text-accent-800" %>
+    </div>
+  </div>
+</section>

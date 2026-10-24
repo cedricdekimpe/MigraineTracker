@@ -302,6 +302,8 @@ fr:
   # Form errors
   errors:
     form_title: "Veuillez corriger les erreurs suivantes :"
+    messages:
+      confirmation: "ne concorde pas avec le mot de passe"
     
   # Common
   common:
@@ -779,6 +781,31 @@ fr:
     button: "Installer"
     ios: "Dans Safari : Partager, puis « Sur l'écran d'accueil »."
     menu: "Dans le menu de votre navigateur : « Installer l'application » ou « Ajouter à l'écran d'accueil »."
+
+  auth:
+    sign_in: "Se connecter"
+    welcome_back: "Bon retour"
+    sign_in_intro: "Connectez-vous pour continuer votre journal."
+    email: "E-mail"
+    password: "Mot de passe"
+    password_confirmation: "Confirmation du mot de passe"
+    new_password: "Nouveau mot de passe"
+    need_account: "Pas encore de compte ?"
+    create_one: "En créer un"
+    create_title: "Créer un compte"
+    create_intro: "Notez vos crises, vos traitements et leurs effets."
+    create_submit: "Créer mon compte"
+    already_registered: "Déjà inscrit ?"
+    min_characters:
+      one: "1 caractère minimum"
+      other: "%{count} caractères minimum"
+    errors_title: "Corrigez ceci pour continuer :"
+    forgot_title: "Mot de passe oublié"
+    forgot_intro: "Indiquez votre e-mail : nous vous envoyons un lien pour en choisir un nouveau."
+    forgot_submit: "Envoyer le lien"
+    back_to_sign_in: "Retour à la connexion"
+    reset_title: "Nouveau mot de passe"
+    reset_submit: "Changer mon mot de passe"
 
   sessions:
     remember_me: "Se souvenir de moi"
