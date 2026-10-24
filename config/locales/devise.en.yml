@@ -20,7 +20,11 @@ en:
       confirmation_instructions:
         subject: "Confirmation instructions"
       reset_password_instructions:
-        subject: "Reset password instructions"
+        subject: "Reset your Migraine Tracker password"
+        greeting: "Hello,"
+        instruction: "Someone asked to change the password of your Migraine Tracker account. You can do it with this link, which works for a few hours:"
+        action: "Change my password"
+        ignore: "If it was not you, ignore this message: your password stays the same."
       unlock_instructions:
         subject: "Unlock instructions"
       email_changed:
