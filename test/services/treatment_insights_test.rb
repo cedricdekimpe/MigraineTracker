@@ -128,4 +128,18 @@ class TreatmentInsightsTest < ActiveSupport::TestCase
     assert_nil insights.menstrual_link
     assert_empty insights.acute_rows
   end
+
+  test "nausea is summed over the painful attacks that answered, from three of them" do
+    attack(@today - 5).update!(nausea: "none")
+    attack(@today - 4).update!(nausea: "nausea")
+    assert_nil insights.nausea, "two answers are too few"
+
+    attack(@today - 3).update!(nausea: "vomiting")
+    attack(@today - 2) # not answered: left out
+    aura_only = @user.episodes.create!(occurred_on: @today - 1, aura: true, nausea: "nausea")
+
+    summary = insights.nausea
+    assert_equal [ 3, 2, 1 ], [ summary.rated, summary.with_nausea, summary.vomiting ]
+    assert aura_only.persisted?
+  end
 end

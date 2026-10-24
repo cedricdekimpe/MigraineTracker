@@ -12,6 +12,13 @@
   </section>
 <% end %>
 
+<% if (nausea = insights.nausea) %>
+  <p class="text-sm text-fg" data-nausea-summary>
+    <%= t("stats.treatments.nausea", with: nausea.with_nausea, rated: nausea.rated, vomiting: nausea.vomiting) %>
+    <%= render "shared/info", text: t("stats.treatments.nausea_hint"), more: numbers_path(anchor: "nausea") %>
+  </p>
+<% end %>
+
 <% if acute_rows.any? %>
   <section data-acute-efficacy>
     <h2 class="text-2xl font-semibold text-fg"><%= t("stats.treatments.acute_title") %> <%= render "shared/info", text: t("stats.treatments.acute_hint"), more: numbers_path(anchor: "acute") %></h2>

@@ -124,7 +124,7 @@ module Reports
 
     # Only when there is something to read: treatments taken, a preventive, a pattern worth a line.
     def indicators?
-      insights.acute_rows.any? || insights.preventive_rows.any? || @overview.chronic_streak.positive? || menstrual_link
+      insights.acute_rows.any? || insights.preventive_rows.any? || insights.nausea || @overview.chronic_streak.positive? || menstrual_link
     end
 
     def insights
@@ -148,6 +148,10 @@ module Reports
       pdf.fill_color INK
       pdf.text t("severe_line", total: severe, threshold: MonthlyOverview::SEVERE_FROM), size: 10
       pdf.text(t(@overview.chronic_streak >= 3 ? "chronic_sustained" : "chronic_month"), size: 10, style: :bold, color: RED) if @overview.chronic_streak.positive?
+      if (nausea = insights.nausea)
+        pdf.fill_color INK
+        pdf.text t("nausea_line", with: nausea.with_nausea, rated: nausea.rated, vomiting: nausea.vomiting), size: 10
+      end
       pdf.move_down 10
 
       draw_acute_table(pdf) if insights.acute_rows.any?

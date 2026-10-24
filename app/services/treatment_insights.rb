@@ -20,6 +20,9 @@ class TreatmentInsights
       !drop.nil? && drop >= RESPONDER_DROP
     end
   end
+  # Nausea over the attacks where it was answered; only worth a line from NAUSEA_MIN_RATED attacks
+  NauseaSummary = Struct.new(:rated, :with_nausea, :vomiting, keyword_init: true)
+  NAUSEA_MIN_RATED = 3
   MenstrualLink = Struct.new(:cycles, :with_attack, :outside_attacks, keyword_init: true) do
     def pattern?
       cycles >= 3 && with_attack >= 2
@@ -51,6 +54,15 @@ class TreatmentInsights
         verdict: verdict(intakes)
       )
     end.compact.sort_by { |row| [-row.intakes, row.medication.name.downcase] }
+  end
+
+  def nausea
+    return @nausea if defined?(@nausea)
+
+    values = @user.episodes.where(occurred_on: @since..@through).where.not(pain_kind: nil).where.not(nausea: nil).pluck(:nausea)
+    @nausea = if values.size >= NAUSEA_MIN_RATED
+      NauseaSummary.new(rated: values.size, with_nausea: values.count { |value| value != "none" }, vomiting: values.count("vomiting"))
+    end
   end
 
   # Median minutes between the start of an attack and its first treatment, with how many attacks it rests on.

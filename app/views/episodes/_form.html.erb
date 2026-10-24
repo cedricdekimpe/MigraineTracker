@@ -47,6 +47,18 @@
   </fieldset>
 
   <fieldset class="space-y-3">
+    <legend class="text-sm font-medium text-fg-secondary"><%= t("episodes.nausea") %></legend>
+    <div class="grid grid-cols-3 gap-2">
+      <% Episode::NAUSEAS.each do |value| %>
+        <label>
+          <%= form.radio_button :nausea, value, checked: episode.nausea == value, class: "peer sr-only" %>
+          <span class="<%= tile %>"><%= t("episodes.nausea_#{value}") %></span>
+        </label>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <fieldset class="space-y-3">
     <legend class="flex w-full items-center justify-between text-sm font-medium text-fg-secondary">
       <%= t("episodes.medication") %>
       <%= link_to t("episodes.manage_medications"), account_medications_path, class: "text-xs font-medium text-link hover:text-accent-800" %>

@@ -147,6 +147,7 @@ class DataImporter
       aura: ActiveModel::Type::Boolean.new.cast(row["aura"]) || false,
       pain_kind: row["pain_kind"],
       intensity: row["intensity"],
+      nausea: row["nausea"].presence,
       notes: row["notes"].is_a?(String) ? row["notes"] : nil
     )
 

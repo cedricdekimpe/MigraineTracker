@@ -35,6 +35,14 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
     assert_nothing_raised { Time.iso8601(exported["exported_at"]) }
   end
 
+  test "exports the nausea of an episode, format 5" do
+    episode = @user.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 5, nausea: "nausea")
+    post exports_path
+
+    assert_equal 5, exported["format_version"]
+    assert_equal "nausea", exported["episodes"].find { |row| row["occurred_on"] == episode.occurred_on.iso8601 && row["nausea"] }["nausea"]
+  end
+
   test "exports every medication, trigger and episode of the user" do
     post exports_path
 

@@ -22,6 +22,14 @@ class DataImporterTest < ActiveSupport::TestCase
     assert_equal ["Noise"], episode.triggers.map(&:name)
   end
 
+  test "nausea is imported when given, and refused when it is not one of the three answers" do
+    import("episodes" => [ episode_row("nausea" => "vomiting"), episode_row("occurred_on" => "2020-01-16") ])
+    assert_equal "vomiting", @user.episodes.find_by!(occurred_on: "2020-01-15").nausea
+    assert_nil @user.episodes.find_by!(occurred_on: "2020-01-16").nausea
+
+    assert_raises(DataImporter::InvalidData) { import("episodes" => [ episode_row("occurred_on" => "2020-01-17", "nausea" => "dizzy") ]) }
+  end
+
   test "dates outside the journal abort the import with a clear message" do
     [
       { "episodes" => [episode_row("occurred_on" => "1899-12-31")] },

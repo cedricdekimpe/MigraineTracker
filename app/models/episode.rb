@@ -2,6 +2,7 @@
 # An aura can precede a migraine or occur alone, so the two are independent fields.
 class Episode < ApplicationRecord
   PAIN_KINDS = %w[migraine headache].freeze
+  NAUSEAS = %w[none nausea vomiting].freeze
   # An attack longer than 72 h is, by definition, a status migrainosus (ICHD-3 1.4.1): worth telling a
   # doctor. It is recorded as it is, up to a week, instead of being cut.
   LONG_ATTACK_MINUTES = 72 * 60
@@ -17,9 +18,11 @@ class Episode < ApplicationRecord
     reject_if: ->(attributes) { attributes["id"].blank? && attributes["medication_id"].blank? }
 
   before_validation :normalize_pain
+  before_validation { self.nausea = nausea.presence }
 
   validates :occurred_on, presence: true, journal_date: true
   validates :pain_kind, inclusion: { in: PAIN_KINDS }, allow_nil: true
+  validates :nausea, inclusion: { in: NAUSEAS }, allow_nil: true
   validates :intensity, presence: true, if: :pain?
   validates :intensity, numericality: { only_integer: true, in: 1..10 }, allow_nil: true
   validates :duration_minutes, numericality: { only_integer: true, in: 1..MAX_DURATION_MINUTES }, allow_nil: true

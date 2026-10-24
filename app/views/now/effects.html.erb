@@ -3,6 +3,18 @@
 <section class="py-2 sm:py-6">
   <h1 class="text-2xl font-semibold"><%= t("now.effects.title") %></h1>
 
+  <% if @episode.pain? %>
+    <div class="mt-6" data-nausea>
+      <p class="text-lg font-medium"><%= t("now.nausea.question") %></p>
+      <%= form_with url: now_nausea_path(episode_id: @episode.id), method: :patch, data: { turbo: false }, class: "mt-2 grid grid-cols-3 gap-2" do %>
+        <% Episode::NAUSEAS.each do |value| %>
+          <%= button_tag t("episodes.nausea_#{value}"), type: "submit", name: "nausea", value: value,
+                class: "min-h-14 cursor-pointer rounded-2xl border px-1 text-[15px] leading-tight transition #{@episode.nausea == value ? 'border-accent-400 bg-primary text-primary-on' : 'border-line-control bg-surface-soft text-fg hover:border-accent-400'}" %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
   <ul class="mt-6 space-y-5">
     <% @intakes.each do |intake| %>
       <li data-intake="<%= intake.id %>">

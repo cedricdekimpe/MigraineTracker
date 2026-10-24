@@ -68,8 +68,8 @@ class NowController < ApplicationController
     @episode.update!(ongoing: false, duration_minutes: minutes)
     notice = t("now.flash.finished", duration: helpers.duration_label(minutes))
 
-    # Treatment taken: ask how it worked while it is fresh, the one figure that tells whether it suits
-    if @episode.medication_intakes.any?
+    # Pain or treatment: ask how it went while it is fresh (nausea, and how each medication worked)
+    if @episode.medication_intakes.any? || @episode.pain?
       redirect_to now_effects_path(episode_id: @episode.id), notice: notice
     else
       redirect_to episodes_path(month: @episode.occurred_on.strftime("%Y-%m")), notice: notice
@@ -80,7 +80,13 @@ class NowController < ApplicationController
   def effects
     @episode = current_user.episodes.includes(medication_intakes: :medication).find(params[:episode_id])
     @intakes = @episode.medication_intakes.reject { |intake| intake.medication.kind.in?(%w[preventive other]) }
-    redirect_to episodes_path(month: @episode.occurred_on.strftime("%Y-%m")) if @intakes.empty?
+    redirect_to episodes_path(month: @episode.occurred_on.strftime("%Y-%m")) if @intakes.empty? && !@episode.pain?
+  end
+
+  def nausea
+    episode = current_user.episodes.find(params[:episode_id])
+    episode.update(nausea: params[:nausea].presence_in(Episode::NAUSEAS))
+    redirect_to now_effects_path(episode_id: episode.id)
   end
 
   def effect

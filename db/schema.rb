@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_230000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_24_200000) do
   create_table "daily_checks", force: :cascade do |t|
     t.integer "user_id", null: false
     t.date "date", null: false
@@ -46,11 +46,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_230000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "ongoing", default: false, null: false
+    t.string "nausea"
     t.index ["user_id", "occurred_on"], name: "index_episodes_on_user_id_and_occurred_on"
     t.index ["user_id", "ongoing"], name: "index_episodes_on_user_id_and_ongoing"
     t.index ["user_id"], name: "index_episodes_on_user_id"
     t.check_constraint "aura = 1 OR pain_kind IS NOT NULL", name: "episodes_aura_or_pain"
     t.check_constraint "intensity IS NULL OR (intensity >= 1 AND intensity <= 10)", name: "episodes_intensity_range"
+    t.check_constraint "nausea IS NULL OR nausea IN ('none', 'nausea', 'vomiting')", name: "episodes_nausea_values"
   end
 
   create_table "medication_intakes", force: :cascade do |t|

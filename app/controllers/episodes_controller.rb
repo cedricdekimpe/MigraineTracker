@@ -144,7 +144,7 @@ class EpisodesController < ApplicationController
 
   def episode_params
     params.require(:episode).permit(
-      :occurred_on, :started_time, :duration_minutes, :aura, :pain_kind, :intensity, :notes,
+      :occurred_on, :started_time, :duration_minutes, :aura, :pain_kind, :intensity, :nausea, :notes,
       medication_intakes_attributes: %i[id dose taken_time effect _destroy]
     )
   end

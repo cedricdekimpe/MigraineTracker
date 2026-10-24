@@ -239,9 +239,9 @@ class NowControllerTest < ActionDispatch::IntegrationTest
       patch now_finish_path
     end
 
-    assert_redirected_to episodes_path(month: "2026-10")
-    assert_equal "Episode saved (2 h 15).", flash[:notice]
     episode = @user.episodes.order(:id).last
+    assert_redirected_to now_effects_path(episode_id: episode.id) # a painful episode asks about nausea
+    assert_equal "Episode saved (2 h 15).", flash[:notice]
     assert_equal [false, 135], [episode.ongoing, episode.duration_minutes]
     assert_nil ongoing
   end
@@ -265,10 +265,38 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     assert_match(/400 mg/, response.body)
   end
 
-  test "an episode without treatment goes straight back to the journal" do
+  test "a painful episode without treatment still asks about nausea" do
     episode = @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", pain_kind: "migraine", intensity: 6, ongoing: true)
     patch now_finish_path
+    assert_redirected_to now_effects_path(episode_id: episode.id)
+    follow_redirect!
+    assert_select "[data-nausea] button[name=nausea]", 3
+    assert_select "li[data-intake]", 0
+  end
+
+  test "an aura alone, without treatment, goes straight back to the journal" do
+    episode = @user.episodes.create!(occurred_on: Date.current, started_time: "10:00", aura: true, ongoing: true)
+    patch now_finish_path
     assert_redirected_to episodes_path(month: episode.occurred_on.strftime("%Y-%m"))
+  end
+
+  test "one tap records nausea, can be changed, and ignores other values" do
+    episode = @user.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 6)
+
+    patch now_nausea_path(episode_id: episode.id), params: { nausea: "vomiting" }
+    assert_redirected_to now_effects_path(episode_id: episode.id)
+    assert_equal "vomiting", episode.reload.nausea
+    patch now_nausea_path(episode_id: episode.id), params: { nausea: "none" }
+    assert_equal "none", episode.reload.nausea
+    patch now_nausea_path(episode_id: episode.id), params: { nausea: "nonsense" }
+    assert_nil episode.reload.nausea
+  end
+
+  test "another user's episode cannot get nausea" do
+    episode = users(:two).episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 5)
+    patch now_nausea_path(episode_id: episode.id), params: { nausea: "nausea" }
+    assert_response :not_found
+    assert_nil episode.reload.nausea
   end
 
   test "one tap records the effect of a medication, and can be changed" do
@@ -299,7 +327,8 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     episode = @user.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 6)
     episode.medication_intakes.create!(medication: users(:one).medications.create!(name: "Metoclopramide", kind: "other"))
     get now_effects_path(episode_id: episode.id)
-    assert_redirected_to episodes_path(month: episode.occurred_on.strftime("%Y-%m"))
+    assert_response :success
+    assert_select "li[data-intake]", 0
   end
 
   test "cancel deletes an episode started by mistake" do

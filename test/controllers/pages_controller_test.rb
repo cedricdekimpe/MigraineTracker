@@ -28,8 +28,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:one)
     get numbers_path(locale: :fr)
     assert_response :success
-    %w[days limits acute preventive chronic menstrual factors].each { |anchor| assert_select "section##{anchor} h2" }
-    assert_select "section", 7
+    %w[days limits nausea acute preventive chronic menstrual factors].each { |anchor| assert_select "section##{anchor} h2" }
+    assert_select "section", 8
     assert_select "section#limits p.text-xs", text: /INAMI/
     assert_match(/pas un avis médical/, response.body)
   end

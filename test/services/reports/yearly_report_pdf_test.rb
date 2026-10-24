@@ -103,6 +103,14 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
     assert_match(/Menstrual cycle/, text(pdf, first_sheet(pdf)))
   end
 
+  test "the indicators page says how often the attacks came with nausea" do
+    [ "none", "nausea", "vomiting", "nausea" ].each_with_index { |value, i| episode(Date.new(2025, 3, 3 + i)).update!(nausea: value) }
+
+    page = flat(reader, 2)
+    assert_match(/Indicators - 2025/, page)
+    assert_match(/Nausea in 3 of 4 attacks answered, 1 with vomiting/, page)
+  end
+
   test "no indicators page when there is nothing to show" do
     episode(Date.new(2025, 1, 10))
     assert_equal 5, reader.page_count

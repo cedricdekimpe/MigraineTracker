@@ -9,6 +9,13 @@ class EpisodeTest < ActiveSupport::TestCase
     assert build.valid?
   end
 
+  test "nausea is optional and limited to none, nausea or vomiting" do
+    assert build.valid?
+    Episode::NAUSEAS.each { |value| assert build(nausea: value).valid?, value }
+    assert_nil build(nausea: "").tap(&:valid?).nausea
+    assert_not build(nausea: "dizzy").valid?
+  end
+
   test "the date is neither in the future nor before 1900" do
     assert build(occurred_on: Date.new(1900, 1, 1)).valid?
 

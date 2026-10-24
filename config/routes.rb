@@ -43,6 +43,7 @@ Rails.application.routes.draw do
     post "now/offline", to: "now#offline", as: :now_offline
     get "now/effects/:episode_id", to: "now#effects", as: :now_effects
     patch "now/intakes/:id/effect", to: "now#effect", as: :now_intake_effect
+    patch "now/nausea/:episode_id", to: "now#nausea", as: :now_nausea
 
     # The daily check-in (sleep, stress, meals, caffeine)
     get "check", to: "daily_checks#today", as: :check

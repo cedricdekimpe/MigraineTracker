@@ -124,6 +124,8 @@ fr:
       intakes_count:
         one: "1 prise"
         other: "%{count} prises"
+      nausea: "Nausées dans %{with} crises sur %{rated} renseignées, dont %{vomiting} avec vomissements."
+      nausea_hint: "Sur les 12 derniers mois, d'après ce que vous notez après chaque crise."
       chronic_month: "Profil de migraine chronique ce mois-ci (15 jours de maux de tête dont 8 de migraine). Parlez-en à votre médecin."
       chronic_sustained: "Profil de migraine chronique depuis 3 mois (15 jours de maux de tête dont 8 de migraine par mois). Parlez-en à votre médecin."
       acute_title: "Vos traitements de crise"
@@ -474,6 +476,10 @@ fr:
     pain_headache: "Mal de tête"
     aura: "Aura"
     intensity: "Intensité"
+    nausea: "Nausées"
+    nausea_none: "Non"
+    nausea_nausea: "Nausées"
+    nausea_vomiting: "Vomissements"
     medication: "Médicament pris"
     common_medications: "Médicaments courants"
     add_medication: "Autre médicament"
@@ -556,8 +562,10 @@ fr:
     add_details: "Ajouter des détails"
     cancel: "Annuler l'épisode"
     confirm_cancel: "Supprimer cet épisode ?"
+    nausea:
+      question: "Nausées ?"
     effects:
-      title: "Effet des médicaments"
+      title: "Comment ça s'est passé"
       none: "Aucun effet"
       partial: "Soulagé en partie"
       good: "Soulagé, plus ou presque plus de douleur"
@@ -675,6 +683,10 @@ fr:
         title: "Les limites de traitement"
         body: "Trop de jours de traitement peut entretenir les maux de tête. Trois repères, du plus prudent au plus sérieux. Les limites conseillées : moins de 10 jours par mois et pas plus de 3 par semaine pour les antidouleurs simples et les AINS ; moins de 8 par mois et pas plus de 2 par semaine pour les triptans et les antidouleurs associés. Les seuils de diagnostic : 10 jours par mois pour les triptans et les associés, 15 pour les antidouleurs simples, 10 en mélangeant plusieurs types. Enfin ces seuils atteints 3 mois de suite, qui est le critère de la céphalée par surconsommation. Les semaines vont du lundi au dimanche. C'est un rappel pour en parler à votre médecin, jamais un diagnostic."
         source: "Recommandations de l'International Headache Society 2024 ; ICHD-3, critère 8.2 ; jury de consensus INAMI 2023."
+      nausea:
+        title: "Nausées"
+        body: "Les nausées ou vomissements font partie des signes qui définissent une migraine. Ils comptent aussi pour le traitement : quand l'estomac est au ralenti, les comprimés agissent moins bien, et un médecin peut proposer un antinauséeux ou une autre forme (spray nasal, injection). Le chiffre ne compte que les crises où vous avez répondu : il peut être faussé si vous passez la question les pires jours."
+        source: "ICHD-3, critère 1.1 ; étude AMPP (American Migraine Prevalence and Prevention) ; recommandations IHS 2024."
       acute:
         title: "Le bilan d'un traitement de crise"
         body: "Il repose sur l'effet que vous notez après chaque crise. Un traitement qui n'a rien fait sur 2 des 3 dernières crises notées est considéré comme inefficace. Avant d'en changer, parlez-en à votre médecin : la dose, le moment de la prise ou la forme peuvent compter. Prendre le traitement tôt, quand la douleur est encore légère, est ce qui marche le mieux."
@@ -706,7 +718,7 @@ fr:
         title: "Les données conservées"
         points:
           - "Votre compte : adresse e-mail, mot de passe haché (jamais lisible), date et version de votre consentement."
-          - "Votre journal : pour chaque épisode, la date, l'heure de début et la durée si vous les notez, le type de douleur, l'aura, l'intensité, les médicaments pris (dose, heure, effet), les déclencheurs cochés et vos notes."
+          - "Votre journal : pour chaque épisode, la date, l'heure de début et la durée si vous les notez, le type de douleur, l'aura, l'intensité, les nausées, les médicaments pris (dose, heure, effet), les déclencheurs cochés et vos notes."
           - "Vos médicaments (nom, type, dose habituelle) et les périodes de vos traitements de fond (début, fin, dose, raison de l'arrêt)."
           - "Vos bilans du jour (sommeil, stress, repas sauté, caféine) et, si vous activez le suivi du cycle, vos jours de règles."
           - "Sans compte : une crise notée depuis la page d'accueil reste dans un cookie chiffré de votre navigateur. Elle n'arrive sur le serveur que si vous créez un compte ou vous connectez, et disparaît si vous choisissez « Ne pas le garder » ou fermez le navigateur."
@@ -909,6 +921,7 @@ fr:
     overuse_note: "Le statut compte, par mois, les jours avec un triptan (seuil %{triptan}), avec un antidouleur associé ou un opioïde (seuil %{combination}), avec un antidouleur simple ou un AINS (seuil %{acute}), ou avec plusieurs types mélangés (seuil %{mixed}). Limites conseillées : moins de %{acute_advised} jours par mois pour les antidouleurs simples, moins de %{triptan_advised} pour les triptans et les associés. « Seuil atteint 3 mois » : le critère du diagnostic de surconsommation."
     indicators_title: "Indicateurs"
     indicators_subtitle: "Traitements et profil, tels que votre journal les montre. À discuter avec votre médecin."
+    nausea_line: "Nausées dans %{with} crises sur %{rated} renseignées, dont %{vomiting} avec vomissements."
     severe_line: "Jours de douleur à %{threshold}/10 ou plus : %{total} sur les mois écoulés."
     chronic_month: "Ce mois-ci : au moins 15 jours de maux de tête dont 8 de migraine (profil de migraine chronique)."
     chronic_sustained: "Depuis 3 mois ou plus : au moins 15 jours de maux de tête dont 8 de migraine par mois (profil de migraine chronique)."

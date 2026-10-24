@@ -124,6 +124,8 @@ en:
       intakes_count:
         one: "1 dose"
         other: "%{count} doses"
+      nausea: "Nausea in %{with} of %{rated} attacks answered, %{vomiting} with vomiting."
+      nausea_hint: "Over the last 12 months, from what you note after each attack."
       chronic_month: "Chronic migraine pattern this month (15 headache days with 8 migraine days). Talk to your doctor."
       chronic_sustained: "Chronic migraine pattern for 3 months (15 headache days with 8 migraine days a month). Talk to your doctor."
       acute_title: "Your acute treatments"
@@ -375,6 +377,10 @@ en:
     pain_headache: "Headache"
     aura: "Aura"
     intensity: "Intensity"
+    nausea: "Nausea"
+    nausea_none: "No"
+    nausea_nausea: "Nausea"
+    nausea_vomiting: "Vomiting"
     medication: "Medication taken"
     common_medications: "Common medications"
     add_medication: "Another medication"
@@ -457,8 +463,10 @@ en:
     add_details: "Add details"
     cancel: "Cancel the episode"
     confirm_cancel: "Delete this episode?"
+    nausea:
+      question: "Nausea?"
     effects:
-      title: "Effect of the medications"
+      title: "How it went"
       none: "No effect"
       partial: "Partly relieved"
       good: "Relieved, little or no pain left"
@@ -576,6 +584,10 @@ en:
         title: "Treatment limits"
         body: "Too many treatment days can keep headaches going. Three reference points, from the most cautious to the most serious. The advised limits: under 10 days a month and no more than 3 a week for simple painkillers and NSAIDs; under 8 a month and no more than 2 a week for triptans and combined painkillers. The diagnostic thresholds: 10 days a month for triptans and combined ones, 15 for simple painkillers, 10 when several kinds are mixed. Finally those thresholds reached 3 months in a row, which is the criterion for medication-overuse headache. Weeks run from Monday to Sunday. It is a reminder to talk to your doctor, never a diagnosis."
         source: "International Headache Society recommendations 2024; ICHD-3 criterion 8.2; Belgian INAMI consensus jury 2023."
+      nausea:
+        title: "Nausea"
+        body: "Nausea or vomiting is one of the signs that define a migraine. It also matters for treatment: when the stomach is slow, tablets work less well, and a doctor may suggest an anti-nausea drug or another form (nasal spray, injection). The figure counts only the attacks where you answered, so it can be off if you skip the question on the worst days."
+        source: "ICHD-3 criterion 1.1; American Migraine Prevalence and Prevention study; IHS recommendations 2024."
       acute:
         title: "The verdict on an acute treatment"
         body: "It rests on the effect you note after each attack. A treatment that did nothing on 2 of the last 3 rated attacks is considered ineffective. Before changing, talk to your doctor: the dose, the timing or the form may matter. Taking the treatment early, while the pain is still mild, works best."
@@ -607,7 +619,7 @@ en:
         title: "The data kept"
         points:
           - "Your account: email address, hashed password (never readable), date and version of your consent."
-          - "Your journal: for each episode, the date, the start time and duration if you note them, the type of pain, the aura, the intensity, the medications taken (dose, time, effect), the triggers ticked and your notes."
+          - "Your journal: for each episode, the date, the start time and duration if you note them, the type of pain, the aura, the intensity, nausea, the medications taken (dose, time, effect), the triggers ticked and your notes."
           - "Your medications (name, type, usual dose) and the periods of your preventive treatments (start, end, dose, reason for stopping)."
           - "Your daily check-ins (sleep, stress, skipped meal, caffeine) and, if you turn on cycle tracking, your period days."
           - "Without an account: an attack noted from the home page stays in an encrypted cookie in your browser. It only reaches the server if you create an account or sign in, and disappears if you choose \"Don't keep it\" or close the browser."
@@ -810,6 +822,7 @@ en:
     overuse_note: "Status counts, per month, the days with a triptan (threshold %{triptan}), with a combined painkiller or opioid (threshold %{combination}), with a simple painkiller or NSAID (threshold %{acute}), or with several kinds mixed (threshold %{mixed}). Advised limits: under %{acute_advised} days a month for simple painkillers, under %{triptan_advised} for triptans and combined ones. \"Threshold reached 3 months\" is the criterion for diagnosing overuse."
     indicators_title: "Indicators"
     indicators_subtitle: "Treatments and pattern, as the journal shows them. To talk over with your doctor."
+    nausea_line: "Nausea in %{with} of %{rated} attacks answered, %{vomiting} with vomiting."
     severe_line: "Pain days at %{threshold}/10 or more: %{total} over the months so far."
     chronic_month: "This month: at least 15 headache days with 8 migraine days (chronic migraine pattern)."
     chronic_sustained: "For 3 months or more: at least 15 headache days with 8 migraine days a month (chronic migraine pattern)."
