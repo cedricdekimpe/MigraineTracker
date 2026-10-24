@@ -606,7 +606,7 @@ en:
         source: "ICHD-3, appendix A1.1.1."
       factors:
         title: "Everyday factors"
-        body: "The daily check-in compares the share of days with pain after a day with a factor (poor night, high stress, stress dropping, skipped meal, a lot of caffeine) with the share after the other days, the same day, the next day and 2 days later. Nothing is shown before 30 days of check-ins, and a factor is only flagged from 8 days concerned and a 15-point gap. It is a link in your journal, not proof of cause. The early signs of an attack (tiredness, craving sweets, a stiff neck) look like triggers: do not note them in the check-in."
+        body: "Each day you answer a few questions: sleep, stress, meals, caffeine. The app then checks whether your attacks come back more often after certain days, for example a poor night. It waits for 30 check-ins, and only flags a factor that happened at least 8 times, with a clear difference. It is a link in your journal, not proof of a cause. Tiredness, sugar cravings or a stiff neck can announce an attack that is already on its way: do not note them here."
         source: "Diary studies of people with migraine: Peris 2017; Lipton 2014; Bertisch 2020; Mostofsky 2019."
 
   privacy:

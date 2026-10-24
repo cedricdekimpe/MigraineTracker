@@ -705,7 +705,7 @@ fr:
         source: "ICHD-3, annexe A1.1.1."
       factors:
         title: "Les facteurs du quotidien"
-        body: "Le bilan quotidien compare la part des jours avec douleur après un jour avec un facteur (mauvaise nuit, stress élevé, baisse du stress, repas sauté, beaucoup de caféine) à la part après les autres jours, le jour même, le lendemain et 2 jours après. Rien n'est affiché avant 30 jours de bilan, et un facteur n'est signalé qu'à partir de 8 jours concernés et de 15 points d'écart. C'est un lien dans votre journal, pas une preuve de cause. Les signes avant-coureurs d'une crise (fatigue, envie de sucré, nuque raide) ressemblent à des déclencheurs : ne les notez pas dans le bilan."
+        body: "Chaque jour, vous répondez à quelques questions : sommeil, stress, repas, caféine. L'appli regarde ensuite si vos crises reviennent plus souvent après certains jours, par exemple une mauvaise nuit. Elle attend 30 bilans, et ne signale un facteur que s'il s'est produit au moins 8 fois, avec une différence nette. C'est un lien dans votre journal, pas la preuve d'une cause. Fatigue, envie de sucré ou nuque raide peuvent annoncer une crise déjà en route : ne les notez pas ici."
         source: "Études de journaux de migraineux : Peris 2017 ; Lipton 2014 ; Bertisch 2020 ; Mostofsky 2019."
 
   privacy:

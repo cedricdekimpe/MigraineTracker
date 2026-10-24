@@ -39,12 +39,11 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
+  # The proxy's health check calls /up in plain HTTP: it must get a 200, not a redirect to HTTPS.
   config.ssl_options = {
-    hsts: { expires: 1.year, subdomains: true, preload: true }
+    hsts: { expires: 1.year, subdomains: true, preload: true },
+    redirect: { exclude: ->(request) { request.path == "/up" } }
   }
-
-  # Skip http-to-https redirect for the default health check endpoint.
-  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]
