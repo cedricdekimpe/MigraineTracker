@@ -495,4 +495,33 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "[data-month]", count: 12
   end
+
+  test "a month outside the journal shows the current one" do
+    current = Date.current.strftime("%Y-%m")
+    ["1-01", "1" + "0" * 400 + "-01", "1899-12", Date.current.next_month.strftime("%Y-%m")].each do |month|
+      get episodes_path(month: month)
+      assert_response :success
+      assert_select "section[data-month='#{current}']"
+    end
+  end
+
+  test "the journal links neither past the current quarter nor before 1900" do
+    get episodes_path
+    assert_select "nav[aria-label=Quarters] a", text: "Next", count: 0
+    assert_select "nav[aria-label=Months] a", text: "Next", count: 0
+
+    get episodes_path(month: "1900-02")
+    assert_select "nav[aria-label=Quarters] a", text: "Previous", count: 0
+    assert_select "nav[aria-label=Months] a[href*='month=1900-01']"
+    assert_select "nav[aria-label=Quarters] a[href*='month=1900-04']"
+  end
+
+  test "a year outside the journal shows the current one, without a link to the next" do
+    ["99999", "1899", (Date.current.year + 1).to_s].each do |year|
+      get yearly_episodes_path(year: year)
+      assert_response :success
+      assert_select "h1", text: Date.current.year.to_s
+      assert_select "a[href*='year=#{Date.current.year + 1}']", count: 0
+    end
+  end
 end

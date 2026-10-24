@@ -241,7 +241,7 @@ class NowControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to episodes_path(month: "2026-10")
     assert_equal "Episode saved (2 h 15).", flash[:notice]
-    episode = @user.episodes.order(:created_at).last
+    episode = @user.episodes.order(:id).last
     assert_equal [false, 135], [episode.ongoing, episode.duration_minutes]
     assert_nil ongoing
   end
@@ -251,7 +251,7 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     sign_in @user
     patch now_finish_path
 
-    assert_equal 1, @user.episodes.order(:created_at).last.duration_minutes
+    assert_equal 1, @user.episodes.order(:id).last.duration_minutes
   end
 
   test "finishing an episode with treatment asks how it worked" do

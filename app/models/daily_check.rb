@@ -12,20 +12,13 @@ class DailyCheck < ApplicationRecord
     self.caffeine = caffeine.presence
   end
 
-  validates :date, presence: true, uniqueness: { scope: :user_id }
+  validates :date, presence: true, uniqueness: { scope: :user_id }, journal_date: true
   validates :sleep, inclusion: { in: SLEEPS }, allow_nil: true
   validates :stress, inclusion: { in: STRESSES }, allow_nil: true
   validates :caffeine, inclusion: { in: CAFFEINES }, allow_nil: true
-  validate :not_in_the_future
 
   # Stress as a number to compare one day with the next
   def stress_level
     STRESSES.index(stress)
-  end
-
-  private
-
-  def not_in_the_future
-    errors.add(:date, :future) if date && date > Date.current
   end
 end

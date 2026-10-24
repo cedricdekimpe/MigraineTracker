@@ -29,6 +29,8 @@ class PeriodDaysControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference -> { PeriodDay.count } do
       post period_days_path, params: { date: (Date.current + 1).iso8601 }
       assert_response :unprocessable_entity
+      post period_days_path, params: { date: "1899-12-31" }
+      assert_response :unprocessable_entity
       post period_days_path, params: { date: "2026-02-30" }
       assert_response :bad_request
     end

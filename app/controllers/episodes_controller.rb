@@ -10,15 +10,16 @@ class EpisodesController < ApplicationController
     @month = @current_month
     @quarter = Sheet.quarter_of(@month)
     @sheet = Sheet.new(current_user, months: @quarter)
-    @previous_month = @month.prev_month
-    @next_month = @month.next_month
-    @previous_quarter = @quarter.first.advance(months: -3)
-    @next_quarter = @quarter.first.advance(months: 3)
+    # No link past the journal's limits (before 1900, after the current month)
+    @previous_month = within_journal(@month.prev_month)
+    @next_month = within_journal(@month.next_month)
+    @previous_quarter = within_journal(@quarter.first.advance(months: -3))
+    @next_quarter = within_journal(@quarter.first.advance(months: 3))
   end
 
   def history
     @years = current_user.episodes.distinct.pluck(Arel.sql("strftime('%Y', occurred_on)")).map(&:to_i).sort.reverse
-    @selected_year = params[:year].present? ? params[:year].to_i : nil
+    @selected_year = JournalDates.year(params[:year])
     @selected_date = parse_date(params[:date])
 
     episodes = current_user.episodes.includes(:medication_intakes, :medications, :triggers)
@@ -32,8 +33,8 @@ class EpisodesController < ApplicationController
 
   def yearly
     @current_year = extract_year
-    @previous_year = @current_year - 1
-    @next_year = @current_year + 1
+    @previous_year = @current_year - 1 if @current_year > JournalDates::EARLIEST.year
+    @next_year = @current_year + 1 if @current_year < Date.current.year
 
     start_of_year = safe_date(@current_year, 1, 1)
     end_of_year = start_of_year.end_of_year
@@ -93,14 +94,13 @@ class EpisodesController < ApplicationController
     { year: params[:year].presence, date: parse_date(params[:date])&.iso8601 }.compact
   end
 
+  # A malformed month, or one outside the journal, shows the current one
   def set_current_month
-    @current_month = if params[:month].present?
-      Date.strptime(params[:month], "%Y-%m").beginning_of_month
-    else
-      Date.current.beginning_of_month
-    end
-  rescue Date::Error
-    @current_month = Date.current.beginning_of_month
+    @current_month = JournalDates.month(params[:month]) || Date.current.beginning_of_month
+  end
+
+  def within_journal(month)
+    month if month.between?(JournalDates::EARLIEST, Date.current.beginning_of_month)
   end
 
   def set_days
@@ -125,13 +125,13 @@ class EpisodesController < ApplicationController
   end
 
   def extract_year
-    return Date.current.year if params[:year].blank?
-
-    Integer(params[:year], exception: false) || Date.current.year
+    JournalDates.year(params[:year]) || Date.current.year
   end
 
+  # A date of the journal (ISO 8601), or nil
   def parse_date(value)
-    Date.iso8601(value.to_s) if value.to_s.match?(/\A\d{4}-\d{2}-\d{2}\z/)
+    date = Date.iso8601(value.to_s) if value.to_s.match?(/\A\d{4}-\d{2}-\d{2}\z/)
+    date if date && JournalDates.cover?(date)
   rescue Date::Error
     nil
   end

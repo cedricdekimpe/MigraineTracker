@@ -9,6 +9,18 @@ class EpisodeTest < ActiveSupport::TestCase
     assert build.valid?
   end
 
+  test "the date is neither in the future nor before 1900" do
+    assert build(occurred_on: Date.new(1900, 1, 1)).valid?
+
+    future = build(occurred_on: Date.current + 1)
+    assert_not future.valid?
+    assert future.errors.of_kind?(:occurred_on, :future)
+
+    too_old = build(occurred_on: Date.new(1899, 12, 31))
+    assert_not too_old.valid?
+    assert too_old.errors.of_kind?(:occurred_on, :too_early)
+  end
+
   test "aura alone is valid and needs no intensity" do
     episode = build(pain_kind: nil, intensity: nil, aura: true)
     assert episode.valid?, episode.errors.full_messages.to_sentence

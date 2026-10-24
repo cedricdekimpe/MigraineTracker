@@ -21,7 +21,7 @@
           <%= form_with model: period, url: medication_treatment_period_path(medication, period), method: :patch, data: { turbo: false }, class: "mt-2 grid gap-2 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end" do |form| %>
             <div>
               <%= form.label :ended_on, t("treatment_periods.ended_on"), class: "block text-xs font-medium text-fg-secondary" %>
-              <%= form.date_field :ended_on, max: Date.current, class: "#{field} w-full" %>
+              <%= form.date_field :ended_on, min: JournalDates::EARLIEST, max: Date.current, class: "#{field} w-full" %>
             </div>
             <div>
               <%= form.label :stop_reason, t("treatment_periods.stop_reason"), class: "block text-xs font-medium text-fg-secondary" %>
@@ -43,7 +43,7 @@
   <%= form_with model: TreatmentPeriod.new, url: medication_treatment_periods_path(medication), data: { turbo: false }, class: "mt-3 grid gap-2 sm:grid-cols-[1fr_1fr_auto] sm:items-end" do |form| %>
     <div>
       <%= form.label :started_on, t("treatment_periods.started_on"), class: "block text-xs font-medium text-fg-secondary" %>
-      <%= form.date_field :started_on, max: Date.current, value: Date.current, required: true, class: "#{field} w-full" %>
+      <%= form.date_field :started_on, min: JournalDates::EARLIEST, max: Date.current, value: Date.current, required: true, class: "#{field} w-full" %>
     </div>
     <div>
       <%= form.label :dose, t("treatment_periods.dose"), class: "block text-xs font-medium text-fg-secondary" %>

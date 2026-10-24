@@ -215,11 +215,12 @@ class DataImporter
     parts.map { |part| part.respond_to?(:iso8601) && !part.is_a?(String) ? part.iso8601 : part.to_s }
   end
 
-  # Strict ISO 8601 calendar date (YYYY-MM-DD); anything else is rejected.
+  # Strict ISO 8601 calendar date (YYYY-MM-DD) within the journal's limits; anything else is rejected.
   def parse_date(value)
     return nil unless value.is_a?(String) && value.match?(/\A\d{4}-\d{2}-\d{2}\z/)
 
-    Date.iso8601(value)
+    date = Date.iso8601(value)
+    date if JournalDates.cover?(date)
   rescue Date::Error
     nil
   end

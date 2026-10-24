@@ -345,6 +345,9 @@ en:
 
   activerecord:
     errors:
+      messages:
+        future: "can't be in the future."
+        too_early: "can't be before %{date}."
       models:
         treatment_period:
           attributes:

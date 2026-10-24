@@ -444,6 +444,9 @@ fr:
         current_password: "Le mot de passe actuel"
         health_data_consent: "Le consentement"
     errors:
+      messages:
+        future: "ne peut pas être dans le futur."
+        too_early: "ne peut pas précéder le %{date}."
       models:
         treatment_period:
           attributes:

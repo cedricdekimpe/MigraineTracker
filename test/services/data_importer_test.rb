@@ -22,6 +22,19 @@ class DataImporterTest < ActiveSupport::TestCase
     assert_equal ["Noise"], episode.triggers.map(&:name)
   end
 
+  test "dates outside the journal abort the import with a clear message" do
+    [
+      { "episodes" => [episode_row("occurred_on" => "1899-12-31")] },
+      { "episodes" => [episode_row("occurred_on" => (Date.current + 1).iso8601)] },
+      { "episodes" => [], "period_days" => ["3000-01-01"] },
+      { "episodes" => [], "daily_checks" => [{ "date" => "0001-01-01" }] }
+    ].each do |data|
+      assert_no_difference ["@user.episodes.count", "@user.period_days.count", "@user.daily_checks.count"] do
+        assert_raises(DataImporter::InvalidData) { import(data) }
+      end
+    end
+  end
+
   test "matches existing medications and triggers ignoring case" do
     assert_no_difference ["@user.medications.count", "@user.triggers.count"] do
       import("episodes" => [episode_row("medications" => [{ "name" => " ibuprofen " }], "triggers" => ["STRESS"])])

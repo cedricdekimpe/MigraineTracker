@@ -7,6 +7,8 @@ class MonthlyOverviewTest < ActiveSupport::TestCase
     @acute = @user.medications.create!(name: "Ibuprofen", kind: "acute")
     @preventive = @user.medications.create!(name: "Propranolol", kind: "preventive")
     @today = Date.new(2026, 10, 23)
+    # The tests fill the whole of October 2026, which must not be in the future
+    travel_to Time.zone.local(2026, 10, 31, 12)
   end
 
   def episode(date, pain: "migraine", aura: false, medications: [])

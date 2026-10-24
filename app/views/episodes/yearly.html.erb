@@ -8,8 +8,8 @@
       <h1 class="text-2xl font-semibold text-fg"><%= @current_year %></h1>
     </div>
     <div class="flex flex-wrap items-center gap-3 text-sm">
-      <%= link_to t('migraines.previous'), yearly_episodes_path(year: @previous_year), class: "rounded-lg border border-line-control bg-surface px-3 py-1.5 font-medium text-fg-secondary transition hover:border-fg-muted" %>
-      <%= link_to t('migraines.next'), yearly_episodes_path(year: @next_year), class: "rounded-lg border border-line-control bg-surface px-3 py-1.5 font-medium text-fg-secondary transition hover:border-fg-muted" %>
+      <%= link_to t('migraines.previous'), yearly_episodes_path(year: @previous_year), class: "rounded-lg border border-line-control bg-surface px-3 py-1.5 font-medium text-fg-secondary transition hover:border-fg-muted" if @previous_year %>
+      <%= link_to t('migraines.next'), yearly_episodes_path(year: @next_year), class: "rounded-lg border border-line-control bg-surface px-3 py-1.5 font-medium text-fg-secondary transition hover:border-fg-muted" if @next_year %>
       <%= link_to t('migraines.export_pdf'), yearly_episodes_path(year: @current_year, format: :pdf), data: { turbo: false }, class: "rounded-lg border border-accent-200 bg-accent-50 px-3 py-1.5 font-semibold text-link transition hover:bg-accent-100" %>
       <%= link_to t('navigation.migraine_log'), episodes_path(month: Date.new(@current_year, Date.current.month, 1).strftime("%Y-%m")), class: "rounded-lg border border-line-control bg-surface px-3 py-1.5 font-medium text-fg-secondary transition hover:border-fg-muted" %>
       <%= link_to t('migraines.new_entry'), new_episode_path, class: "rounded-lg bg-primary px-3 py-1.5 font-semibold text-primary-on transition hover:bg-primary-hover" %>

@@ -18,7 +18,7 @@ class Episode < ApplicationRecord
 
   before_validation :normalize_pain
 
-  validates :occurred_on, presence: true
+  validates :occurred_on, presence: true, journal_date: true
   validates :pain_kind, inclusion: { in: PAIN_KINDS }, allow_nil: true
   validates :intensity, presence: true, if: :pain?
   validates :intensity, numericality: { only_integer: true, in: 1..10 }, allow_nil: true

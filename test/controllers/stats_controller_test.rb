@@ -69,7 +69,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-month-summary].bg-panel-amber.border-amber-400" # October = first ink of its quarter
 
     @today = Time.zone.local(2026, 11, 20)
-    log(Date.new(2026, 11, 2))
+    travel_to(@today) { log(Date.new(2026, 11, 2)) } # a date of the journal only once November has come
     visit_stats
     assert_select "[data-month-summary].bg-panel-rose.border-rose-400"
   end

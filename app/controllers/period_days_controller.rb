@@ -21,7 +21,7 @@ class PeriodDaysController < ApplicationController
 
   def set_date
     @date = Date.iso8601(params[:date] || params[:id])
-    head :unprocessable_entity if @date > Date.current
+    head :unprocessable_entity unless JournalDates.cover?(@date)
   rescue Date::Error
     head :bad_request
   end

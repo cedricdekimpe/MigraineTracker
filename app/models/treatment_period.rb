@@ -7,7 +7,8 @@ class TreatmentPeriod < ApplicationRecord
 
   before_validation { self.dose = dose.to_s.strip.presence; self.stop_reason = stop_reason.presence }
 
-  validates :started_on, presence: true
+  validates :started_on, presence: true, journal_date: true
+  validates :ended_on, journal_date: true
   validates :dose, length: { maximum: 50 }
   validates :stop_reason, inclusion: { in: STOP_REASONS }, allow_nil: true
   validate :ends_after_start
