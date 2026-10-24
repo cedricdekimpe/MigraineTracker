@@ -739,7 +739,7 @@ fr:
         points:
           - "Tenir votre journal, calculer vos statistiques et produire le rapport PDF pour votre médecin."
           - "Vous permettre d'exporter et d'importer vos données."
-          - "Vous écrire uniquement pour réinitialiser votre mot de passe : pas de lettre d'information, pas de publicité."
+          - "Vous écrire uniquement pour réinitialiser votre mot de passe, ou répondre à votre message : pas de lettre d'information, pas de publicité."
           - "Base légale : votre consentement explicite à la création du compte, nécessaire pour des données de santé (RGPD, article 9, paragraphe 2, point a). Vous pouvez le retirer à tout moment en supprimant votre compte."
       retention:
         title: "Durée de conservation"
@@ -751,7 +751,7 @@ fr:
         title: "Partage et sécurité"
         points:
           - "Vos données ne sont ni vendues, ni partagées, ni utilisées pour la publicité."
-          - "Le service tourne sur un serveur loué chez Hetzner Online, dans l'Union européenne. L'hébergeur stocke les données pour notre compte ; aucun autre service n'y a accès."
+          - "Le service tourne sur un serveur loué chez Hetzner Online, dans l'Union européenne. L'hébergeur stocke les données pour notre compte ; aucun autre service n'y a accès. Les e-mails (réinitialisation du mot de passe, vos messages à l'adresse de contact) passent par Infomaniak, en Suisse, qui ne voit que l'adresse et le message, jamais votre journal."
           - "Les données circulent chiffrées (HTTPS). Dans la base, elles sont protégées par l'accès au serveur ; elles ne sont pas encore chiffrées une à une."
       rights:
         title: "Vos droits"
@@ -763,7 +763,7 @@ fr:
           - "Réclamation : l'Autorité de protection des données en Belgique (autoriteprotectiondonnees.be), ou l'autorité de votre pays."
     contact_title: "Contact et responsable du traitement"
     contact_email_label: "E-mail"
-    contact_email: "[privacy@migraine-tracker.eu]"
+    contact_email: "contact@migraine-tracker.eu"
     contact_address_label: "Responsable"
     contact_address: "[Nom, ville, pays]"
 

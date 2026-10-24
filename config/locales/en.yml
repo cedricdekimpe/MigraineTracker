@@ -640,7 +640,7 @@ en:
         points:
           - "To keep your journal, compute your statistics and produce the PDF report for your doctor."
           - "To let you export and import your data."
-          - "To email you only to reset your password: no newsletter, no advertising."
+          - "To email you only to reset your password, or to answer your message: no newsletter, no advertising."
           - "Legal basis: your explicit consent when creating the account, required for health data (GDPR, article 9(2)(a)). You can withdraw it at any time by deleting your account."
       retention:
         title: "How long it is kept"
@@ -652,7 +652,7 @@ en:
         title: "Sharing and security"
         points:
           - "Your data is not sold, shared or used for advertising."
-          - "The service runs on a server rented from Hetzner Online, in the European Union. The host stores the data on our behalf; no other service has access to it."
+          - "The service runs on a server rented from Hetzner Online, in the European Union. The host stores the data on our behalf; no other service has access to it. Mail (password reset, your messages to the contact address) goes through Infomaniak, in Switzerland, which sees only the address and the message, never your journal."
           - "Data travels encrypted (HTTPS). In the database it is protected by access to the server; it is not yet encrypted field by field."
       rights:
         title: "Your rights"
@@ -664,7 +664,7 @@ en:
           - "Complaint: the Data Protection Authority in Belgium (dataprotectionauthority.be), or the authority of your country."
     contact_title: "Contact and data controller"
     contact_email_label: "Email"
-    contact_email: "[privacy@migraine-tracker.eu]"
+    contact_email: "contact@migraine-tracker.eu"
     contact_address_label: "Controller"
     contact_address: "[Name, city, country]"
 
