@@ -747,6 +747,7 @@ fr:
         title: "Durée de conservation"
         points:
           - "Vos données restent tant que votre compte existe ; le supprimer les efface immédiatement de la base."
+          - "Une copie de sauvegarde de la base est faite chaque nuit et gardée 30 jours, chiffrée, dans un dépôt de sauvegarde à l'extérieur du serveur (BorgBase). Un compte supprimé disparaît donc aussi des sauvegardes au bout de 30 jours."
           - "Les fichiers d'export vous sont envoyés directement et ne sont pas gardés sur le serveur."
           - "Les compteurs anti-abus disparaissent au bout d'une heure au plus."
       sharing:
