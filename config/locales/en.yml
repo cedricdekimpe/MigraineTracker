@@ -646,7 +646,7 @@ en:
         title: "How long it is kept"
         points:
           - "Your data stays as long as your account exists; deleting it erases them from the database at once."
-          - "A backup copy of the database is made every night and kept for 30 days, encrypted, in a backup repository outside the server (BorgBase). A deleted account therefore leaves the backups after 30 days too."
+          - "A backup copy of the database is made every night and kept for 30 days, encrypted, in a backup repository outside the server (BorgBase, in the European Union). A deleted account therefore leaves the backups after 30 days too."
           - "Export files are sent straight to you and not kept on the server."
           - "Anti-abuse counters disappear after one hour at most."
       sharing:
