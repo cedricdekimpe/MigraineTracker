@@ -90,7 +90,9 @@ Devise.setup do |config|
   # It will change confirmation, password recovery and other workflows
   # to behave the same regardless if the e-mail provided was right or wrong.
   # Does not affect registerable.
-  # config.paranoid = true
+  # Paranoid mode: "forgot password" answers the same whether the address has an account or not, so the form
+  # cannot be used to find out who uses the app (the fact of using a migraine app is health information).
+  config.paranoid = true
 
   # By default Devise will store the user in session. You can skip storage for
   # particular strategies by setting this option.
