@@ -26,6 +26,14 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     css_select("[data-figure='#{name}']").first&.text&.strip
   end
 
+  test "the text alternative of the chart sits in a clipped box, so a phone never scrolls sideways" do
+    log(@today.to_date)
+    visit_stats
+    # A table ignores overflow: hidden, so the sr-only class goes on a wrapper, not on the table itself.
+    assert_select "div.sr-only > table"
+    assert_select "table.sr-only", false
+  end
+
   test "requires authentication" do
     get stats_path
     assert_redirected_to new_user_session_path
@@ -143,7 +151,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     log(Date.new(2026, 10, 5))
     visit_stats
 
-    assert_select "table.sr-only tbody tr", count: 12
+    assert_select "div.sr-only table tbody tr", count: 12
   end
 
   test "auras alone are mentioned without inflating the pain days" do

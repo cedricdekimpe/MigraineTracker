@@ -85,7 +85,8 @@
         <span class="inline-flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-chart-a"></i><%= t("stats.legend_migraine") %></span>
         <span class="inline-flex items-center gap-2"><i class="h-3 w-3 rounded-sm bg-chart-b"></i><%= t("stats.legend_headache") %></span>
       </p>
-      <table class="sr-only">
+      <div class="sr-only">
+      <table>
         <caption><%= t("stats.pain_chart_title") %></caption>
         <thead><tr><th><%= t("stats.table_month") %></th><th><%= t("stats.legend_migraine") %></th><th><%= t("stats.legend_headache") %></th></tr></thead>
         <tbody>
@@ -94,6 +95,7 @@
           <% end %>
         </tbody>
       </table>
+      </div>
     </section>
 
     <section>
