@@ -7,6 +7,10 @@ Thank you for looking. Migraine Tracker is a one-person project with a narrow ai
 - **Before a bigger change**, open an issue to talk about it. I keep the tool small on purpose: a few features, done well,
   with little text on screen. A feature that adds a tracker, an account requirement, advertising or a dependency on an
   outside service will not be accepted.
+- **No sign-in with Google, Facebook or another outside account** (decided 2026-10-26). At every sign-in, that company
+  would learn that the person uses a migraine app, which is health information, and two of them live on advertising.
+  It would also add companies to the privacy policy, a review process with each of them, and a way to lose access to the
+  journal with the outside account. If signing in must become easier, passkeys (no third party) are the way to look at.
 - **No promise of support or of a reply time.** I read everything, but I do this on my own time.
 - **Code:** `bin/docker-dev bin/rails test` and `bin/docker-dev bin/rubocop` must pass, and new behaviour needs a test.
   Texts go in `config/locales/fr.yml` and `en.yml` (both languages).
@@ -24,5 +28,7 @@ Questions: contact@migraine-tracker.eu
 
 **En français :** les rapports de bugs avec les étapes pour les reproduire, les textes faux ou confus, les problèmes
 d'accessibilité et les points cliniques avec une source publiée m'aident le plus. Pour un changement important, ouvrez
-d'abord un ticket : l'outil reste petit volontairement. Je ne promets ni support ni délai de réponse. N'envoyez jamais de
+d'abord un ticket : l'outil reste petit volontairement. Pas de connexion par Google, Facebook ou un autre compte
+extérieur : l'entreprise apprendrait à chaque connexion que la personne utilise une app de migraine (décision du
+26 octobre 2026 ; si la connexion doit devenir plus simple, ce seront les passkeys). Je ne promets ni support ni délai de réponse. N'envoyez jamais de
 données de santé réelles.
