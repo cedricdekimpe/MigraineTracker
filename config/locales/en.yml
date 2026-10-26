@@ -920,6 +920,7 @@ en:
       history: "History"
       year: "Year view"
       report: "Doctor report (PDF)"
+      report_year: "Year of the report"
     period:
       mark: "Mark %{date} as a period day"
       unmark: "Remove the period day of %{date}"

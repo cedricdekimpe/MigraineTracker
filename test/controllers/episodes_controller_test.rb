@@ -136,6 +136,21 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href$='/episodes/yearly.pdf?year=2025']", text: /Doctor report/
   end
 
+  test "with several years in the journal, the report asks which year, the displayed one first" do
+    @user.episodes.create!(occurred_on: Date.new(2023, 3, 2), pain_kind: "migraine", intensity: 5)
+    get episodes_path(month: "2025-06")
+
+    assert_select "form[data-report-form][action$='/episodes/yearly.pdf'][method=get]" do
+      assert_select "select[name=year] option", Date.current.year - 2023 + 1
+      assert_select "select[name=year] option[selected]", text: "2025"
+      assert_select "button", text: /Doctor report/
+    end
+
+    get yearly_episodes_path(year: "2023", format: :pdf)
+    assert_response :success
+    assert_includes response.headers["Content-Disposition"], "migraine-calendar-2023.pdf"
+  end
+
   test "an unreadable month falls back to the current one" do
     get episodes_path(month: "nonsense")
     assert_response :success

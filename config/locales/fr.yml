@@ -1021,6 +1021,7 @@ fr:
       history: "Historique"
       year: "Vue annuelle"
       report: "Rapport médecin (PDF)"
+      report_year: "Année du rapport"
     period:
       mark: "Marquer le %{date} comme jour de règles"
       unmark: "Retirer le jour de règles du %{date}"

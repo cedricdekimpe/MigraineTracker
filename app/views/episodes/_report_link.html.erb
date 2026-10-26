@@ -1,0 +1,13 @@
+<%# The doctor report (PDF) of a year. With several years in the journal, a list picks the year first.
+    locals: year (selected by default), button_class %>
+<% years = report_years(current_user) %>
+<% if years.size > 1 %>
+  <%= form_with url: yearly_episodes_path(format: :pdf), method: :get, data: { turbo: false, report_form: true }, class: "inline-flex flex-wrap items-center gap-2" do %>
+    <%= label_tag "report_year", t("sheet.links.report_year"), class: "sr-only" %>
+    <%= select_tag :year, options_for_select(years, years.include?(year) ? year : years.first), id: "report_year",
+          class: "min-h-11 rounded-xl border border-line-control bg-surface px-3 py-2 text-base text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus" %>
+    <%= button_tag t("sheet.links.report"), type: "submit", name: nil, class: "min-h-11 cursor-pointer #{button_class}" %>
+  <% end %>
+<% else %>
+  <%= link_to t("sheet.links.report"), yearly_episodes_path(year: year, format: :pdf), data: { turbo: false }, class: button_class %>
+<% end %>

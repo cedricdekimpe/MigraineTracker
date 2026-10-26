@@ -48,4 +48,10 @@ module EpisodesHelper
     label += " · #{duration_label(episode.duration_minutes)}" if episode.duration_minutes
     label
   end
+
+  # The years a doctor report can cover: from the first episode noted to this year, newest first
+  def report_years(user)
+    first = user.episodes.minimum(:occurred_on)&.year || Date.current.year
+    Date.current.year.downto(first).to_a
+  end
 end

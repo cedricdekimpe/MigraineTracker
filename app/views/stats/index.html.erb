@@ -7,8 +7,8 @@
 
   <% if @has_data %>
     <p>
-      <%= link_to t("sheet.links.report"), yearly_episodes_path(year: Date.current.year, format: :pdf), data: { turbo: false },
-            class: "inline-flex rounded-xl border border-line-control bg-surface px-4 py-2 text-sm font-semibold text-link hover:bg-surface-soft" %>
+      <%= render "episodes/report_link", year: Date.current.year,
+            button_class: "inline-flex items-center rounded-xl border border-line-control bg-surface px-4 py-2 text-sm font-semibold text-link hover:bg-surface-soft" %>
     </p>
   <% end %>
 
