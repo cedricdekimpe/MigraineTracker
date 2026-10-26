@@ -5,7 +5,7 @@
      ({ key: "reminder", path: account_profile_path, done: current_user.notifications? } if WebPushSender.enabled?)
    ].compact %>
 <section class="rounded-2xl border border-accent-300 bg-accent-50 p-4 text-accent-900" data-onboarding data-controller="onboarding">
-  <div class="flex items-start justify-between gap-3">
+  <div class="flex items-center justify-between gap-3">
     <h2 class="text-base font-semibold"><%= t("onboarding.title") %></h2>
     <%= button_to t("onboarding.dismiss"), account_onboarding_path, method: :patch, data: { turbo: false }, form: { class: "shrink-0" },
           class: "min-h-11 cursor-pointer px-2 text-sm underline hover:text-fg" %>
