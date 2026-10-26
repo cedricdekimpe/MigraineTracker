@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     delete "now", to: "now#cancel"
     patch "now/intensity", to: "now#intensity", as: :now_intensity
     post "now/medication", to: "now#medication", as: :now_medication
+    delete "now/intakes/:id", to: "now#remove_intake", as: :now_intake
     patch "now/finish", to: "now#finish", as: :now_finish
     post "now/offline", to: "now#offline", as: :now_offline
     get "now/effects/:episode_id", to: "now#effects", as: :now_effects

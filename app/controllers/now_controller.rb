@@ -63,6 +63,12 @@ class NowController < ApplicationController
     redirect_to now_path
   end
 
+  # A medication added by mistake: only the intakes of the episode in progress, which is also what the screen shows.
+  def remove_intake
+    @episode.medication_intakes.find(params[:id]).destroy
+    redirect_to now_path
+  end
+
   def finish
     minutes = ((Time.current - @episode.started_at) / 60).round.clamp(1, Episode::MAX_DURATION_MINUTES)
     @episode.update!(ongoing: false, duration_minutes: minutes)
@@ -143,6 +149,6 @@ class NowController < ApplicationController
 
   def set_ongoing_episode
     @episode = current_user.episodes.ongoing.includes(medication_intakes: :medication).order(:created_at).last
-    redirect_to now_path if @episode.nil? && %w[intensity medication finish cancel].include?(action_name)
+    redirect_to now_path if @episode.nil? && %w[intensity medication remove_intake finish cancel].include?(action_name)
   end
 end

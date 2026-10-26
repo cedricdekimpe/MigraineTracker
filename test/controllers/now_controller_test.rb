@@ -13,6 +13,49 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     @user.reload.episodes.ongoing.first
   end
 
+  # --- removing a medication added by mistake -------------------------------
+
+  test "a medication added by mistake can be removed while the episode is in progress" do
+    medication = @user.medications.create!(name: "Sumatriptan", kind: "triptan")
+    post now_path, params: { pain_kind: "migraine", intensity: 5 }
+    post now_medication_path, params: { medication_id: medication.id }
+    intake = ongoing.medication_intakes.first
+
+    get now_path
+    assert_select "form[action='#{now_intake_path(id: intake)}'] button", text: I18n.t("now.remove_intake")
+
+    assert_difference -> { MedicationIntake.count }, -1 do
+      delete now_intake_path(id: intake)
+    end
+    assert_redirected_to now_path
+    assert_empty ongoing.medication_intakes
+    assert Medication.exists?(medication.id), "the medication itself stays"
+  end
+
+  test "another person's intake cannot be removed" do
+    other = User.create!({ email: "other@example.com", password: "password123" }.merge(consent_attrs))
+    medication = other.medications.create!(name: "Ibuprofen", kind: "acute")
+    episode = other.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 4, ongoing: true)
+    intake = episode.medication_intakes.create!(medication: medication)
+    post now_path, params: { pain_kind: "migraine", intensity: 5 }
+
+    assert_no_difference -> { MedicationIntake.count } do
+      delete now_intake_path(id: intake)
+    end
+    assert_response :not_found
+  end
+
+  test "removing an intake needs an episode in progress" do
+    medication = @user.medications.create!(name: "Naproxen", kind: "acute")
+    episode = @user.episodes.create!(occurred_on: Date.current - 1, pain_kind: "migraine", intensity: 4)
+    intake = episode.medication_intakes.create!(medication: medication)
+
+    assert_no_difference -> { MedicationIntake.count } do
+      delete now_intake_path(id: intake)
+    end
+    assert_redirected_to now_path
+  end
+
   # --- start ----------------------------------------------------------------
 
   test "requires authentication" do

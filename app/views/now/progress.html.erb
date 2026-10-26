@@ -31,7 +31,13 @@
     <% if @episode.medication_intakes.any? %>
       <ul class="mb-4 space-y-1 text-fg">
         <% @episode.medication_intakes.each do |intake| %>
-          <li>✓ <%= [intake.medication.name, intake.dose].compact_blank.join(" ") %> <span class="text-fg-muted">· <%= intake.taken_time&.strftime("%H:%M") %></span></li>
+          <% label = [intake.medication.name, intake.dose].compact_blank.join(" ") %>
+          <li class="flex items-center justify-between gap-3">
+            <span>✓ <%= label %> <span class="text-fg-muted">· <%= intake.taken_time&.strftime("%H:%M") %></span></span>
+            <%= button_to t("now.remove_intake"), now_intake_path(id: intake), method: :delete, data: { turbo: false },
+                  "aria-label": t("now.remove_intake_named", name: label), form: { class: "shrink-0" },
+                  class: "min-h-11 cursor-pointer px-2 text-sm text-fg-muted underline hover:text-fg" %>
+          </li>
         <% end %>
       </ul>
     <% end %>

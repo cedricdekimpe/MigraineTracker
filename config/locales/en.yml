@@ -468,6 +468,8 @@ en:
     finish: "It's over"
     add_details: "Add details"
     cancel: "Cancel the episode"
+    remove_intake: "Remove"
+    remove_intake_named: "Remove %{name}"
     confirm_cancel: "Delete this episode?"
     nausea:
       question: "Nausea?"

@@ -569,6 +569,8 @@ fr:
     finish: "C'est passé"
     add_details: "Ajouter des détails"
     cancel: "Annuler l'épisode"
+    remove_intake: "Retirer"
+    remove_intake_named: "Retirer %{name}"
     confirm_cancel: "Supprimer cet épisode ?"
     nausea:
       question: "Nausées ?"
