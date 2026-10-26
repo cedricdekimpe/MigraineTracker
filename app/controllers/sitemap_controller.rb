@@ -26,6 +26,11 @@ class SitemapController < ApplicationController
         changefreq: 'monthly',
         priority: '0.8'
       }
+
+      # Who is behind the tool, and what it costs
+      %w[why-free about-ai].each do |slug|
+        @pages << { url: "#{base_url}/#{locale}/#{slug}", locale: locale, lastmod: Time.current, changefreq: 'monthly', priority: '0.6' }
+      end
     end
     
     respond_to do |format|

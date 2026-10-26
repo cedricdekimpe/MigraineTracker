@@ -1,0 +1,25 @@
+<% content_for :title, t('about_ai.title') %>
+<% content_for :description, t('about_ai.description') %>
+
+<article class="mx-auto max-w-3xl space-y-8 rounded-2xl border border-line bg-surface p-5 sm:p-8" data-about-ai>
+  <header>
+    <h1 class="text-3xl font-bold text-fg"><%= t('about_ai.title') %></h1>
+    <p class="mt-1 text-sm text-fg-muted"><%= t('about_ai.updated') %></p>
+    <p class="mt-4 text-fg-secondary"><%= t('about_ai.intro') %></p>
+  </header>
+
+  <% t('about_ai.sections').each do |key, section| %>
+    <section id="<%= key %>" class="scroll-mt-20">
+      <h2 class="text-xl font-semibold text-fg"><%= section[:title] %></h2>
+      <% section[:body].each do |paragraph| %>
+        <p class="mt-3 leading-7 text-fg-secondary"><%= paragraph %></p>
+      <% end %>
+    </section>
+  <% end %>
+
+  <p class="text-sm text-fg-secondary">
+    <%= t('free.contact') %>
+    <%= link_to t('privacy.contact_email'), "mailto:#{t('privacy.contact_email')}", class: "font-medium text-link underline" %>
+    · <%= link_to t('navigation.why_free'), why_free_path, class: "font-medium text-link underline" %>
+  </p>
+</article>

@@ -4,7 +4,8 @@ module SeoHelper
   def seo_title(page_title = nil)
     base_title = t("seo.site_name", default: "Migraine Tracker")
     if page_title.present?
-      "#{page_title} | #{base_title}"
+      # safe_join keeps the title escaped once (an apostrophe is not shown as &amp;#39;)
+      safe_join([ page_title, base_title ], " | ")
     else
       base_title
     end
@@ -55,7 +56,7 @@ module SeoHelper
       "@context" => "https://schema.org",
       "@type" => "Organization",
       "name" => t("seo.site_name", default: "Migraine Tracker"),
-      "description" => seo_description,
+      "description" => CGI.unescapeHTML(seo_description.to_s),
       "url" => root_url(locale: I18n.locale, only_path: false),
       "logo" => "#{request.base_url}/icon.png",
       "sameAs" => []
@@ -67,7 +68,7 @@ module SeoHelper
       "@context" => "https://schema.org",
       "@type" => "WebApplication",
       "name" => t("seo.site_name", default: "Migraine Tracker"),
-      "description" => seo_description,
+      "description" => CGI.unescapeHTML(seo_description.to_s),
       "url" => root_url(locale: I18n.locale, only_path: false),
       "applicationCategory" => "HealthApplication",
       "operatingSystem" => "Web",

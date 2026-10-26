@@ -16,6 +16,8 @@ fr:
     faq: "FAQ"
     privacy: "Politique de confidentialité"
     urgent: "Quand consulter en urgence"
+    why_free: "Pourquoi gratuit ?"
+    about_ai: "Un mot sur l'IA"
   
   # SEO
   seo:
@@ -768,7 +770,7 @@ fr:
     contact_email_label: "E-mail"
     contact_email: "contact@migraine-tracker.eu"
     contact_address_label: "Responsable"
-    contact_address: "[Nom, ville, pays]"
+    contact_address: "Cédric Dekimpe, Belgique"
 
   offline:
     title: "Pas de connexion"
@@ -777,6 +779,63 @@ fr:
     retry: "Réessayer"
     emergency: "Un signe vous inquiète ? Appelez le 112."
 
+  free:
+    title: "Pourquoi cet outil est gratuit"
+    description: "Migraine Tracker est gratuit, sans publicité ni abonnement, et vos données ne sont pas revendues. Pourquoi, et ce que cela coûte."
+    updated: "Dernière mise à jour : 26 octobre 2026"
+    intro: "Migraine Tracker est gratuit, et je veux que vous sachiez pourquoi."
+    sections:
+      need:
+        title: "Un besoin personnel"
+        body:
+          - "Je vis avec des migraines chroniques. J'ai d'abord fait cet outil pour moi, pour remplacer le calendrier papier de ma neurologue, et je le partage parce qu'il peut aider d'autres personnes dans la même situation. C'est la seule raison d'être de ce projet."
+      promise:
+        title: "Ce que je ne ferai pas"
+        body:
+          - "Tant que je gère ce projet : pas d'abonnement, pas de publicité, pas de revente de vos données, pas de traceur. Vos données ne servent qu'à vous. Vous pouvez les exporter ou supprimer votre compte à tout moment."
+      costs:
+        title: "Ce que ça coûte"
+        body:
+          - "Je ne cache pas les chiffres. Voici ce que je paie pour que l'outil existe."
+      later:
+        title: "Si les coûts me pèsent un jour"
+        body:
+          - "Si ces coûts finissaient par me peser trop, je chercherais d'autres solutions qu'un abonnement ou de la publicité, et je l'écrirais ici avant tout changement. Vous ne serez pas mis devant le fait accompli."
+      who:
+        title: "Qui est derrière"
+        body:
+          - "Cédric Dekimpe, en Belgique. Je suis développeur de métier et mon premier but est d'aider les personnes qui, comme moi, souffrent de migraines chroniques."
+    costs:
+      - { label: "Serveur (Hetzner, en Europe)", value: "4,49 € par mois, hors TVA" }
+      - { label: "Nom de domaine", value: "10 € par an" }
+      - { label: "Total", value: "environ 64 € par an", total: true }
+    costs_note: "Chiffres de 2026, payés depuis décembre 2025 ; le domaine se renouvelle au même prix. Le serveur sert aussi, pour l'instant, à d'autres projets personnels : la part de cet outil est donc plus petite que ce montant. Je ne compte pas mon temps, ni mes outils de développement."
+    contact: "Une question, une remarque :"
+  about_ai:
+    title: "Un mot sur l'IA"
+    description: "Migraine Tracker a été développé avec l'aide d'une intelligence artificielle, par un développeur professionnel. Ce que cela veut dire, et ce que l'outil fait de vos données."
+    updated: "Dernière mise à jour : 26 octobre 2026"
+    intro: "Cet outil a été développé avec l'aide d'une intelligence artificielle. Je préfère vous dire ce que cela veut dire."
+    sections:
+      who:
+        title: "Qui l'a développé"
+        body:
+          - "Je suis développeur professionnel depuis près de 20 ans. Je saurais écrire cet outil seul ; ce que je n'aurais probablement pas eu, c'est le temps de le faire. L'IA m'a permis d'aller beaucoup plus vite."
+          - "Je reste responsable de l'outil, de ce qu'il fait et de ce qu'il fait de vos données."
+      checks:
+        title: "Ce qui garde le résultat sérieux"
+        body:
+          - "L'outil est couvert par plus de 400 tests automatiques, et son code passe un contrôle de sécurité automatique avant que je le mette en ligne."
+          - "Je peux me tromper, et l'IA aussi. Si vous voyez une erreur, écrivez-moi."
+      data:
+        title: "L'IA et vos données"
+        body:
+          - "Il n'y a aucune IA dans l'outil lui-même : il fait des calculs simples sur vos jours de douleur et de traitement. Vos données ne sont envoyées à aucun service d'IA."
+      health:
+        title: "Les repères de santé"
+        body:
+          - "Les seuils et les repères viennent de recommandations publiées (International Headache Society, classification internationale des céphalées, consensus belge). Leurs sources sont indiquées dans la page « Comprendre mes chiffres », une fois connecté."
+          - "L'outil ne pose pas de diagnostic et ne remplace pas un médecin."
   install:
     title: "Installer l'application"
     button: "Installer"

@@ -16,6 +16,8 @@ en:
     faq: "FAQ"
     privacy: "Privacy policy"
     urgent: "When to seek urgent care"
+    why_free: "Why free?"
+    about_ai: "A word about AI"
   
   # SEO
   seo:
@@ -667,7 +669,7 @@ en:
     contact_email_label: "Email"
     contact_email: "contact@migraine-tracker.eu"
     contact_address_label: "Controller"
-    contact_address: "[Name, city, country]"
+    contact_address: "Cédric Dekimpe, Belgium"
 
   offline:
     title: "No connection"
@@ -676,6 +678,63 @@ en:
     retry: "Try again"
     emergency: "A sign worries you? Call 112."
 
+  free:
+    title: "Why this tool is free"
+    description: "Migraine Tracker is free, with no ads and no subscription, and your data is not resold. Why, and what it costs."
+    updated: "Last updated: 26 October 2026"
+    intro: "Migraine Tracker is free, and I want you to know why."
+    sections:
+      need:
+        title: "A personal need"
+        body:
+          - "I live with chronic migraine. I first made this tool for myself, to replace my neurologist's paper calendar, and I share it because it may help other people in the same situation. That is the only reason this project exists."
+      promise:
+        title: "What I will not do"
+        body:
+          - "As long as I run this project: no subscription, no advertising, no resale of your data, no trackers. Your data is used for you alone. You can export it or delete your account at any time."
+      costs:
+        title: "What it costs"
+        body:
+          - "I do not hide the figures. This is what I pay for the tool to exist."
+      later:
+        title: "If the costs weigh on me one day"
+        body:
+          - "If these costs ended up weighing on me too much, I would look for solutions other than a subscription or advertising, and I would write it here before any change. You will not be put in front of a done deal."
+      who:
+        title: "Who is behind it"
+        body:
+          - "Cédric Dekimpe, in Belgium. I am a developer by trade and my first aim is to help people who, like me, suffer from chronic migraine."
+    costs:
+      - { label: "Server (Hetzner, in Europe)", value: "€4.49 a month, excluding VAT" }
+      - { label: "Domain name", value: "€10 a year" }
+      - { label: "Total", value: "about €64 a year", total: true }
+    costs_note: "2026 figures, paid since December 2025; the domain renews at the same price. For now the server also runs other personal projects, so this tool's share is smaller than that amount. I do not count my time, nor my development tools."
+    contact: "A question, a remark:"
+  about_ai:
+    title: "A word about AI"
+    description: "Migraine Tracker was developed with the help of artificial intelligence, by a professional developer. What that means, and what the tool does with your data."
+    updated: "Last updated: 26 October 2026"
+    intro: "This tool was developed with the help of artificial intelligence. I would rather tell you what that means."
+    sections:
+      who:
+        title: "Who developed it"
+        body:
+          - "I have been a professional developer for almost 20 years. I could write this tool on my own; what I probably would not have had is the time. AI let me go much faster."
+          - "I remain responsible for the tool, for what it does and for what it does with your data."
+      checks:
+        title: "What keeps the result sound"
+        body:
+          - "The tool is covered by more than 400 automated tests, and its code goes through an automated security check before I put it online."
+          - "I can be wrong, and so can AI. If you see a mistake, write to me."
+      data:
+        title: "AI and your data"
+        body:
+          - "There is no AI in the tool itself: it does simple calculations on your pain and treatment days. Your data is sent to no AI service."
+      health:
+        title: "The health reference points"
+        body:
+          - "The thresholds and reference points come from published guidelines (International Headache Society, international classification of headache disorders, Belgian consensus). Their sources are listed on the \"Understand my figures\" page, once signed in."
+          - "The tool gives no diagnosis and does not replace a doctor."
   install:
     title: "Install the app"
     button: "Install"

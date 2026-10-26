@@ -95,4 +95,45 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_match(/bilans du jour/, response.body)
     assert_equal "2026-10-23", User::HEALTH_DATA_CONSENT_VERSION
   end
+
+  test "the pages on why the tool is free and on AI are public, in both languages" do
+    get why_free_path(locale: :fr)
+    assert_response :success
+    assert_select "h1", text: "Pourquoi cet outil est gratuit"
+    assert_select "[data-costs] dd", text: /4,49 € par mois, hors TVA/
+    assert_select "[data-costs] dd", text: /10 € par an/
+    assert_match(/Cédric Dekimpe/, response.body)
+    assert_no_match(/\[Nom|\[privacy/, response.body)
+
+    get why_free_path(locale: :en)
+    assert_select "h1", text: "Why this tool is free"
+    assert_select "[data-costs] dd", text: /€4.49 a month/
+
+    get about_ai_path(locale: :fr)
+    assert_response :success
+    assert_select "h1", text: "Un mot sur l'IA"
+    assert_select "p", text: /près de 20 ans/
+    assert_select "p", text: /aucune IA dans l'outil/
+    assert_select "title", text: "Un mot sur l'IA | Migraine Tracker"
+    assert_no_match(/&amp;#39;|u0026#39/, response.body)
+
+    get about_ai_path(locale: :en)
+    assert_select "h1", text: "A word about AI"
+  end
+
+  test "the footer links to both pages and the sitemap lists them" do
+    get root_path(locale: :fr)
+    assert_select "footer a[href='/fr/why-free']"
+    assert_select "footer a[href='/fr/about-ai']"
+
+    get sitemap_path(format: :xml)
+    assert_includes response.body, "/fr/why-free"
+    assert_includes response.body, "/en/about-ai"
+  end
+
+  test "the privacy policy names the person responsible" do
+    get privacy_path(locale: :fr)
+    assert_select "#contact", text: /Cédric Dekimpe, Belgique/
+    assert_select "#contact", text: /contact@migraine-tracker.eu/
+  end
 end
