@@ -1,0 +1,50 @@
+<% content_for :title, t("feedback.title") %>
+
+<div class="mx-auto flex w-full max-w-5xl flex-col gap-6 lg:flex-row">
+  <aside class="lg:w-64 lg:shrink-0">
+    <div class="lg:rounded-2xl lg:border lg:border-line lg:bg-surface lg:p-4">
+      <h2 class="mb-4 hidden px-3 text-xs font-semibold uppercase tracking-wider text-fg-muted lg:block"><%= t('account.settings') %></h2>
+      <%= render 'account/navigation' %>
+    </div>
+  </aside>
+
+  <main class="flex flex-1 flex-col gap-6">
+    <div class="rounded-2xl border border-line bg-surface p-5 sm:p-8">
+      <header class="mb-6">
+        <h1 class="text-2xl font-semibold text-fg"><%= t("feedback.title") %> <%= render "shared/info", text: t("feedback.hint") %></h1>
+      </header>
+
+      <%= form_with url: feedback_path, method: :post, data: { turbo: false, controller: "feedback" }, class: "space-y-6" do %>
+        <%= hidden_field_tag :mode, "browser", data: { feedback_target: "mode" } %>
+        <% { helps: "feedback.helps", missing: "feedback.missing" }.each do |field, key| %>
+          <div class="space-y-2">
+            <%= label_tag field, t(key), class: "block text-sm font-medium text-fg-secondary" %>
+            <%= text_area_tag field, nil, rows: 4, maxlength: FeedbacksController::MAX_LENGTH,
+                  class: "block w-full rounded-lg border border-line-control bg-surface px-3 py-2 text-base text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus" %>
+          </div>
+        <% end %>
+
+        <fieldset class="space-y-2" data-question="recommend">
+          <legend class="text-sm font-medium text-fg-secondary"><%= t("feedback.recommend") %></legend>
+          <div class="flex flex-wrap gap-3">
+            <% FeedbacksController::RECOMMENDATIONS.each do |value| %>
+              <label class="cursor-pointer">
+                <%= radio_button_tag :recommend, value, false, class: "peer sr-only" %>
+                <span class="inline-flex min-h-11 items-center rounded-xl border border-line-control bg-surface-soft px-4 text-base text-fg peer-checked:border-accent-400 peer-checked:bg-primary peer-checked:text-primary-on peer-focus-visible:ring-2 peer-focus-visible:ring-focus"><%= t("feedback.answers.#{value}") %></span>
+              </label>
+            <% end %>
+          </div>
+        </fieldset>
+
+        <div class="flex items-center gap-3">
+          <%= check_box_tag :reply, "1", false, class: "h-6 w-6 shrink-0 rounded border-line-control text-link focus:ring-focus" %>
+          <%= label_tag :reply, t("feedback.reply"), class: "text-sm font-medium text-fg-secondary" %>
+        </div>
+
+        <div class="flex items-center justify-end border-t border-line pt-6">
+          <%= submit_tag t("feedback.send"), class: "min-h-11 cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-on transition hover:bg-primary-hover" %>
+        </div>
+      <% end %>
+    </div>
+  </main>
+</div>

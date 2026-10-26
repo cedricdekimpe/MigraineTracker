@@ -561,6 +561,24 @@ en:
       done: "Daily check-in done"
       edit: "Edit"
 
+  feedback:
+    nav: "Give feedback"
+    title: "Give feedback"
+    hint: "No need for medical details. Your message reaches me by e-mail; it is not kept in the app. It also carries the language, the browser type and whether the app is installed, to understand a problem, and your address only if you tick the box."
+    helps: "What helps you?"
+    missing: "What bothers you or is missing?"
+    recommend: "Would you recommend it to another person with migraines?"
+    answers:
+      "yes": "Yes"
+      maybe: "Maybe"
+      "no": "No"
+    reply: "You can reply to me"
+    send: "Send"
+    thanks: "Thank you, it was received."
+    empty: "Write at least a word, or pick an answer."
+    too_many: "You already sent several messages today. Try again tomorrow."
+    failed: "The message did not go. Try again later."
+
   onboarding:
     title: "Getting started"
     dismiss: "Hide"
@@ -662,6 +680,7 @@ en:
           - "To keep your journal, compute your statistics and produce the PDF report for your doctor."
           - "To let you export and import your data."
           - "To email you only to reset your password, or to answer your message: no newsletter, no advertising."
+          - "To receive your opinion if you give one (Account › Give feedback): it arrives by e-mail in the contact mailbox and is not kept in the app. It carries your address only if you tick \"You can reply to me\"."
           - "Legal basis: your explicit consent when creating the account, required for health data (GDPR, article 9(2)(a)). You can withdraw it at any time by deleting your account."
       retention:
         title: "How long it is kept"

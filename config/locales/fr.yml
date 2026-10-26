@@ -662,6 +662,24 @@ fr:
       done: "Bilan du jour fait"
       edit: "Modifier"
 
+  feedback:
+    nav: "Donner mon avis"
+    title: "Donner mon avis"
+    hint: "Pas besoin de détails médicaux. Votre message m'arrive par e-mail ; il n'est pas gardé dans l'application. Il contient aussi la langue, le type de navigateur et si l'application est installée, pour comprendre un problème, et votre adresse seulement si vous cochez la case."
+    helps: "Qu'est-ce qui vous aide ?"
+    missing: "Qu'est-ce qui vous gêne ou vous manque ?"
+    recommend: "Le conseilleriez-vous à une autre personne migraineuse ?"
+    answers:
+      "yes": "Oui"
+      maybe: "Peut-être"
+      "no": "Non"
+    reply: "Vous pouvez me répondre"
+    send: "Envoyer"
+    thanks: "Merci, c'est bien reçu."
+    empty: "Écrivez au moins un mot, ou choisissez une réponse."
+    too_many: "Vous avez déjà envoyé plusieurs messages aujourd'hui. Réessayez demain."
+    failed: "Le message n'est pas parti. Réessayez plus tard."
+
   onboarding:
     title: "Pour bien démarrer"
     dismiss: "Masquer"
@@ -763,6 +781,7 @@ fr:
           - "Tenir votre journal, calculer vos statistiques et produire le rapport PDF pour votre médecin."
           - "Vous permettre d'exporter et d'importer vos données."
           - "Vous écrire uniquement pour réinitialiser votre mot de passe, ou répondre à votre message : pas de lettre d'information, pas de publicité."
+          - "Recevoir votre avis si vous le donnez (Compte › Donner mon avis) : il arrive par e-mail dans la boîte de contact et n'est pas gardé dans l'application. Il ne contient votre adresse que si vous cochez « Vous pouvez me répondre »."
           - "Base légale : votre consentement explicite à la création du compte, nécessaire pour des données de santé (RGPD, article 9, paragraphe 2, point a). Vous pouvez le retirer à tout moment en supprimant votre compte."
       retention:
         title: "Durée de conservation"

@@ -32,6 +32,16 @@
     <%= t('account.nav.data') %>
   <% end %>
 
+  <% if Instance.feedback_address %>
+    <%= link_to feedback_path,
+        class: "flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-xl px-3 py-2 text-sm font-medium transition lg:gap-3 #{current_page?(feedback_path) ? 'bg-ok-surface text-link' : 'text-fg-secondary hover:bg-page hover:text-fg'}" do %>
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h5m-9 6 3-3h11a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v14Z"/>
+      </svg>
+      <%= t("feedback.nav") %>
+    <% end %>
+  <% end %>
+
   <%= button_to destroy_user_session_path, method: :delete, form: { class: "lg:mt-4 lg:border-t lg:border-line lg:pt-4" },
         class: "flex min-h-11 w-full items-center gap-2 whitespace-nowrap rounded-xl px-3 py-2 text-sm font-medium text-fg-secondary transition hover:bg-surface-soft hover:text-fg lg:gap-3" do %>
     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

@@ -24,6 +24,8 @@ Rails.application.routes.draw do
     get "account/triggers", to: "account#triggers", as: :account_triggers
     get "account/data", to: "account#data", as: :account_data
     patch "account/preferences", to: "account#update_preferences", as: :account_preferences
+    get "account/feedback", to: "feedbacks#new", as: :feedback
+    post "account/feedback", to: "feedbacks#create"
     patch "account/onboarding", to: "account#dismiss_onboarding", as: :account_onboarding
     patch "account/notifications", to: "account#update_notifications", as: :account_notifications
     # This device accepts notifications (web push)

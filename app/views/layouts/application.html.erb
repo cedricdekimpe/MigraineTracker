@@ -132,6 +132,7 @@
           <%= link_to t("navigation.faq"), faq_path, class: "hover:text-fg" %>
           <%= link_to t("navigation.privacy"), privacy_path, class: "hover:text-fg" %>
           <%= link_to t("navigation.urgent"), urgent_path, class: "hover:text-fg" %>
+          <%= link_to t("feedback.nav"), feedback_path, class: "hover:text-fg" if user_signed_in? && Instance.feedback_address %>
           <% if official_instance? %>
             <%= link_to t("navigation.why_free"), why_free_path, class: "hover:text-fg" %>
             <%= link_to t("navigation.about_ai"), about_ai_path, class: "hover:text-fg" %>

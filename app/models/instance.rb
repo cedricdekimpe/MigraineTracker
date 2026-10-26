@@ -18,6 +18,13 @@ module Instance
     ENV["CONTACT_EMAIL"].to_s.strip.presence
   end
 
+  # Where "Give feedback" messages go: the contact of whoever runs this copy. Only offered when the mail can leave.
+  def feedback_address
+    return nil unless !Rails.env.production? || ENV["SMTP_PASSWORD"].present?
+
+    contact_email || ("contact@migraine-tracker.eu" if official?)
+  end
+
   # Anyone may create an account unless the operator closed the sign-ups (a personal or family copy)
   def signups_open?
     ENV["SIGNUPS"].to_s.strip.downcase != "closed"

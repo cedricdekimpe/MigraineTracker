@@ -1,0 +1,10 @@
+Ce qui aide :
+<%= @helps.presence || "-" %>
+
+Ce qui gêne ou manque :
+<%= @missing.presence || "-" %>
+
+Le conseillerait : <%= @recommend.presence || "-" %>
+
+--
+<%= @context.map { |key, value| "#{key}: #{value}" }.join("\n") %>
