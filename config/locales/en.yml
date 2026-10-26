@@ -748,6 +748,10 @@ en:
         title: "The code is open"
         body:
           - "The tool's code is public, under the AGPL-3.0 licence: you can read it to check what it does, and reuse it under the terms of that licence. The name and logo \"Migraine Tracker\" remain mine."
+          - "You can also run your own copy on your own server: one container, one volume, and a step-by-step guide. You then become responsible for your data."
+        link:
+          label: "Self-hosting guide"
+          url: "https://github.com/cedricdekimpe/MigraineTracker/blob/main/docs/SELF-HOSTING.md"
       data:
         title: "AI and your data"
         body:

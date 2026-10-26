@@ -115,6 +115,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "p", text: /près de 20 ans/
     assert_select "p", text: /aucune IA dans l'outil/
     assert_select "section#source", text: /AGPL-3.0/
+    assert_select "section#source a[href$='docs/SELF-HOSTING.md']", text: "Guide d'auto-hébergement (en anglais)"
     assert_select "title", text: "Un mot sur l'IA | Migraine Tracker"
     assert_no_match(/&amp;#39;|u0026#39/, response.body)
 

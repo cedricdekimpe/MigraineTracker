@@ -849,6 +849,10 @@ fr:
         title: "Le code est ouvert"
         body:
           - "Le code de l'outil est public, sous licence AGPL-3.0 : vous pouvez le lire pour vérifier ce qu'il fait, et le réutiliser selon les termes de cette licence. Le nom et le logo « Migraine Tracker » restent les miens."
+          - "Vous pouvez aussi faire tourner votre propre copie sur votre serveur : un conteneur, un volume, et un guide pas à pas. Vous devenez alors responsable de vos données."
+        link:
+          label: "Guide d'auto-hébergement (en anglais)"
+          url: "https://github.com/cedricdekimpe/MigraineTracker/blob/main/docs/SELF-HOSTING.md"
       data:
         title: "L'IA et vos données"
         body:
