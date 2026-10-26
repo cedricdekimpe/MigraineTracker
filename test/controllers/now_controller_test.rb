@@ -46,7 +46,7 @@ class NowControllerTest < ActionDispatch::IntegrationTest
 
       assert_redirected_to now_path
       episode = ongoing
-      assert_equal ["migraine", 7, true, false], [episode.pain_kind, episode.intensity, episode.ongoing, episode.aura]
+      assert_equal [ "migraine", 7, true, false ], [ episode.pain_kind, episode.intensity, episode.ongoing, episode.aura ]
       assert_equal Date.new(2026, 10, 24), episode.occurred_on
       assert_equal "14:32", episode.started_time.strftime("%H:%M")
     end
@@ -139,7 +139,7 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     end
 
     intake = ongoing.medication_intakes.last
-    assert_equal ["400 mg", "14:32"], [intake.dose, intake.taken_time.strftime("%H:%M")]
+    assert_equal [ "400 mg", "14:32" ], [ intake.dose, intake.taken_time.strftime("%H:%M") ]
   end
 
   test "with no medication yet, the progress screen offers common ones and a name field" do
@@ -242,7 +242,7 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     episode = @user.episodes.order(:id).last
     assert_redirected_to now_effects_path(episode_id: episode.id) # a painful episode asks about nausea
     assert_equal "Episode saved (2 h 15).", flash[:notice]
-    assert_equal [false, 135], [episode.ongoing, episode.duration_minutes]
+    assert_equal [ false, 135 ], [ episode.ongoing, episode.duration_minutes ]
     assert_nil ongoing
   end
 

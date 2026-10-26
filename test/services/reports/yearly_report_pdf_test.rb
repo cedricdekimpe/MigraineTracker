@@ -45,9 +45,9 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
   end
 
   test "the summary counts days with pain, migraine days and treatment days by class" do
-    episode(Date.new(2025, 3, 3), medications: [@triptan])
+    episode(Date.new(2025, 3, 3), medications: [ @triptan ])
     episode(Date.new(2025, 3, 3)) # same day
-    episode(Date.new(2025, 3, 4), pain: "headache", intensity: 3, medications: [@acute])
+    episode(Date.new(2025, 3, 4), pain: "headache", intensity: 3, medications: [ @acute ])
     episode(Date.new(2025, 3, 5), pain: nil, aura: true)
     summary = text(reader, 1)
 
@@ -56,7 +56,7 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
   end
 
   test "overuse is flagged on the month that reaches a threshold" do
-    10.times { |i| episode(Date.new(2025, 5, i + 1), medications: [@triptan]) }
+    10.times { |i| episode(Date.new(2025, 5, i + 1), medications: [ @triptan ]) }
     summary = text(reader, 1)
 
     assert_match(/May.*Threshold reached/, summary)
@@ -74,7 +74,7 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
   end
 
   test "the sheet pages reproduce the paper: month frames, letters, intensity and treatment marks" do
-    episode(Date.new(2025, 1, 10), aura: true, intensity: 9, medications: [@acute, @triptan])
+    episode(Date.new(2025, 1, 10), aura: true, intensity: 9, medications: [ @acute, @triptan ])
     episode(Date.new(2025, 1, 11), pain: "headache", intensity: 4)
     episode(Date.new(2025, 1, 12), pain: nil, aura: true)
     pdf = reader
@@ -118,7 +118,7 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
   end
 
   test "an indicators page follows the summary with the effect of each acute drug" do
-    episode(Date.new(2025, 1, 10), medications: [@acute]).medication_intakes.first.update!(effect: "none")
+    episode(Date.new(2025, 1, 10), medications: [ @acute ]).medication_intakes.first.update!(effect: "none")
     pdf = reader
     assert_equal 6, pdf.page_count
     page = flat(pdf, 2)
@@ -133,7 +133,7 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
     propranolol = @user.medications.create!(name: "Propranolol", kind: "preventive")
     propranolol.treatment_periods.create!(user: @user, started_on: Date.new(2025, 2, 1), ended_on: Date.new(2025, 3, 20), stop_reason: "not_tolerated", dose: "80 mg")
     @user.update!(track_cycle: true)
-    [Date.new(2025, 1, 5), Date.new(2025, 2, 2), Date.new(2025, 3, 1)].each { |start| @user.period_days.create!(date: start); episode(start) }
+    [ Date.new(2025, 1, 5), Date.new(2025, 2, 2), Date.new(2025, 3, 1) ].each { |start| @user.period_days.create!(date: start); episode(start) }
     page = flat(reader, 2)
 
     assert_match(/Preventive treatments/, page)
@@ -148,7 +148,7 @@ class Reports::YearlyReportPdfTest < ActiveSupport::TestCase
   end
 
   test "the report speaks French with decimal commas" do
-    [Date.new(2025, 2, 1), Date.new(2025, 2, 2), Date.new(2025, 3, 1)].each { |date| episode(date) }
+    [ Date.new(2025, 2, 1), Date.new(2025, 2, 2), Date.new(2025, 3, 1) ].each { |date| episode(date) }
     pdf = reader(locale: :fr)
 
     assert_match(/Calendrier des migraines - 2025/, text(pdf, 1))

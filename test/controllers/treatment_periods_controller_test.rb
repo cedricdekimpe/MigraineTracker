@@ -25,7 +25,7 @@ class TreatmentPeriodsControllerTest < ActionDispatch::IntegrationTest
   test "stops a period with a reason" do
     period = @medication.treatment_periods.create!(user: @user, started_on: "2026-01-01")
     patch medication_treatment_period_path(medication_id: @medication.id, id: period.id), params: { treatment_period: { ended_on: "2026-04-01", stop_reason: "ineffective" } }
-    assert_equal ["2026-04-01", "ineffective"], [period.reload.ended_on.iso8601, period.stop_reason]
+    assert_equal [ "2026-04-01", "ineffective" ], [ period.reload.ended_on.iso8601, period.stop_reason ]
   end
 
   test "an invalid period is refused with a message" do

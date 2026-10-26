@@ -16,7 +16,7 @@ class SheetTest < ActiveSupport::TestCase
   end
 
   def sheet
-    Sheet.new(@user, months: [@month])
+    Sheet.new(@user, months: [ @month ])
   end
 
   def day(number)
@@ -36,8 +36,8 @@ class SheetTest < ActiveSupport::TestCase
     episode(3, pain: "headache")
     episode(4, pain: nil, aura: true)
 
-    assert_equal %w[M T A], [day(2).letter, day(3).letter, day(4).letter]
-    assert_equal [true, true, false], [day(2).pain?, day(3).pain?, day(4).pain?]
+    assert_equal %w[M T A], [ day(2).letter, day(3).letter, day(4).letter ]
+    assert_equal [ true, true, false ], [ day(2).pain?, day(3).pain?, day(4).pain? ]
   end
 
   test "a migraine wins over a headache the same day and the intensity is the strongest" do
@@ -68,21 +68,21 @@ class SheetTest < ActiveSupport::TestCase
   end
 
   test "X for an acute treatment and t for a triptan, preventives are ignored" do
-    episode(9, medications: [@acute])
-    episode(10, medications: [@triptan])
-    episode(11, medications: [@acute, @triptan])
-    episode(12, medications: [@preventive])
+    episode(9, medications: [ @acute ])
+    episode(10, medications: [ @triptan ])
+    episode(11, medications: [ @acute, @triptan ])
+    episode(12, medications: [ @preventive ])
 
-    assert_equal [true, false], [day(9).acute?, day(9).triptan?]
-    assert_equal [false, true], [day(10).acute?, day(10).triptan?]
-    assert_equal [true, true], [day(11).acute?, day(11).triptan?]
+    assert_equal [ true, false ], [ day(9).acute?, day(9).triptan? ]
+    assert_equal [ false, true ], [ day(10).acute?, day(10).triptan? ]
+    assert_equal [ true, true ], [ day(11).acute?, day(11).triptan? ]
     assert_not day(12).treatment?
   end
 
   test "X also covers combined analgesics and gepants, an anti-nausea drug shows nothing" do
-    episode(13, medications: [@user.medications.create!(name: "Paracetamol + codeine", kind: "combination")])
-    episode(14, medications: [@user.medications.create!(name: "Rimegepant", kind: "gepant")])
-    episode(15, medications: [@user.medications.create!(name: "Metoclopramide", kind: "other")])
+    episode(13, medications: [ @user.medications.create!(name: "Paracetamol + codeine", kind: "combination") ])
+    episode(14, medications: [ @user.medications.create!(name: "Rimegepant", kind: "gepant") ])
+    episode(15, medications: [ @user.medications.create!(name: "Metoclopramide", kind: "other") ])
 
     assert day(13).acute?
     assert day(14).acute?
@@ -90,7 +90,7 @@ class SheetTest < ActiveSupport::TestCase
   end
 
   test "counts pain days and treatment days of a month" do
-    episode(1, medications: [@acute])
+    episode(1, medications: [ @acute ])
     episode(2, pain: "headache")
     episode(3, pain: nil, aura: true)
 
@@ -100,12 +100,12 @@ class SheetTest < ActiveSupport::TestCase
 
   test "days_of covers every day of the month" do
     assert_equal 31, sheet.days_of(@month).size
-    assert_equal 28, Sheet.new(@user, months: [Date.new(2027, 2, 1)]).days_of(Date.new(2027, 2, 1)).size
+    assert_equal 28, Sheet.new(@user, months: [ Date.new(2027, 2, 1) ]).days_of(Date.new(2027, 2, 1)).size
   end
 
   test "the quarter of a month follows the paper sheet: Jan-Mar, Apr-Jun, Jul-Sep, Oct-Dec" do
-    assert_equal [Date.new(2026, 10, 1), Date.new(2026, 11, 1), Date.new(2026, 12, 1)], Sheet.quarter_of(Date.new(2026, 11, 15))
-    assert_equal [Date.new(2026, 1, 1), Date.new(2026, 2, 1), Date.new(2026, 3, 1)], Sheet.quarter_of(Date.new(2026, 3, 31))
+    assert_equal [ Date.new(2026, 10, 1), Date.new(2026, 11, 1), Date.new(2026, 12, 1) ], Sheet.quarter_of(Date.new(2026, 11, 15))
+    assert_equal [ Date.new(2026, 1, 1), Date.new(2026, 2, 1), Date.new(2026, 3, 1) ], Sheet.quarter_of(Date.new(2026, 3, 31))
     assert_equal Date.new(2026, 7, 1), Sheet.quarter_of(Date.new(2026, 8, 3)).first
   end
 

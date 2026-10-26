@@ -8,11 +8,11 @@ Rails.application.config.assets.paths << Rails.root.join("app/assets/builds")
 
 # Add RailsAdmin asset paths
 Rails.application.config.assets.configure do |env|
-  env.unregister_postprocessor('text/css', Sprockets::SassCompressor) if defined?(Sprockets::SassCompressor)
+  env.unregister_postprocessor("text/css", Sprockets::SassCompressor) if defined?(Sprockets::SassCompressor)
 end
 
 # Precompile additional assets.
 Rails.application.config.assets.precompile += %w[
-	application.css
-	tailwind.css
+  application.css
+  tailwind.css
 ]

@@ -26,7 +26,7 @@ class TreatmentInsightsTest < ActiveSupport::TestCase
 
     rows = insights.acute_rows
     assert_equal %w[Ibuprofen Sumatriptan], rows.map { |row| row.medication.name }
-    assert_equal [3, 1, 1, 1], [rows.first.intakes, rows.first.good, rows.first.none, rows.first.unrated]
+    assert_equal [ 3, 1, 1, 1 ], [ rows.first.intakes, rows.first.good, rows.first.none, rows.first.unrated ]
   end
 
   test "a drug that did nothing on 2 of the last 3 rated attacks is not working" do
@@ -73,11 +73,11 @@ class TreatmentInsightsTest < ActiveSupport::TestCase
     (1..9).each { |i| attack(start - 10 * i, pain: "headache") }
     @user.episodes.create!(occurred_on: start - 95, pain_kind: "migraine", intensity: 5) # also before: keeps the journal covering the window
     period = propranolol.treatment_periods.create!(user: @user, started_on: start, ended_on: Date.new(2026, 6, 29))
-    [Date.new(2026, 5, 1), Date.new(2026, 5, 20), Date.new(2026, 6, 10)].each { |date| attack(date) }
+    [ Date.new(2026, 5, 1), Date.new(2026, 5, 20), Date.new(2026, 6, 10) ].each { |date| attack(date) }
 
     row = insights.preventive_rows.first
     assert_equal period, row.period
-    assert_equal [3.0, 1.0], [row.before, row.after]
+    assert_equal [ 3.0, 1.0 ], [ row.before, row.after ]
     assert_equal 0.67, row.drop
     assert row.responder?
   end
@@ -93,19 +93,19 @@ class TreatmentInsightsTest < ActiveSupport::TestCase
   end
 
   test "attacks around the first bleeding day, in at least 2 of the last 3 cycles" do
-    starts = [Date.new(2026, 7, 10), Date.new(2026, 8, 7), Date.new(2026, 9, 4)]
+    starts = [ Date.new(2026, 7, 10), Date.new(2026, 8, 7), Date.new(2026, 9, 4) ]
     starts.each { |start| 4.times { |i| @user.period_days.create!(date: start + i) } }
     attack(starts[0] - 1)
     attack(starts[1] + 2)
 
     link = insights.menstrual_link
-    assert_equal [3, 2, 0], [link.cycles, link.with_attack, link.outside_attacks]
+    assert_equal [ 3, 2, 0 ], [ link.cycles, link.with_attack, link.outside_attacks ]
     assert link.pattern?
     assert link.pure?
   end
 
   test "an attack at another time of the cycle means it is not purely menstrual" do
-    starts = [Date.new(2026, 7, 10), Date.new(2026, 8, 7), Date.new(2026, 9, 4)]
+    starts = [ Date.new(2026, 7, 10), Date.new(2026, 8, 7), Date.new(2026, 9, 4) ]
     starts.each { |start| @user.period_days.create!(date: start) }
     attack(starts[0]); attack(starts[1]); attack(starts[1] + 14)
 

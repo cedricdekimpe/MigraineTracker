@@ -41,10 +41,10 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "this month: days with pain, migraine days, treatment days and the 3-month average" do
-    log(Date.new(2026, 10, 5), medications: [@triptan])
+    log(Date.new(2026, 10, 5), medications: [ @triptan ])
     log(Date.new(2026, 10, 5)) # same day, still one day
-    log(Date.new(2026, 10, 6), pain: "headache", medications: [@acute])
-    [Date.new(2026, 7, 1), Date.new(2026, 8, 1), Date.new(2026, 8, 2), Date.new(2026, 9, 1), Date.new(2026, 9, 2), Date.new(2026, 9, 3)].each { |d| log(d) }
+    log(Date.new(2026, 10, 6), pain: "headache", medications: [ @acute ])
+    [ Date.new(2026, 7, 1), Date.new(2026, 8, 1), Date.new(2026, 8, 2), Date.new(2026, 9, 1), Date.new(2026, 9, 2), Date.new(2026, 9, 3) ].each { |d| log(d) }
     visit_stats
 
     assert_equal "2", figure("pain-days")
@@ -75,7 +75,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "treatment meters stay calm below the thresholds" do
-    3.times { |i| log(Date.new(2026, 10, i + 1), medications: [@triptan]) }
+    3.times { |i| log(Date.new(2026, 10, i + 1), medications: [ @triptan ]) }
     visit_stats
 
     assert_select "[data-overuse=ok]"
@@ -85,13 +85,13 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "treatment meters warn near and at the thresholds" do
-    8.times { |i| log(Date.new(2026, 10, i + 1), medications: [@triptan]) }
+    8.times { |i| log(Date.new(2026, 10, i + 1), medications: [ @triptan ]) }
     visit_stats
     assert_select "[data-overuse=advised]"
     assert_select "[data-meter=triptan] .bg-meter-advised"
     assert_match(/Above the advised limits/, response.body)
 
-    2.times { |i| log(Date.new(2026, 10, i + 9), medications: [@triptan]) }
+    2.times { |i| log(Date.new(2026, 10, i + 9), medications: [ @triptan ]) }
     visit_stats
     assert_select "[data-overuse=over]"
     assert_select "[data-meter=triptan] .bg-meter-over"
@@ -99,7 +99,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "a meter marks the advised limit and a heavy week is mentioned" do
-    (5..7).each { |day| log(Date.new(2026, 10, day), medications: [@triptan]) }
+    (5..7).each { |day| log(Date.new(2026, 10, day), medications: [ @triptan ]) }
     visit_stats
 
     assert_select "[data-meter=triptan] [role=meter] span[style*='left: 80%']"
@@ -107,8 +107,8 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "the threshold three months in a row is spelled out" do
-    [Date.new(2026, 8, 1), Date.new(2026, 9, 1), Date.new(2026, 10, 1)].each do |month|
-      10.times { |i| log(month + i, medications: [@triptan]) }
+    [ Date.new(2026, 8, 1), Date.new(2026, 9, 1), Date.new(2026, 10, 1) ].each do |month|
+      10.times { |i| log(month + i, medications: [ @triptan ]) }
     end
     visit_stats
 
@@ -117,8 +117,8 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "mixing both kinds shows the combined count" do
-    5.times { |i| log(Date.new(2026, 10, i + 1), medications: [@triptan]) }
-    5.times { |i| log(Date.new(2026, 10, i + 6), medications: [@acute]) }
+    5.times { |i| log(Date.new(2026, 10, i + 1), medications: [ @triptan ]) }
+    5.times { |i| log(Date.new(2026, 10, i + 6), medications: [ @acute ]) }
     visit_stats
 
     assert_select "[data-overuse=over]"
@@ -126,7 +126,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "twelve months of columns, two series told apart by lightness, with the threshold on the treatment chart" do
-    log(Date.new(2026, 10, 5), medications: [@acute])
+    log(Date.new(2026, 10, 5), medications: [ @acute ])
     visit_stats
 
     assert_select "[data-chart=pain-days] svg[role=img]", count: 2 # wide and phone versions
@@ -210,7 +210,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     (1..9).each { |i| log(start - 9 * i) }
     log(start - 95)
     propranolol.treatment_periods.create!(user: @user, started_on: start)
-    [Date.new(2026, 9, 1), Date.new(2026, 9, 15), Date.new(2026, 10, 1)].each { |date| log(date) }
+    [ Date.new(2026, 9, 1), Date.new(2026, 9, 15), Date.new(2026, 10, 1) ].each { |date| log(date) }
     visit_stats
 
     assert_select "[data-preventives] [data-comparison]", text: /3 days a month before, 1 on the treatment/
@@ -224,7 +224,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "the menstrual link only appears with cycle tracking" do
-    [Date.new(2026, 7, 10), Date.new(2026, 8, 7), Date.new(2026, 9, 4)].each do |start|
+    [ Date.new(2026, 7, 10), Date.new(2026, 8, 7), Date.new(2026, 9, 4) ].each do |start|
       @user.period_days.create!(date: start)
       log(start)
     end
@@ -237,7 +237,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "the page is in French under /fr" do
-    log(Date.new(2026, 10, 5), medications: [@triptan])
+    log(Date.new(2026, 10, 5), medications: [ @triptan ])
     visit_stats(locale: "fr")
 
     assert_match(/Jours de traitement aigu/, response.body)

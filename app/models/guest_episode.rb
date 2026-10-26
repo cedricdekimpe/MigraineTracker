@@ -18,7 +18,7 @@ class GuestEpisode
 
     probe = Episode.new(attributes.slice("aura", "pain_kind", "intensity").merge(occurred_on: now.to_date))
     probe.valid?
-    attributes if (probe.errors.attribute_names - [:user]).empty?
+    attributes if (probe.errors.attribute_names - [ :user ]).empty?
   end
 
   def self.read(session)

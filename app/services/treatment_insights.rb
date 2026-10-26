@@ -53,7 +53,7 @@ class TreatmentInsights
         none: effects.count("none"), partial: effects.count("partial"), good: effects.count("good"), unrated: effects.count(nil),
         verdict: verdict(intakes)
       )
-    end.compact.sort_by { |row| [-row.intakes, row.medication.name.downcase] }
+    end.compact.sort_by { |row| [ -row.intakes, row.medication.name.downcase ] }
   end
 
   def nausea
@@ -109,7 +109,7 @@ class TreatmentInsights
   def all_intakes
     @all_intakes ||= MedicationIntake.joins(:medication, :episode).includes(:medication, :episode)
                                      .where(episodes: { user_id: @user.id }, medications: { kind: Medication::COUNTED_KINDS })
-                                     .sort_by { |intake| [intake.episode.occurred_on, intake.taken_time&.strftime("%H:%M").to_s, intake.id] }
+                                     .sort_by { |intake| [ intake.episode.occurred_on, intake.taken_time&.strftime("%H:%M").to_s, intake.id ] }
   end
 
   # Judged on the last 3 attacks where an effect was noted.
@@ -133,7 +133,7 @@ class TreatmentInsights
   end
 
   def first_record_on
-    @first_record_on ||= [@user.episodes.minimum(:occurred_on), @user.period_days.minimum(:date)].compact.min
+    @first_record_on ||= [ @user.episodes.minimum(:occurred_on), @user.period_days.minimum(:date) ].compact.min
   end
 
   def cycle_starts
@@ -144,7 +144,7 @@ class TreatmentInsights
 
   def build_menstrual_link(starts)
     windows = starts.map { |start| (start - 2)..(start + 2) }
-    span_end = [starts.last + 27, @today].min
+    span_end = [ starts.last + 27, @today ].min
     span = (starts.first - 2)..span_end
     attacks = pain_dates.select { |date| span.cover?(date) }
     in_window = windows.count { |window| attacks.any? { |date| window.cover?(date) } }

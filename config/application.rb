@@ -37,13 +37,13 @@ module MyMigraineManager
     config.time_zone = "Brussels"
     # `time` columns (episode start, intake time) are wall-clock values typed by the user ("08:30"),
     # not instants: don't shift them through the time zone.
-    config.active_record.time_zone_aware_types = [:datetime]
+    config.active_record.time_zone_aware_types = [ :datetime ]
     # config.eager_load_paths << Rails.root.join("extras")
 
     # I18n configuration
-    config.i18n.available_locales = [:en, :fr]
+    config.i18n.available_locales = [ :en, :fr ]
     config.i18n.default_locale = :en
-    config.i18n.fallbacks = [:en]
+    config.i18n.fallbacks = [ :en ]
 
     # Don't generate system test files.
     config.generators.system_tests = nil

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PagesController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:faq, :privacy, :urgent, :free, :about_ai]
+  skip_before_action :authenticate_user!, only: [ :faq, :privacy, :urgent, :free, :about_ai ]
 
   # The author's own pages (who he is, what the hosted service costs) exist on the official instance only
   before_action :require_official_instance, only: [ :free, :about_ai ]

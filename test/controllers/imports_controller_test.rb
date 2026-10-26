@@ -65,7 +65,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "rejects JSON that is not a backup" do
-    import([1, 2, 3])
+    import([ 1, 2, 3 ])
     assert_redirected_to new_import_path
     assert_match(/valid backup data/, flash[:alert])
   end
@@ -82,10 +82,10 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
         assert_difference "@user.episodes.count", 1 do
           import(
             user_email: @user.email,
-            medications: [{ name: "Sumatriptan", kind: "acute", default_dose: "50 mg" }],
-            triggers: [{ name: "Noise" }],
-            episodes: [{ occurred_on: "2024-05-05", aura: true, pain_kind: "migraine", intensity: 8, triggers: ["Noise"],
-                         medications: [{ name: "Sumatriptan", dose: "50 mg", taken_time: "10:00", effect: "good" }] }]
+            medications: [ { name: "Sumatriptan", kind: "acute", default_dose: "50 mg" } ],
+            triggers: [ { name: "Noise" } ],
+            episodes: [ { occurred_on: "2024-05-05", aura: true, pain_kind: "migraine", intensity: 8, triggers: [ "Noise" ],
+                         medications: [ { name: "Sumatriptan", dose: "50 mg", taken_time: "10:00", effect: "good" } ] } ]
           )
         end
       end
@@ -96,7 +96,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
 
     episode = @user.episodes.find_by!(occurred_on: "2024-05-05")
     assert episode.aura?
-    assert_equal ["Noise"], episode.triggers.map(&:name)
+    assert_equal [ "Noise" ], episode.triggers.map(&:name)
     assert_equal "10:00", episode.medication_intakes.first.taken_time.strftime("%H:%M")
   end
 
@@ -105,24 +105,24 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
     row = { occurred_on: existing.occurred_on.iso8601, pain_kind: "headache", intensity: 4 }
 
     assert_difference "@user.episodes.count", 1 do
-      import(episodes: [row, row.merge(started_time: "22:00")])
+      import(episodes: [ row, row.merge(started_time: "22:00") ])
     end
     assert_equal "Successfully imported 0 medications and 1 episodes.", flash[:notice]
   end
 
   test "matches existing medications ignoring case" do
     assert_no_difference "@user.medications.count" do
-      import(episodes: [{ occurred_on: "2024-06-01", pain_kind: "migraine", intensity: 5, medications: [{ name: "ibuprofen" }] }])
+      import(episodes: [ { occurred_on: "2024-06-01", pain_kind: "migraine", intensity: 5, medications: [ { name: "ibuprofen" } ] } ])
     end
     assert_equal medications(:ibuprofen), @user.episodes.find_by!(occurred_on: "2024-06-01").medications.first
   end
 
   test "rolls back everything on an invalid row" do
-    assert_no_difference ["@user.episodes.count", "@user.medications.count", "@user.triggers.count"] do
+    assert_no_difference [ "@user.episodes.count", "@user.medications.count", "@user.triggers.count" ] do
       import(
-        medications: [{ name: "Brand New" }],
-        triggers: [{ name: "Brand New" }],
-        episodes: [{ occurred_on: "2024-07-01", aura: true }, { occurred_on: "invalid-date", pain_kind: "migraine", intensity: 5 }]
+        medications: [ { name: "Brand New" } ],
+        triggers: [ { name: "Brand New" } ],
+        episodes: [ { occurred_on: "2024-07-01", aura: true }, { occurred_on: "invalid-date", pain_kind: "migraine", intensity: 5 } ]
       )
     end
 
@@ -131,7 +131,7 @@ class ImportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "error messages never leak exception details" do
-    import(episodes: [{ occurred_on: "31/12/2020", pain_kind: "migraine", intensity: 3 }])
+    import(episodes: [ { occurred_on: "31/12/2020", pain_kind: "migraine", intensity: 3 } ])
 
     assert_match(/Episode #1/, flash[:alert])
     assert_no_match(/Date::Error|ActiveRecord|NoMethodError|Validation failed/, flash[:alert])

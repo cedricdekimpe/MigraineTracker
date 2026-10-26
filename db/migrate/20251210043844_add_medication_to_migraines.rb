@@ -48,7 +48,7 @@ class AddMedicationToMigraines < ActiveRecord::Migration[8.1]
       ensure_default_medications(user)
     end
 
-    MigrationMigraine.where.not(medication: [nil, ""]).find_each do |migraine|
+    MigrationMigraine.where.not(medication: [ nil, "" ]).find_each do |migraine|
       name = migraine.medication.to_s.strip
       next if name.blank?
 

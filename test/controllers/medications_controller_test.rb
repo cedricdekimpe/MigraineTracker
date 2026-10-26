@@ -50,7 +50,7 @@ class MedicationsControllerTest < ActionDispatch::IntegrationTest
     patch medication_path(id: medications(:paracetamol)), params: { medication: { name: "Acetaminophen", kind: "other", default_dose: "1 g" } }
 
     medication = medications(:paracetamol).reload
-    assert_equal ["Acetaminophen", "other", "1 g"], [medication.name, medication.kind, medication.default_dose]
+    assert_equal [ "Acetaminophen", "other", "1 g" ], [ medication.name, medication.kind, medication.default_dose ]
   end
 
   test "removing a used medication archives it and keeps the history" do

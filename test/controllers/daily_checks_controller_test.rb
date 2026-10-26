@@ -34,13 +34,13 @@ class DailyChecksControllerTest < ActionDispatch::IntegrationTest
       patch daily_check_path(date: @today.iso8601), params: { daily_check: { sleep: "fragmented", stress: "high", skipped_meal: "1", caffeine: "usual" } }
     end
     check = @user.daily_checks.find_by!(date: @today)
-    assert_equal ["fragmented", "high", true, "usual"], [check.sleep, check.stress, check.skipped_meal, check.caffeine]
+    assert_equal [ "fragmented", "high", true, "usual" ], [ check.sleep, check.stress, check.skipped_meal, check.caffeine ]
     assert_redirected_to episodes_path(month: @today.strftime("%Y-%m"))
 
     assert_no_difference -> { @user.daily_checks.count } do
       patch daily_check_path(date: @today.iso8601), params: { daily_check: { sleep: "good", skipped_meal: "0" } }
     end
-    assert_equal ["good", false], [check.reload.sleep, check.skipped_meal]
+    assert_equal [ "good", false ], [ check.reload.sleep, check.skipped_meal ]
   end
 
   test "yesterday can be filled in, the future and old history cannot" do

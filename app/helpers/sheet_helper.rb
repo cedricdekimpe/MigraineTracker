@@ -26,7 +26,7 @@ module SheetHelper
   def sheet_letter(day)
     return if day.letter.nil?
 
-    safe_join([day.letter, (tag.sup("a", class: "ml-px text-[0.6em] font-semibold", title: t("episodes.aura")) if day.aura_with_pain?)])
+    safe_join([ day.letter, (tag.sup("a", class: "ml-px text-[0.6em] font-semibold", title: t("episodes.aura")) if day.aura_with_pain?) ])
   end
 
 

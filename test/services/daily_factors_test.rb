@@ -34,8 +34,8 @@ class DailyFactorsTest < ActiveSupport::TestCase
     end
 
     result = factors.results.find { |row| row.factor == :poor_sleep && row.lag == 2 }
-    assert_equal [20, 20, 40], [result.exposed_days, result.exposed_pain_days, result.other_days]
-    assert_equal [100, 0, 100], [result.exposed_share, result.other_share, result.gap]
+    assert_equal [ 20, 20, 40 ], [ result.exposed_days, result.exposed_pain_days, result.other_days ]
+    assert_equal [ 100, 0, 100 ], [ result.exposed_share, result.other_share, result.gap ]
     assert result.notable?
     assert_equal :poor_sleep, factors.notable.first.factor
     same_day = factors.results.find { |row| row.factor == :poor_sleep && row.lag == 0 }

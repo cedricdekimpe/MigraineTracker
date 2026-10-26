@@ -12,6 +12,6 @@ Rails.application.configure do
     policy.form_action :self, :https
   end
 
-  config.content_security_policy_nonce_directives = %w(script-src style-src)
+  config.content_security_policy_nonce_directives = %w[script-src style-src]
   config.content_security_policy_report_only = false
 end

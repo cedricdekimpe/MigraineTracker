@@ -6,7 +6,7 @@ class ExportsController < ApplicationController
 
     send_data DataExporter.new(current_user).as_hash.to_json,
       filename: filename,
-      type: 'application/json',
-      disposition: 'attachment'
+      type: "application/json",
+      disposition: "attachment"
   end
 end

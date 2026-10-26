@@ -240,7 +240,7 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
   test "ticked medications become intakes with the default dose" do
     ibuprofen = medications(:ibuprofen)
 
-    post episodes_path, params: { episode: { occurred_on: "2025-02-06", pain_kind: "headache", intensity: "3", medication_ids: [ibuprofen.id, medications(:paracetamol).id] } }
+    post episodes_path, params: { episode: { occurred_on: "2025-02-06", pain_kind: "headache", intensity: "3", medication_ids: [ ibuprofen.id, medications(:paracetamol).id ] } }
 
     episode = @user.episodes.find_by!(occurred_on: "2025-02-06")
     assert_equal 2, episode.medication_intakes.count
@@ -252,12 +252,12 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
       post episodes_path, params: { episode: {
         occurred_on: "2025-02-07", pain_kind: "migraine", intensity: "8",
         new_medication_names: "Sumatriptan 50, ibuprofen",
-        suggested_medications: ["Rizatriptan"]
+        suggested_medications: [ "Rizatriptan" ]
       } }
     end
 
     episode = @user.episodes.find_by!(occurred_on: "2025-02-07")
-    assert_equal ["Ibuprofen", "Rizatriptan", "Sumatriptan 50"], episode.medications.map(&:name).sort
+    assert_equal [ "Ibuprofen", "Rizatriptan", "Sumatriptan 50" ], episode.medications.map(&:name).sort
   end
 
   test "typing the name of an archived medication brings it back" do
@@ -268,7 +268,7 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "another user's medication id is ignored" do
-    post episodes_path, params: { episode: { occurred_on: "2025-02-09", pain_kind: "migraine", intensity: "4", medication_ids: [medications(:aspirin).id] } }
+    post episodes_path, params: { episode: { occurred_on: "2025-02-09", pain_kind: "migraine", intensity: "4", medication_ids: [ medications(:aspirin).id ] } }
 
     assert_empty @user.episodes.find_by!(occurred_on: "2025-02-09").medications
   end
@@ -277,22 +277,22 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     assert_difference "@user.triggers.count", 1 do
       post episodes_path, params: { episode: {
         occurred_on: "2025-02-10", pain_kind: "migraine", intensity: "5",
-        trigger_ids: [triggers(:stress).id], new_trigger_names: "Chocolate, stress"
+        trigger_ids: [ triggers(:stress).id ], new_trigger_names: "Chocolate, stress"
       } }
     end
 
     names = @user.episodes.find_by!(occurred_on: "2025-02-10").triggers.map(&:name).sort
-    assert_equal ["Chocolate", "Stress"], names
+    assert_equal [ "Chocolate", "Stress" ], names
   end
 
   test "another user's trigger id is ignored" do
-    post episodes_path, params: { episode: { occurred_on: "2025-02-11", pain_kind: "migraine", intensity: "5", trigger_ids: [triggers(:other_users_trigger).id] } }
+    post episodes_path, params: { episode: { occurred_on: "2025-02-11", pain_kind: "migraine", intensity: "5", trigger_ids: [ triggers(:other_users_trigger).id ] } }
 
     assert_empty @user.episodes.find_by!(occurred_on: "2025-02-11").triggers
   end
 
   test "a failed save creates no medication or trigger" do
-    assert_no_difference ["Medication.count", "Trigger.count", "Episode.count"] do
+    assert_no_difference [ "Medication.count", "Trigger.count", "Episode.count" ] do
       post episodes_path, params: { episode: { occurred_on: "2025-02-12", pain_kind: "", new_medication_names: "Brand New", new_trigger_names: "Brand New" } }
     end
     assert_response :unprocessable_entity
@@ -317,13 +317,13 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
 
     patch episode_path(id: episode), params: { episode: {
       intensity: "9",
-      medication_ids: [medications(:ibuprofen).id, medications(:propranolol).id]
+      medication_ids: [ medications(:ibuprofen).id, medications(:propranolol).id ]
     } }
 
     assert_redirected_to history_episodes_path(year: nil)
     episode.reload
     assert_equal 9, episode.intensity
-    assert_equal [medications(:ibuprofen).id, medications(:propranolol).id].sort, episode.medication_intakes.map(&:medication_id).sort
+    assert_equal [ medications(:ibuprofen).id, medications(:propranolol).id ].sort, episode.medication_intakes.map(&:medication_id).sort
     assert_equal "partial", episode.medication_intakes.find_by!(medication: medications(:ibuprofen)).effect
   end
 
@@ -332,7 +332,7 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     intake = medication_intakes(:first_dose)
 
     patch episode_path(id: episode), params: { episode: {
-      medication_ids: [medications(:ibuprofen).id, medications(:paracetamol).id],
+      medication_ids: [ medications(:ibuprofen).id, medications(:paracetamol).id ],
       medication_intakes_attributes: { "0" => { id: intake.id, dose: "600 mg", taken_time: "09:15", effect: "good" } }
     } }
 
@@ -349,8 +349,8 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
     get edit_episode_path(id: episode)
     assert_select "input[name='episode[medication_ids][]'][value='#{medications(:old_med).id}'][checked]"
 
-    patch episode_path(id: episode), params: { episode: { intensity: "6", medication_ids: [medications(:old_med).id] } }
-    assert_equal [medications(:old_med)], episode.reload.medications.to_a
+    patch episode_path(id: episode), params: { episode: { intensity: "6", medication_ids: [ medications(:old_med).id ] } }
+    assert_equal [ medications(:old_med) ], episode.reload.medications.to_a
   end
 
   test "update with invalid data re-renders" do
@@ -498,7 +498,7 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
 
   test "a month outside the journal shows the current one" do
     current = Date.current.strftime("%Y-%m")
-    ["1-01", "1" + "0" * 400 + "-01", "1899-12", Date.current.next_month.strftime("%Y-%m")].each do |month|
+    [ "1-01", "1" + "0" * 400 + "-01", "1899-12", Date.current.next_month.strftime("%Y-%m") ].each do |month|
       get episodes_path(month: month)
       assert_response :success
       assert_select "section[data-month='#{current}']"
@@ -517,7 +517,7 @@ class EpisodesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "a year outside the journal shows the current one, without a link to the next" do
-    ["99999", "1899", (Date.current.year + 1).to_s].each do |year|
+    [ "99999", "1899", (Date.current.year + 1).to_s ].each do |year|
       get yearly_episodes_path(year: year)
       assert_response :success
       assert_select "h1", text: Date.current.year.to_s

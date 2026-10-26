@@ -18,8 +18,8 @@ module ApplicationHelper
 
     # Previous button
     if pagy.prev
-      html << link.call(pagy.prev, 
-        '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>', 
+      html << link.call(pagy.prev,
+        '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>',
         classes: "inline-flex items-center rounded-lg border border-line-control bg-surface px-2 py-2 text-sm font-medium text-fg-muted hover:bg-page transition",
         aria_label: "Previous")
     else
@@ -30,7 +30,7 @@ module ApplicationHelper
     pagy.series.each do |item|
       case item
       when Integer
-        html << link.call(item, item.to_s, 
+        html << link.call(item, item.to_s,
           classes: "inline-flex items-center rounded-lg border border-line-control bg-surface px-3 py-2 text-sm font-medium text-fg-secondary hover:bg-page transition")
       when String
         html << %(<span class="inline-flex items-center rounded-lg border border-accent-500 bg-accent-500 px-3 py-2 text-sm font-medium text-white">#{item}</span>)
@@ -41,8 +41,8 @@ module ApplicationHelper
 
     # Next button
     if pagy.next
-      html << link.call(pagy.next, 
-        '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>', 
+      html << link.call(pagy.next,
+        '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>',
         classes: "inline-flex items-center rounded-lg border border-line-control bg-surface px-2 py-2 text-sm font-medium text-fg-muted hover:bg-page transition",
         aria_label: "Next")
     else

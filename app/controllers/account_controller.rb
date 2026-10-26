@@ -2,7 +2,7 @@
 
 class AccountController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_resource, only: [:profile]
+  before_action :set_resource, only: [ :profile ]
 
   def show
     redirect_to account_profile_path
@@ -15,7 +15,7 @@ class AccountController < ApplicationController
     @medications = current_user.medications.active.alphabetical
     @archived_medications = current_user.medications.archived.alphabetical
     known = current_user.medications.map { |medication| medication.name.downcase }
-    @suggestions = Medication.suggestions.flat_map { |kind, names| names.map { |name| [name, kind] } }
+    @suggestions = Medication.suggestions.flat_map { |kind, names| names.map { |name| [ name, kind ] } }
                              .reject { |name, _kind| known.include?(name.downcase) }
   end
 

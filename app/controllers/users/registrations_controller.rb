@@ -16,7 +16,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     super
   end
 
-  before_action :configure_sign_up_params, only: [:create]
+  before_action :configure_sign_up_params, only: [ :create ]
   before_action :require_open_signups, only: [ :new, :create ]
 
   protected
@@ -36,6 +36,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:health_data_consent])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [ :health_data_consent ])
   end
 end

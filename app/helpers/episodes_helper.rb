@@ -9,10 +9,10 @@ module EpisodesHelper
       tag.span(intensity, class: "inline-flex min-w-7 items-center justify-center rounded-full bg-sev-extreme px-1.5 font-bold text-sev-on-extreme", data: { severity: "extreme" })
     else
       severity, weight = case intensity
-                         when 0..3 then ["mild", "font-semibold"]
-                         when 4..6 then ["moderate", "font-semibold"]
-                         else ["severe", "font-bold"]
-                         end
+      when 0..3 then [ "mild", "font-semibold" ]
+      when 4..6 then [ "moderate", "font-semibold" ]
+      else [ "severe", "font-bold" ]
+      end
       tag.span(intensity, class: "#{weight} text-sev-#{severity}", data: { severity: severity })
     end
   end
@@ -30,7 +30,7 @@ module EpisodesHelper
   # What a guest told us, worded like a saved episode: "Migraine, 7/10".
   def guest_episode_summary(data)
     episode = Episode.new(pain_kind: data["pain_kind"].presence, aura: data["aura"], intensity: data["intensity"])
-    [episode_kind_label(episode), (episode.intensity && "#{episode.intensity}/10")].compact.join(", ")
+    [ episode_kind_label(episode), (episode.intensity && "#{episode.intensity}/10") ].compact.join(", ")
   end
 
   # 135 -> "2 h 15", 45 -> "45 min"

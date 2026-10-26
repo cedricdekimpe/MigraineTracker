@@ -114,13 +114,13 @@ class EpisodeTest < ActiveSupport::TestCase
   end
 
   test "cannot take another user's medication" do
-    episode = build(medication_intakes_attributes: [{ medication_id: medications(:aspirin).id }])
+    episode = build(medication_intakes_attributes: [ { medication_id: medications(:aspirin).id } ])
     assert_not episode.save
   end
 
   test "destroying an episode removes its intakes and trigger links" do
     episode = episodes(:migraine_with_aura)
-    assert_difference ["MedicationIntake.count", "EpisodeTrigger.count"], -2 do
+    assert_difference [ "MedicationIntake.count", "EpisodeTrigger.count" ], -2 do
       episode.destroy
     end
   end
@@ -145,6 +145,6 @@ class EpisodeTest < ActiveSupport::TestCase
     user.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 4)
     user.episodes.create!(occurred_on: Date.current - 8, pain_kind: "migraine", intensity: 4, ongoing: true)
 
-    assert_equal [open_one], user.episodes.ongoing.to_a
+    assert_equal [ open_one ], user.episodes.ongoing.to_a
   end
 end

@@ -47,7 +47,7 @@ class MonthlyOverview
     end
 
     def mixed?
-      [triptan_days, acute_days, combination_days, gepant_days].count(&:positive?) > 1
+      [ triptan_days, acute_days, combination_days, gepant_days ].count(&:positive?) > 1
     end
 
     # An ICHD-3 threshold is reached this month.

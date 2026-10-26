@@ -55,9 +55,9 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
     post exports_path
 
     episode = exported["episodes"].find { |e| e["started_time"] == "08:30" }
-    assert_equal [true, "migraine", 7, 240], episode.values_at("aura", "pain_kind", "intensity", "duration_minutes")
-    assert_equal ["Lack of sleep", "Stress"], episode["triggers"]
-    assert_equal ["Ibuprofen", "Paracetamol"], episode["medications"].map { |m| m["name"] }.sort
+    assert_equal [ true, "migraine", 7, 240 ], episode.values_at("aura", "pain_kind", "intensity", "duration_minutes")
+    assert_equal [ "Lack of sleep", "Stress" ], episode["triggers"]
+    assert_equal [ "Ibuprofen", "Paracetamol" ], episode["medications"].map { |m| m["name"] }.sort
 
     aura_only = exported["episodes"].find { |e| e["aura"] && e["pain_kind"].nil? }
     assert_nil aura_only["intensity"]
@@ -73,7 +73,7 @@ class ExportsControllerTest < ActionDispatch::IntegrationTest
     assert_equal({ "date" => "2026-03-02", "sleep" => "short", "stress" => "high", "skipped_meal" => true, "caffeine" => "none" },
                  exported["daily_checks"].find { |row| row["date"] == "2026-03-02" })
     candesartan = exported["medications"].find { |m| m["name"] == "Candesartan" }
-    assert_equal [{ "started_on" => "2026-01-01", "ended_on" => "2026-04-01", "dose" => "16 mg", "stop_reason" => "ineffective" }], candesartan["periods"]
+    assert_equal [ { "started_on" => "2026-01-01", "ended_on" => "2026-04-01", "dose" => "16 mg", "stop_reason" => "ineffective" } ], candesartan["periods"]
   end
 
   test "an export can be imported back into an empty account" do

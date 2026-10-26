@@ -14,7 +14,7 @@ class DailyFactors
     skipped_meal: ->(check, _previous) { check.skipped_meal },
     caffeine_high: ->(check, _previous) { check.caffeine && check.caffeine == "high" }
   }.freeze
-  LAGS = [0, 1, 2].freeze
+  LAGS = [ 0, 1, 2 ].freeze
 
   MIN_CHECKED_DAYS = 30
   MIN_EXPOSED_DAYS = 8
@@ -80,8 +80,8 @@ class DailyFactors
   end
 
   def result(factor, lag)
-    exposed = [0, 0]
-    other = [0, 0]
+    exposed = [ 0, 0 ]
+    other = [ 0, 0 ]
 
     checks.each do |check|
       outcome_day = check.date + lag
