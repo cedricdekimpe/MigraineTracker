@@ -4,12 +4,13 @@
 <%
   # Questions by section, with the page each answer points to when there is one
   sections = {
-    usage: %w[track_crisis guest install daily_check medications statistics report],
+    # The reminder question only where the reminder exists (a copy without push keys has none)
+    usage: %w[track_crisis guest install daily_check reminder medications statistics report] - (WebPushSender.enabled? ? [] : %w[reminder]),
     account: %w[export import delete],
     privacy: %w[storage sharing rights]
   }
   links = {
-    "statistics" => [:numbers, numbers_path], "export" => [:data, account_data_path], "import" => [:data, account_data_path],
+    "statistics" => [:numbers, numbers_path], "reminder" => [:profile, account_profile_path], "export" => [:data, account_data_path], "import" => [:data, account_data_path],
     "delete" => [:data, account_data_path], "storage" => [:privacy, privacy_path], "sharing" => [:privacy, privacy_path],
     "rights" => [:privacy, privacy_path]
   }

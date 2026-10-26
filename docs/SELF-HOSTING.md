@@ -25,6 +25,8 @@ curl -fsSL  https://raw.githubusercontent.com/cedricdekimpe/MigraineTracker/main
 - `OPERATOR_NAME` and `CONTACT_EMAIL`: who runs this copy. The privacy page shows them and warns visitors if they are empty.
 - `SIGNUPS=closed` once you and your people have accounts (a personal copy should not take strangers).
 - `SMTP_*` and `MAIL_FROM`: optional mail. Without `SMTP_PASSWORD`, nothing is ever sent.
+- `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY`: optional notifications (the daily check-in reminder). The command to generate
+  them is in `.env.selfhost.example`. Without them, the reminder does not show. Notifications need https.
 - To try it on your own machine over plain http first, set `FORCE_SSL=false` and open http://localhost:3000.
 
 ## 3. Start it
@@ -75,6 +77,7 @@ back up before.
 
 ## Good to know
 - No analytics, no tracker, no outside script: nothing in the app calls another site. Your mail provider, if you set one, sees
-  the address and the message of password-reset mails.
+  the address and the message of password-reset mails. With the reminder keys set, the server sends the reminders through the
+  notification service of each user's browser (Google, Apple, Mozilla), encrypted; say so in your privacy page.
 - The name "Migraine Tracker" and the logo are not covered by the licence: if you change the software, pick your own name.
 - A security problem in the software itself: see `SECURITY.md`.

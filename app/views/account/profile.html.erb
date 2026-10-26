@@ -71,6 +71,8 @@
           </div>
         <% end %>
       </section>
+
+      <%= render "account/reminder" if WebPushSender.enabled? %>
     </div>
   </main>
 </div>

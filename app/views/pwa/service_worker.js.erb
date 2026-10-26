@@ -59,3 +59,34 @@ async function cacheFirst(request) {
   if (response.ok) cache.put(request, response.clone())
   return response
 }
+
+// Notifications (the daily check-in reminder). The message only holds a neutral title, a line of text and
+// the page to open; it never carries health data.
+self.addEventListener("push", (event) => {
+  let data = {}
+  try { data = event.data ? event.data.json() : {} } catch { data = {} }
+  if (!data.title) return
+
+  event.waitUntil(self.registration.showNotification(data.title, {
+    body: data.body,
+    tag: data.tag,
+    icon: "/icon-192.png",
+    data: { url: data.url }
+  }))
+})
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close()
+  const url = new URL((event.notification.data && event.notification.data.url) || "/", self.location.origin)
+  if (url.origin !== self.location.origin) return
+
+  event.waitUntil((async () => {
+    const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true })
+    const open = windows.find((client) => new URL(client.url).origin === self.location.origin && "navigate" in client)
+    if (open) {
+      await open.focus()
+      return open.navigate(url.href)
+    }
+    return self.clients.openWindow(url.href)
+  })())
+})

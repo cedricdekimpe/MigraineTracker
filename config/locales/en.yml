@@ -620,7 +620,7 @@ en:
   privacy:
     title: "Privacy policy"
     description: "What Migraine Tracker keeps, why, for how long, with whom, and your rights."
-    updated: "Last updated: 24 October 2026"
+    updated: "Last updated: 26 October 2026"
     intro: "Migraine Tracker keeps only what you write in it. There is no advertising, no tracking, and no script, font or analytics tool loaded from another site."
     sections:
       data:
@@ -637,6 +637,7 @@ en:
           - "A session cookie, needed to stay signed in; if you tick \"Remember me\" (ticked by default), a second cookie that lasts three months and is renewed each time you come back. No analytics or advertising cookie."
           - "Your theme choice (Auto, Paper, Night) stays in your browser."
           - "Installed on a phone or a computer, the app keeps its technical files (styles, icons) on the device, plus two public pages, \"No connection\" and \"When to seek urgent care\". Never a page of your journal."
+          - "If you turn on the daily check-in reminder: the time you chose, your time zone and, for each device that accepts it, the address its browser gives for notifications. The reminder goes, encrypted, through the browser's notification service (Google for Chrome, Apple for Safari, Mozilla for Firefox), which does not see its content. Turning the reminder off erases these addresses."
           - "An attack noted without network stays in the device's browser until the network is back, then it is sent and erased from the device."
           - "To block attacks on passwords, the IP address and email address of sign-in attempts are counted for one hour at most."
           - "The server's technical logs record the pages requested and the IP address; your health data is filtered out of them."
@@ -763,6 +764,24 @@ en:
         body:
           - "The thresholds and reference points come from published guidelines (International Headache Society, international classification of headache disorders, Belgian consensus). Their sources are listed on the \"Understand my figures\" page, once signed in."
           - "The tool gives no diagnosis and does not replace a doctor."
+  reminders:
+    title: "Daily check-in reminder"
+    enable: "Remind me to fill in the daily check-in"
+    hint: "One notification a day at the time you choose, only if the check-in is still empty. It says \"Daily check-in\", nothing about your health. It goes, encrypted, through your browser's notification service (Google, Apple or Mozilla)."
+    time: "Time"
+    saved_on: "Reminder on, every day at %{time}."
+    saved_off: "Reminder off."
+    this_device: "This device does not get the reminder."
+    receive_here: "Get it here"
+    ready: "This device will get the reminder."
+    denied: "Notifications are blocked for this site. Allow them in your browser's settings."
+    ios_install: "On iPhone and iPad, install the app first (Share, then \"Add to Home Screen\"), then turn the reminder on from the app."
+    unsupported: "This browser cannot receive notifications."
+    failed: "Notifications could not be turned on for this device. Try again."
+    daily:
+      title: "Daily check-in"
+      body: "A few seconds to note your day."
+
   install:
     title: "Install the app"
     button: "Install"
@@ -830,6 +849,9 @@ en:
       install:
         question: "Can I install the app on my phone?"
         answer: "Yes: it then opens like an app, without the browser bar. On Android, Account › \"Install\", or Chrome's menu › \"Install app\"; a long press on the icon then offers \"I have a headache\" directly. On iPhone, in Safari: Share › \"Add to Home Screen\". Without network, the app still lets you note an attack: it joins the journal once the network is back."
+      reminder:
+        question: "Can I get a reminder for the daily check-in?"
+        answer: "Yes, if you want: Account › \"Daily check-in reminder\", at the time you choose. At most one notification a day, and none if the check-in is already filled in. It only says \"Daily check-in\". On iPhone, install the app first, then turn the reminder on from the app."
       export:
         question: "How do I export my data?"
         answer: "Account › Data management › \"Export all data\" downloads a JSON file with your whole journal: episodes, medications and treatment periods, triggers, period days and daily check-ins."

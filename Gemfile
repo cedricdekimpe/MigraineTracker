@@ -78,4 +78,7 @@ gem "rails-i18n", "~> 8.0"
 # API
 gem "rack-attack", "~> 6.7"
 
-# API Documentation
+# Web push notifications (the daily check-in reminder). openssl stays the one Ruby ships with: a newer
+# version would have to be compiled, and the 3.x line is all web-push needs.
+gem "web-push", "~> 3.1"
+gem "openssl", "~> 3.3.0"

@@ -43,6 +43,13 @@ class PwaControllerTest < ActionDispatch::IntegrationTest
     assert_match(/const VERSION = "\h{12}"/, response.body)
   end
 
+  test "the service worker shows the notifications and opens their page" do
+    get "/service-worker.js"
+
+    assert_includes response.body, 'addEventListener("push"'
+    assert_includes response.body, 'addEventListener("notificationclick"'
+  end
+
   test "the offline page shows nothing personal, even to someone signed in" do
     user = users(:one)
     sign_in user

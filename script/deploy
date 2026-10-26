@@ -2,13 +2,13 @@
 # Deploys with Kamal. The secret comes from a file of KEY=VALUE lines, read literally:
 # script/deploy [kamal arguments, default: deploy]
 file = ENV.fetch("APP_ENV_FILE", File.join(Dir.home, ".config", "migrainetracker", "app.env"))
-abort "Missing #{file} (SECRET_KEY_BASE, SMTP_PASSWORD, DEPLOY_HOST)" unless File.file?(file)
+abort "Missing #{file} (SECRET_KEY_BASE, SMTP_PASSWORD, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, DEPLOY_HOST)" unless File.file?(file)
 
 File.foreach(file) do |line|
   key, sep, value = line.chomp.partition("=")
   ENV[key] = value if sep == "=" && key.match?(/\A[A-Z][A-Z0-9_]*\z/)
 end
-%w[SECRET_KEY_BASE SMTP_PASSWORD DEPLOY_HOST].each { |key| abort "#{key} is empty in #{file}" if ENV[key].to_s.empty? }
+%w[SECRET_KEY_BASE SMTP_PASSWORD VAPID_PUBLIC_KEY VAPID_PRIVATE_KEY DEPLOY_HOST].each { |key| abort "#{key} is empty in #{file}" if ENV[key].to_s.empty? }
 
 args = ARGV.empty? ? [ "deploy" ] : ARGV
 exec("kamal", *args)

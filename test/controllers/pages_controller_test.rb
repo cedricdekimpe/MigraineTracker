@@ -90,6 +90,17 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Comment noter une crise ?", data["mainEntity"].first["name"]
   end
 
+  test "the FAQ tells about the reminder only where it can be turned on" do
+    ENV["VAPID_PUBLIC_KEY"] = "BPublicKey"
+    ENV["VAPID_PRIVATE_KEY"] = "private"
+    get faq_path(locale: :fr)
+    assert_select "[data-faq] details", 14
+    assert_match(/Rappel du bilan du jour/, response.body)
+  ensure
+    ENV.delete("VAPID_PUBLIC_KEY")
+    ENV.delete("VAPID_PRIVATE_KEY")
+  end
+
   test "the consent asked at sign-up covers the whole journal" do
     get new_user_registration_path(locale: :fr)
     assert_match(/bilans du jour/, response.body)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_24_200000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_100000) do
   create_table "daily_checks", force: :cascade do |t|
     t.integer "user_id", null: false
     t.date "date", null: false
@@ -89,6 +89,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_200000) do
     t.index ["user_id"], name: "index_period_days_on_user_id"
   end
 
+  create_table "push_subscriptions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "endpoint", null: false
+    t.string "p256dh", null: false
+    t.string "auth", null: false
+    t.string "locale", default: "fr", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["endpoint"], name: "index_push_subscriptions_on_endpoint", unique: true
+    t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
+  end
+
   create_table "treatment_periods", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "medication_id", null: false
@@ -126,6 +138,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_200000) do
     t.string "reset_password_token"
     t.datetime "updated_at", null: false
     t.boolean "track_cycle", default: false, null: false
+    t.string "daily_reminder_at"
+    t.string "time_zone", default: "Europe/Brussels", null: false
+    t.date "daily_reminder_sent_on"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["health_data_consent_version"], name: "index_users_on_health_data_consent_version"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -139,6 +154,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_200000) do
   add_foreign_key "medication_intakes", "medications"
   add_foreign_key "medications", "users"
   add_foreign_key "period_days", "users"
+  add_foreign_key "push_subscriptions", "users"
   add_foreign_key "treatment_periods", "medications"
   add_foreign_key "treatment_periods", "users"
   add_foreign_key "triggers", "users"
