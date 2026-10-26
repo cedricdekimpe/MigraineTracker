@@ -42,8 +42,7 @@ Checks used before each release: `bin/rubocop`, `bin/brakeman`, `bin/bundler-aud
 
 **Self-hosting.** One container and one volume: `docker compose up -d` with the provided `docker-compose.yml` and an `.env`
 (see `.env.selfhost.example`). The step-by-step guide, with https, backups, updates and what you owe your users as the person
-responsible for the data, is [docs/SELF-HOSTING.md](docs/SELF-HOSTING.md). The hosted version's own backup routine is in
-`docs/BACKUP.md`.
+responsible for the data, is [docs/SELF-HOSTING.md](docs/SELF-HOSTING.md).
 
 ## Contributing and security
 

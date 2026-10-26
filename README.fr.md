@@ -44,8 +44,7 @@ Contrôles avant chaque version : `bin/rubocop`, `bin/brakeman`, `bin/bundler-au
 
 **Auto-hébergement.** Un conteneur et un volume : `docker compose up -d` avec le `docker-compose.yml` fourni et un `.env`
 (voir `.env.selfhost.example`). Le guide pas à pas, avec le https, les sauvegardes, les mises à jour et ce que vous devez à vos
-utilisateurs en tant que responsable des données, est dans [docs/SELF-HOSTING.md](docs/SELF-HOSTING.md) (en anglais). La
-sauvegarde de la version hébergée est décrite dans `docs/BACKUP.md`.
+utilisateurs en tant que responsable des données, est dans [docs/SELF-HOSTING.md](docs/SELF-HOSTING.md) (en anglais).
 
 ## Contribuer et sécurité
 

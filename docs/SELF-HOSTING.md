@@ -55,7 +55,7 @@ docker compose cp migraine-tracker:/tmp/backup.sqlite3 ./backup-$(date +%F).sqli
 docker compose exec migraine-tracker rm /tmp/backup.sqlite3
 ```
 Keep these copies encrypted and off the machine. To restore: stop the app, put the file back as
-`/rails/storage/production.sqlite3` in the volume, start it. The hosted service's own routine is in `docs/BACKUP.md`.
+`/rails/storage/production.sqlite3` in the volume, start it.
 Each user can also export their own data from Account, then Data.
 
 ## Updating

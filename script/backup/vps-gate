@@ -1,9 +1,0 @@
-#!/bin/sh
-# Runs ON THE VPS as the forced command of the backup key
-# (authorized_keys: command="/home/deploy/bin/migraine-backup-gate",restrict).
-# The key can do two things only: take a snapshot, and read ~/backups-migraine with rsync (read-only).
-case "${SSH_ORIGINAL_COMMAND:-}" in
-  snapshot) exec "$HOME/bin/migraine-snapshot" ;;
-  "rsync --server --sender"*) exec rrsync -ro "$HOME/backups-migraine" ;;
-  *) echo "denied" >&2; exit 1 ;;
-esac
