@@ -13,7 +13,9 @@
     "delete" => [:data, account_data_path], "storage" => [:privacy, privacy_path], "sharing" => [:privacy, privacy_path],
     "rights" => [:privacy, privacy_path]
   }
-  faq_items = sections.values.flatten.map { |key| { question: t("faq.items.#{key}.question"), answer: t("faq.items.#{key}.answer") } }
+  # On a copy run by someone else, the answers about the server and the host are the generic ones
+  answer_key = ->(key) { !Instance.official? && I18n.exists?("faq.items.#{key}.answer_self") ? "faq.items.#{key}.answer_self" : "faq.items.#{key}.answer" }
+  faq_items = sections.values.flatten.map { |key| { question: t("faq.items.#{key}.question"), answer: t(answer_key.call(key)) } }
 %>
 
 <div class="mx-auto max-w-3xl space-y-6" data-faq>
@@ -33,7 +35,7 @@
               <span class="text-fg-muted transition group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
             <div class="space-y-2 px-4 pb-4 text-sm leading-6 text-fg-secondary">
-              <p><%= t("faq.items.#{key}.answer") %></p>
+              <p><%= t(answer_key.call(key)) %></p>
               <% if (link = links[key]) %>
                 <p><%= link_to t("faq.links.#{link.first}"), link.last, class: "font-medium text-link underline" %></p>
               <% end %>

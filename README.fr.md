@@ -42,12 +42,10 @@ TTY_FLAGS=-i bin/docker-dev bash -c "RAILS_ENV=test bin/rails test:system"
 
 Contrôles avant chaque version : `bin/rubocop`, `bin/brakeman`, `bin/bundler-audit`.
 
-**Auto-hébergement.** L'image de production est un seul conteneur avec un volume SQLite (voir `Dockerfile`), réglé par des
-variables d'environnement : `SECRET_KEY_BASE` (obligatoire), `APP_HOST`, et `SMTP_*` / `MAIL_FROM` pour les e-mails de
-réinitialisation du mot de passe (facultatif). Un guide pas à pas n'est pas encore écrit ; `docs/BACKUP.md` décrit la
-sauvegarde de la version hébergée. Si vous hébergez votre propre copie, vous êtes responsable des données qu'elle contient :
-écrivez votre propre politique de confidentialité (les textes de `config/locales` nomment l'exploitant de la version
-hébergée).
+**Auto-hébergement.** Un conteneur et un volume : `docker compose up -d` avec le `docker-compose.yml` fourni et un `.env`
+(voir `.env.selfhost.example`). Le guide pas à pas, avec le https, les sauvegardes, les mises à jour et ce que vous devez à vos
+utilisateurs en tant que responsable des données, est dans [docs/SELF-HOSTING.md](docs/SELF-HOSTING.md) (en anglais). La
+sauvegarde de la version hébergée est décrite dans `docs/BACKUP.md`.
 
 ## Contribuer et sécurité
 

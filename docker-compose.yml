@@ -1,0 +1,19 @@
+# Migraine Tracker, self-hosted: one container, one volume (the SQLite databases).
+#   cp .env.selfhost.example .env     # then edit it
+#   docker compose up -d
+# See docs/SELF-HOSTING.md.
+services:
+  migraine-tracker:
+    image: ghcr.io/cedricdekimpe/migraine-tracker:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SOLID_QUEUE_IN_PUMA: "true"
+    ports:
+      # Put a TLS reverse proxy in front of this port (see the guide); do not expose it to the internet as is.
+      - "127.0.0.1:3000:80"
+    volumes:
+      - migraine_storage:/rails/storage
+
+volumes:
+  migraine_storage:

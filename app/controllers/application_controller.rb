@@ -20,7 +20,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  helper_method :signups_open?, :official_instance?
+
   private
+
+  def signups_open? = Instance.signups_open?
+  def official_instance? = Instance.official?
 
   # Scoped to the request: a bare `I18n.locale =` stays on the thread and leaks into the next request
   # served by it (other web pages, but also the API, which never sets a locale).

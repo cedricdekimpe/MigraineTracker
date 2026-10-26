@@ -38,7 +38,8 @@ Rails.application.configure do
   # config.assume_ssl = true
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  # Behind a TLS proxy this stays on. FORCE_SSL=false is for trying the app over plain http on one's own machine.
+  config.force_ssl = ENV.fetch("FORCE_SSL", "true") != "false"
   # The proxy's health check calls /up in plain HTTP: it must get a 200, not a redirect to HTTPS.
   config.ssl_options = {
     hsts: { expires: 1.year, subdomains: true, preload: true },
@@ -79,7 +80,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Links in mails point to the public address
-  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "migraine-tracker.eu"), protocol: "https" }
+  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "localhost"), protocol: ENV.fetch("FORCE_SSL", "true") == "false" ? "http" : "https" }
 
   # Mail goes out through the SMTP mailbox (Infomaniak) whose password is given to the container.
   # Without it nothing is sent (a password reset then shows an error instead of failing silently).
@@ -89,7 +90,7 @@ Rails.application.configure do
     config.action_mailer.smtp_settings = {
       address: ENV.fetch("SMTP_HOST", "mail.infomaniak.com"),
       port: ENV.fetch("SMTP_PORT", 587).to_i,
-      user_name: ENV.fetch("SMTP_USER", "contact@migraine-tracker.eu"),
+      user_name: ENV["SMTP_USER"],
       password: ENV["SMTP_PASSWORD"],
       authentication: :plain,
       enable_starttls_auto: true

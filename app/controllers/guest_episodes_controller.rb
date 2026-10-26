@@ -2,6 +2,8 @@
 # or sign up (see ApplicationController#after_sign_in_path_for).
 class GuestEpisodesController < ApplicationController
   skip_before_action :authenticate_user!
+  # A copy that takes no new account has no use for a first crisis kept for one
+  before_action -> { redirect_to new_user_session_path unless Instance.signups_open? }
   before_action :redirect_signed_in_users
 
   def show

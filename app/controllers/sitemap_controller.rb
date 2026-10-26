@@ -28,7 +28,7 @@ class SitemapController < ApplicationController
       }
 
       # Who is behind the tool, and what it costs
-      %w[why-free about-ai].each do |slug|
+      (Instance.official? ? %w[why-free about-ai] : []).each do |slug|
         @pages << { url: "#{base_url}/#{locale}/#{slug}", locale: locale, lastmod: Time.current, changefreq: 'monthly', priority: '0.6' }
       end
     end

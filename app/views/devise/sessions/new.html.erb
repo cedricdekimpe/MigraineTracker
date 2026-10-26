@@ -40,9 +40,11 @@
       <%= form.submit t("auth.sign_in"), class: "w-full rounded-lg bg-primary px-4 py-2 text-base font-semibold text-primary-on transition hover:bg-primary-hover" %>
     <% end %>
 
+    <% if signups_open? %>
     <div class="mt-6 text-center text-sm text-fg-secondary">
       <span><%= t("auth.need_account") %></span>
       <%= link_to t("auth.create_one"), new_registration_path(resource_name), class: "font-medium text-link hover:text-accent-800" %>
     </div>
+    <% end %>
   </div>
 </section>

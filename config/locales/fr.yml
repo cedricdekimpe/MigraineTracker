@@ -768,6 +768,23 @@ fr:
           - "Pour toute autre demande (opposition, limitation, question) : écrivez à l'adresse ci-dessous."
           - "Réclamation : l'Autorité de protection des données en Belgique (autoriteprotectiondonnees.be), ou l'autorité de votre pays."
     contact_title: "Contact et responsable du traitement"
+    self_hosted:
+      intro: "Cette copie de Migraine Tracker est exploitée par une personne ou une organisation qui n'est pas l'auteur du logiciel. Cette page décrit ce que le logiciel conserve ; l'exploitant de cette copie, indiqué en bas de page, est responsable de vos données. L'auteur du logiciel n'y a pas accès."
+      operator_missing: "L'exploitant de cette copie n'a pas indiqué son identité. Il doit la renseigner (variables OPERATOR_NAME et CONTACT_EMAIL) avant d'accueillir des utilisateurs."
+      sections:
+        retention:
+          title: "Durée de conservation"
+          points:
+            - "Vos données restent tant que votre compte existe ; le supprimer les efface immédiatement de la base."
+            - "Les copies de sauvegarde, s'il y en a, dépendent de l'exploitant : demandez-lui."
+            - "Les fichiers d'export vous sont envoyés directement et ne sont pas gardés sur le serveur."
+            - "Les compteurs anti-abus disparaissent au bout d'une heure au plus."
+        sharing:
+          title: "Partage et sécurité"
+          points:
+            - "Le logiciel ne vend, ne partage et n'utilise vos données pour aucune publicité, et ne charge rien depuis un autre site."
+            - "Vos données sont stockées sur le serveur de l'exploitant, qui choisit son hébergeur, ses sauvegardes et son service d'e-mail éventuel."
+            - "Elles ne sont pas chiffrées une à une dans la base : elles sont protégées par l'accès au serveur."
     contact_email_label: "E-mail"
     contact_email: "contact@migraine-tracker.eu"
     contact_address_label: "Responsable"
@@ -848,6 +865,7 @@ fr:
     menu: "Dans le menu de votre navigateur : « Installer l'application » ou « Ajouter à l'écran d'accueil »."
 
   auth:
+    signups_closed: "Les inscriptions sont fermées sur ce serveur. Connectez-vous avec votre compte."
     sign_in: "Se connecter"
     welcome_back: "Bon retour"
     sign_in_intro: "Connectez-vous pour continuer votre journal."
@@ -919,9 +937,11 @@ fr:
       storage:
         question: "Où sont mes données et qui peut les voir ?"
         answer: "Sur un serveur dans l'Union européenne, visibles par vous seul depuis votre compte. Elles circulent chiffrées (HTTPS) et votre mot de passe est haché. Aucun script, police ou outil de mesure d'un autre site n'est chargé."
+        answer_self: "Sur le serveur de l'exploitant de cette copie, dont l'identité est dans la politique de confidentialité. Les données circulent chiffrées si l'exploitant active le HTTPS, et votre mot de passe est haché. Aucun script, police ou outil de mesure d'un autre site n'est chargé."
       sharing:
         question: "Partagez-vous mes données ?"
         answer: "Non. Elles ne sont ni vendues, ni partagées, ni utilisées pour la publicité. Seul l'hébergeur du serveur les stocke pour notre compte."
+        answer_self: "Le logiciel ne les vend ni ne les partage, et n'en fait aucun usage publicitaire. Ce que fait l'exploitant de cette copie de son serveur, de ses sauvegardes et de son e-mail est décrit dans la politique de confidentialité."
       rights:
         question: "Quels sont mes droits ?"
         answer: "Exporter vos données, les corriger dans l'application et supprimer votre compte, à tout moment et sans nous écrire. Le détail et le contact sont dans la politique de confidentialité."

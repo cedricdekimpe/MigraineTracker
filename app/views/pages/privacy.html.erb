@@ -8,7 +8,14 @@
     <p class="mt-4 text-fg-secondary"><%= t('privacy.intro') %></p>
   </header>
 
-  <% t('privacy.sections').each do |key, section| %>
+  <%# A copy run by someone else: what the hosted service says about its server, backups and mail provider is not true for it %>
+  <% sections = t('privacy.sections') %>
+  <% unless official_instance? %>
+    <p class="rounded-xl border border-line bg-surface-soft p-4 text-sm leading-6 text-fg-secondary" data-self-hosted><%= t('privacy.self_hosted.intro') %></p>
+    <% sections = sections.merge(t('privacy.self_hosted.sections')) %>
+  <% end %>
+
+  <% sections.each do |key, section| %>
     <section id="<%= key %>" class="scroll-mt-20">
       <h2 class="text-xl font-semibold text-fg"><%= section[:title] %></h2>
       <ul class="mt-3 space-y-2 text-sm leading-6 text-fg-secondary">
@@ -22,8 +29,15 @@
   <section id="contact" class="scroll-mt-20">
     <h2 class="text-xl font-semibold text-fg"><%= t('privacy.contact_title') %></h2>
     <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-fg-secondary">
-      <dt class="font-semibold text-fg"><%= t('privacy.contact_address_label') %></dt><dd><%= t('privacy.contact_address') %></dd>
-      <dt class="font-semibold text-fg"><%= t('privacy.contact_email_label') %></dt><dd><%= t('privacy.contact_email') %></dd>
+      <% if official_instance? %>
+        <dt class="font-semibold text-fg"><%= t('privacy.contact_address_label') %></dt><dd><%= t('privacy.contact_address') %></dd>
+        <dt class="font-semibold text-fg"><%= t('privacy.contact_email_label') %></dt><dd><%= t('privacy.contact_email') %></dd>
+      <% elsif Instance.operator_name || Instance.contact_email %>
+        <% if Instance.operator_name %><dt class="font-semibold text-fg"><%= t('privacy.contact_address_label') %></dt><dd><%= Instance.operator_name %></dd><% end %>
+        <% if Instance.contact_email %><dt class="font-semibold text-fg"><%= t('privacy.contact_email_label') %></dt><dd><%= mail_to Instance.contact_email, nil, class: "text-link underline" %></dd><% end %>
+      <% else %>
+        <dd class="col-span-2 text-over-text" data-operator-missing><%= t('privacy.self_hosted.operator_missing') %></dd>
+      <% end %>
     </dl>
   </section>
 

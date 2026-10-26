@@ -105,7 +105,9 @@
             </div>
           <% else %>
             <%= link_to t("navigation.sign_in"), new_user_session_path, class: "rounded-xl px-3 py-2 font-medium text-fg-secondary transition hover:bg-surface-soft" %>
-            <%= link_to t("navigation.create_account"), new_user_registration_path, class: "hidden rounded-xl bg-primary px-4 py-2 font-semibold text-primary-on transition hover:bg-primary-hover sm:inline-flex" %>
+            <% if signups_open? %>
+              <%= link_to t("navigation.create_account"), new_user_registration_path, class: "hidden rounded-xl bg-primary px-4 py-2 font-semibold text-primary-on transition hover:bg-primary-hover sm:inline-flex" %>
+            <% end %>
           <% end %>
         </nav>
       </div>
@@ -130,8 +132,10 @@
           <%= link_to t("navigation.faq"), faq_path, class: "hover:text-fg" %>
           <%= link_to t("navigation.privacy"), privacy_path, class: "hover:text-fg" %>
           <%= link_to t("navigation.urgent"), urgent_path, class: "hover:text-fg" %>
-          <%= link_to t("navigation.why_free"), why_free_path, class: "hover:text-fg" %>
-          <%= link_to t("navigation.about_ai"), about_ai_path, class: "hover:text-fg" %>
+          <% if official_instance? %>
+            <%= link_to t("navigation.why_free"), why_free_path, class: "hover:text-fg" %>
+            <%= link_to t("navigation.about_ai"), about_ai_path, class: "hover:text-fg" %>
+          <% end %>
           <%# AGPL-3.0 section 13: users of the service are offered its source code %>
           <%= link_to t("navigation.source"), "https://github.com/cedricdekimpe/MigraineTracker", class: "hover:text-fg", rel: "noopener" %>
         </div>

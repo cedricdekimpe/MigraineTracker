@@ -17,8 +17,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   before_action :configure_sign_up_params, only: [:create]
+  before_action :require_open_signups, only: [ :new, :create ]
 
   protected
+
+  # A closed copy (SIGNUPS=closed) takes no new account; existing accounts are untouched
+  def require_open_signups
+    redirect_to new_user_session_path, alert: t("auth.signups_closed") unless Instance.signups_open?
+  end
 
   # Override to add custom flash message key
   def set_flash_message(key, kind, options = {})

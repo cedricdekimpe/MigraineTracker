@@ -40,11 +40,10 @@ TTY_FLAGS=-i bin/docker-dev bash -c "RAILS_ENV=test bin/rails test:system"
 
 Checks used before each release: `bin/rubocop`, `bin/brakeman`, `bin/bundler-audit`.
 
-**Self-hosting.** The production image is a single container with one SQLite volume (see `Dockerfile`), configured with
-environment variables: `SECRET_KEY_BASE` (required), `APP_HOST`, and `SMTP_*` / `MAIL_FROM` for password-reset mail
-(optional). A step-by-step self-hosting guide is not written yet; `docs/BACKUP.md` describes how the hosted version is
-backed up. If you host your own copy you are the data controller for it: write your own privacy policy (the texts in
-`config/locales` name the operator of the hosted version).
+**Self-hosting.** One container and one volume: `docker compose up -d` with the provided `docker-compose.yml` and an `.env`
+(see `.env.selfhost.example`). The step-by-step guide, with https, backups, updates and what you owe your users as the person
+responsible for the data, is [docs/SELF-HOSTING.md](docs/SELF-HOSTING.md). The hosted version's own backup routine is in
+`docs/BACKUP.md`.
 
 ## Contributing and security
 

@@ -3,6 +3,10 @@
 # your test database is "scratch space" for the test suite and is wiped
 # and recreated between test runs. Don't rely on the data there!
 
+# The tests describe the hosted copy (read at boot, before the initializers)
+ENV["INSTANCE"] ||= "official"
+ENV["MAIL_FROM"] ||= "contact@migraine-tracker.eu"
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 

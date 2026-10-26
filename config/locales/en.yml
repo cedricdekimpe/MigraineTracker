@@ -667,6 +667,23 @@ en:
           - "For any other request (objection, restriction, question): write to the address below."
           - "Complaint: the Data Protection Authority in Belgium (dataprotectionauthority.be), or the authority of your country."
     contact_title: "Contact and data controller"
+    self_hosted:
+      intro: "This copy of Migraine Tracker is run by a person or an organisation that is not the author of the software. This page describes what the software keeps; the operator of this copy, named at the bottom of the page, is responsible for your data. The author of the software has no access to it."
+      operator_missing: "The operator of this copy has not stated who they are. They must fill it in (variables OPERATOR_NAME and CONTACT_EMAIL) before taking in users."
+      sections:
+        retention:
+          title: "How long it is kept"
+          points:
+            - "Your data stays as long as your account exists; deleting it erases them from the database at once."
+            - "Backup copies, if any, depend on the operator: ask them."
+            - "Export files are sent straight to you and not kept on the server."
+            - "Anti-abuse counters disappear after one hour at most."
+        sharing:
+          title: "Sharing and security"
+          points:
+            - "The software does not sell or share your data, uses it for no advertising, and loads nothing from another site."
+            - "Your data is stored on the operator's server, who chooses their host, their backups and any mail service."
+            - "It is not encrypted record by record in the database: it is protected by access to the server."
     contact_email_label: "Email"
     contact_email: "contact@migraine-tracker.eu"
     contact_address_label: "Controller"
@@ -747,6 +764,7 @@ en:
     menu: "In your browser's menu: \"Install app\" or \"Add to Home screen\"."
 
   auth:
+    signups_closed: "Sign-ups are closed on this server. Sign in with your account."
     sign_in: "Sign in"
     welcome_back: "Welcome back"
     sign_in_intro: "Sign in to carry on with your journal."
@@ -818,9 +836,11 @@ en:
       storage:
         question: "Where is my data and who can see it?"
         answer: "On a server in the European Union, visible only to you from your account. It travels encrypted (HTTPS) and your password is hashed. No script, font or analytics tool from another site is loaded."
+        answer_self: "On the server of whoever runs this copy, named in the privacy policy. Data travels encrypted if the operator enables HTTPS, and your password is hashed. No script, font or measurement tool from another site is loaded."
       sharing:
         question: "Do you share my data?"
         answer: "No. It is not sold, shared or used for advertising. Only the server's host stores it on our behalf."
+        answer_self: "The software neither sells nor shares it, and makes no advertising use of it. What the operator of this copy does with their server, backups and mail is described in the privacy policy."
       rights:
         question: "What are my rights?"
         answer: "Export your data, correct it in the app and delete your account, at any time and without writing to us. The details and the contact are in the privacy policy."
