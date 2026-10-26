@@ -4,7 +4,7 @@
 # Optional: PUSH_URL_FILE holds an Uptime Kuma push URL, pinged after a success.
 set -eu
 
-host=${BACKUP_HOST:-deploy@77.42.44.3}
+host=${BACKUP_HOST:?set BACKUP_HOST, for example deploy@your-server}
 key=${BACKUP_KEY:-$HOME/.ssh/migraine_backup_ed25519}
 dest=${BACKUP_DEST:-$HOME/backups/migrainetracker}
 push_file=${PUSH_URL_FILE:-$HOME/.config/migrainetracker/backup-push-url}

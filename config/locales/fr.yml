@@ -18,6 +18,7 @@ fr:
     urgent: "Quand consulter en urgence"
     why_free: "Pourquoi gratuit ?"
     about_ai: "Un mot sur l'IA"
+    source: "Code source"
   
   # SEO
   seo:
@@ -827,6 +828,10 @@ fr:
         body:
           - "L'outil est couvert par plus de 400 tests automatiques, et son code passe un contrôle de sécurité automatique avant que je le mette en ligne."
           - "Je peux me tromper, et l'IA aussi. Si vous voyez une erreur, écrivez-moi."
+      source:
+        title: "Le code est ouvert"
+        body:
+          - "Le code de l'outil est public, sous licence AGPL-3.0 : vous pouvez le lire pour vérifier ce qu'il fait, et le réutiliser selon les termes de cette licence. Le nom et le logo « Migraine Tracker » restent les miens."
       data:
         title: "L'IA et vos données"
         body:

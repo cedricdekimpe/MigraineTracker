@@ -114,6 +114,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", text: "Un mot sur l'IA"
     assert_select "p", text: /près de 20 ans/
     assert_select "p", text: /aucune IA dans l'outil/
+    assert_select "section#source", text: /AGPL-3.0/
     assert_select "title", text: "Un mot sur l'IA | Migraine Tracker"
     assert_no_match(/&amp;#39;|u0026#39/, response.body)
 
@@ -125,6 +126,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     get root_path(locale: :fr)
     assert_select "footer a[href='/fr/why-free']"
     assert_select "footer a[href='/fr/about-ai']"
+    assert_select "footer a[href='https://github.com/cedricdekimpe/MigraineTracker']", text: "Code source"
 
     get sitemap_path(format: :xml)
     assert_includes response.body, "/fr/why-free"

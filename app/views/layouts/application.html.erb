@@ -132,6 +132,8 @@
           <%= link_to t("navigation.urgent"), urgent_path, class: "hover:text-fg" %>
           <%= link_to t("navigation.why_free"), why_free_path, class: "hover:text-fg" %>
           <%= link_to t("navigation.about_ai"), about_ai_path, class: "hover:text-fg" %>
+          <%# AGPL-3.0 section 13: users of the service are offered its source code %>
+          <%= link_to t("navigation.source"), "https://github.com/cedricdekimpe/MigraineTracker", class: "hover:text-fg", rel: "noopener" %>
         </div>
         <div class="flex flex-wrap items-center gap-4">
           <div class="flex items-center gap-1" role="group" aria-label="<%= t('theme.label') %>">

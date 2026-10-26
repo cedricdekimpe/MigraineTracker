@@ -7,7 +7,7 @@ image: ghcr.io/cedricdekimpe/my_migraine_manager
 # Deploy to these servers.
 servers:
   web:
-    - 77.42.44.3
+    - <%= ENV.fetch("DEPLOY_HOST") %>
   # job:
   #   hosts:
   #     - 192.168.0.1
