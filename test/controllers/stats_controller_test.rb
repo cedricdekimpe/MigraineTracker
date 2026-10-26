@@ -167,8 +167,15 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     log(Date.new(2026, 10, 5))
     visit_stats
     assert_select "[data-daily-factors] a[href=?]", check_path
-    assert_select "[data-daily-factors]", text: /0\/30 days/
+    assert_select "[data-daily-factors]", text: /30 more check-ins before the first results \(0\/30\)/
     assert_select "[data-triggers]", count: 0
+  end
+
+  test "the acute treatments say when their first summary comes, until there is one" do
+    log(Date.new(2026, 10, 5))
+    visit_stats
+    assert_select "[data-acute-waiting]"
+    assert_select "[data-acute-efficacy]", count: 0
   end
 
   test "once there are enough check-in days, the factors are compared with the other days" do

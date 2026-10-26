@@ -3,7 +3,7 @@
   <h2 class="text-2xl font-semibold text-fg"><%= t("stats.factors.title") %> <%= render "shared/info", text: t("stats.factors.caveat"), more: numbers_path(anchor: "factors") %></h2>
 
   <% if !factors.enough_data? %>
-    <p class="mt-2 max-w-2xl text-sm text-fg-secondary"><%= t("stats.factors.not_enough", checked: factors.checked_days, needed: DailyFactors::MIN_CHECKED_DAYS) %></p>
+    <p class="mt-2 max-w-2xl text-sm text-fg-secondary"><%= t("stats.factors.not_enough", count: DailyFactors::MIN_CHECKED_DAYS - factors.checked_days, checked: factors.checked_days, needed: DailyFactors::MIN_CHECKED_DAYS) %></p>
     <%= link_to t("stats.factors.start"), check_path, class: "mt-4 inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-on hover:bg-primary-hover" %>
   <% else %>
     <% notable = factors.notable %>

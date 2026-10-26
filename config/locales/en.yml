@@ -101,7 +101,9 @@ en:
       other: "of which %{count} migraine"
     factors:
       title: "What comes before your attacks"
-      not_enough: "Daily check-in: %{checked}/%{needed} days."
+      not_enough:
+        one: "%{count} more check-in before the first results (%{checked}/%{needed})."
+        other: "%{count} more check-ins before the first results (%{checked}/%{needed})."
       start: "Do today's check-in"
       notable: "Stands out: %{factors}."
       none: "No clear link yet."
@@ -132,6 +134,7 @@ en:
       chronic_month: "Chronic migraine pattern this month (15 headache days with 8 migraine days). Talk to your doctor."
       chronic_sustained: "Chronic migraine pattern for 3 months (15 headache days with 8 migraine days a month). Talk to your doctor."
       acute_title: "Your acute treatments"
+      acute_waiting: "Note how each treatment worked after every attack: the first summary per treatment comes after 3 attacks."
       acute_hint: "Effect noted after each attack, over 12 months. No effect on 2 of the last 3 attacks: talk to your doctor before changing."
       medication: "Medication"
       intakes: "Taken"

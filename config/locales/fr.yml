@@ -101,7 +101,9 @@ fr:
       other: "dont %{count} de migraine"
     factors:
       title: "Ce qui précède vos crises"
-      not_enough: "Bilan quotidien : %{checked}/%{needed} jours."
+      not_enough:
+        one: "Encore %{count} bilan avant les premiers résultats (%{checked}/%{needed})."
+        other: "Encore %{count} bilans avant les premiers résultats (%{checked}/%{needed})."
       start: "Faire le bilan du jour"
       notable: "Ressort : %{factors}."
       none: "Aucun lien net pour l'instant."
@@ -132,6 +134,7 @@ fr:
       chronic_month: "Profil de migraine chronique ce mois-ci (15 jours de maux de tête dont 8 de migraine). Parlez-en à votre médecin."
       chronic_sustained: "Profil de migraine chronique depuis 3 mois (15 jours de maux de tête dont 8 de migraine par mois). Parlez-en à votre médecin."
       acute_title: "Vos traitements de crise"
+      acute_waiting: "Notez l'effet de vos traitements après chaque crise : le premier bilan par traitement arrive après 3 crises."
       acute_hint: "Effet noté après chaque crise, sur 12 mois. Sans effet sur 2 des 3 dernières crises : à discuter avec votre médecin avant de changer."
       medication: "Médicament"
       intakes: "Prises"
