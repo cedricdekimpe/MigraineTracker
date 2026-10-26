@@ -59,7 +59,10 @@ Rails.application.configure do
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  config.action_dispatch.cookies_same_site_protection = :strict
+  # Lax, not Strict: opening the installed app from the home screen, a notification or a link in a mail is a
+  # navigation from outside the site, and a Strict cookie would make the person look signed out. Cross-site
+  # forms stay without cookies (Lax), and every form carries a CSRF token.
+  config.action_dispatch.cookies_same_site_protection = :lax
 
   config.action_dispatch.default_headers.merge!(
     "X-Frame-Options" => "DENY",
