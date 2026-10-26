@@ -558,6 +558,15 @@ en:
       done: "Daily check-in done"
       edit: "Edit"
 
+  onboarding:
+    title: "Getting started"
+    dismiss: "Hide"
+    done: "Done"
+    steps:
+      medications: "Add your medications"
+      install: "Install the app"
+      reminder: "Get the daily check-in reminder"
+
   urgent:
     link: "When to seek urgent care"
     title: "When to seek urgent care"

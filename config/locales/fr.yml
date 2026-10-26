@@ -659,6 +659,15 @@ fr:
       done: "Bilan du jour fait"
       edit: "Modifier"
 
+  onboarding:
+    title: "Pour bien démarrer"
+    dismiss: "Masquer"
+    done: "Fait"
+    steps:
+      medications: "Ajouter vos médicaments"
+      install: "Installer l'application"
+      reminder: "Recevoir le rappel du bilan du jour"
+
   urgent:
     link: "Quand consulter en urgence"
     title: "Quand consulter en urgence"

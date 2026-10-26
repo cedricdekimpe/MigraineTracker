@@ -36,6 +36,23 @@ class User < ApplicationRecord
     daily_reminder_at.present?
   end
 
+  ONBOARDING_DAYS = 30
+
+  # The "get started" card of the journal: for a new account, until it is dismissed, done, or 30 days old.
+  # Done = the medications are entered and, where this copy can send them, a notification is on.
+  def onboarding?
+    onboarding_dismissed_at.nil? && created_at > ONBOARDING_DAYS.days.ago && !(onboarding_medications? && onboarding_notifications?)
+  end
+
+  def onboarding_medications?
+    medications.exists?
+  end
+
+  # Without push keys there is no reminder to offer: that step counts as done
+  def onboarding_notifications?
+    !WebPushSender.enabled? || notifications?
+  end
+
   # Any notification turned on: the daily check-in reminder or "Still going?"
   def notifications?
     daily_reminder? || ongoing_check?

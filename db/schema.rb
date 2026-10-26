@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_26_110000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_200000) do
   create_table "daily_checks", force: :cascade do |t|
     t.integer "user_id", null: false
     t.date "date", null: false
@@ -143,6 +143,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_110000) do
     t.string "time_zone", default: "Europe/Brussels", null: false
     t.date "daily_reminder_sent_on"
     t.boolean "ongoing_check", default: false, null: false
+    t.datetime "onboarding_dismissed_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["health_data_consent_version"], name: "index_users_on_health_data_consent_version"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

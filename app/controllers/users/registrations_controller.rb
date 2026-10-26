@@ -21,6 +21,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   protected
 
+  # A new account starts on the journal, where the get-started card is. Whoever noted a crisis as a guest
+  # still lands on that crisis, as before.
+  def after_sign_up_path_for(resource)
+    guest = GuestEpisode.read(session).present?
+    path = after_sign_in_path_for(resource)
+    guest ? path : episodes_path
+  end
+
   # A closed copy (SIGNUPS=closed) takes no new account; existing accounts are untouched
   def require_open_signups
     redirect_to new_user_session_path, alert: t("auth.signups_closed") unless Instance.signups_open?

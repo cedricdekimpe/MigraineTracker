@@ -41,6 +41,12 @@ class AccountController < ApplicationController
     redirect_to account_profile_path, notice: t(current_user.notifications? ? "reminders.saved_on" : "reminders.saved_off")
   end
 
+  # "Hide" on the get-started card
+  def dismiss_onboarding
+    current_user.update_column(:onboarding_dismissed_at, Time.current)
+    redirect_back_or_to episodes_path
+  end
+
   def data
   end
 
