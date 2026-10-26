@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     get "account/triggers", to: "account#triggers", as: :account_triggers
     get "account/data", to: "account#data", as: :account_data
     patch "account/preferences", to: "account#update_preferences", as: :account_preferences
-    patch "account/reminder", to: "account#update_reminder", as: :account_reminder
+    patch "account/notifications", to: "account#update_notifications", as: :account_notifications
     # This device accepts notifications (web push)
     post "account/push_subscriptions", to: "push_subscriptions#create", as: :push_subscriptions
 

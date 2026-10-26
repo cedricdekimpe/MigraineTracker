@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_26_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_110000) do
   create_table "daily_checks", force: :cascade do |t|
     t.integer "user_id", null: false
     t.date "date", null: false
@@ -47,6 +47,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_100000) do
     t.datetime "updated_at", null: false
     t.boolean "ongoing", default: false, null: false
     t.string "nausea"
+    t.datetime "ongoing_checked_at"
     t.index ["user_id", "occurred_on"], name: "index_episodes_on_user_id_and_occurred_on"
     t.index ["user_id", "ongoing"], name: "index_episodes_on_user_id_and_ongoing"
     t.index ["user_id"], name: "index_episodes_on_user_id"
@@ -141,6 +142,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_100000) do
     t.string "daily_reminder_at"
     t.string "time_zone", default: "Europe/Brussels", null: false
     t.date "daily_reminder_sent_on"
+    t.boolean "ongoing_check", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["health_data_consent_version"], name: "index_users_on_health_data_consent_version"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

@@ -289,6 +289,32 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     assert_nil ongoing
   end
 
+  test "an attack left open for 12 hours asks when it ended" do
+    travel_to(@now) { post now_path, params: { pain_kind: "migraine", intensity: "6" } }
+    sign_in @user
+
+    travel_to(@now + 11.hours) { get now_path }
+    assert_select "form[data-still-going]", count: 0
+
+    travel_to(@now + 13.hours) { get now_path }
+    assert_select "form[data-still-going][action='#{now_finish_path}'] input[type=datetime-local][name=ended_at]"
+  end
+
+  test "the end time given is the one kept, between the start and now" do
+    travel_to(@now) { post now_path, params: { pain_kind: "migraine", intensity: "6" } }
+    sign_in @user
+    travel_to(@now + 20.hours) { patch now_finish_path, params: { ended_at: "2026-10-24T18:02" } }
+    assert_equal 210, @user.episodes.order(:id).last.duration_minutes
+
+    travel_to(@now) { post now_path, params: { pain_kind: "migraine", intensity: "6" } }
+    travel_to(@now + 2.hours) { patch now_finish_path, params: { ended_at: "2026-10-30T10:00" } }
+    assert_equal 120, @user.episodes.order(:id).last.duration_minutes
+
+    travel_to(@now) { post now_path, params: { pain_kind: "migraine", intensity: "6" } }
+    travel_to(@now + 2.hours) { patch now_finish_path, params: { ended_at: "nonsense" } }
+    assert_equal 120, @user.episodes.order(:id).last.duration_minutes
+  end
+
   test "a very short episode lasts at least one minute" do
     post now_path, params: { pain_kind: "headache", intensity: "2" }
     sign_in @user

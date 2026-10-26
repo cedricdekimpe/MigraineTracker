@@ -31,18 +31,14 @@ class AccountController < ApplicationController
     redirect_to account_profile_path, notice: t("preferences.saved")
   end
 
-  # The daily check-in reminder. Turned off, every device stops receiving notifications.
-  def update_reminder
-    if params[:enabled] == "1"
-      time = params[:time].presence_in(User::DAILY_REMINDER_TIMES) || User::DEFAULT_DAILY_REMINDER_AT
-      zone = params[:time_zone].presence if ActiveSupport::TimeZone[params[:time_zone].to_s]
-      current_user.update!(daily_reminder_at: time, time_zone: zone || current_user.time_zone)
-      redirect_to account_profile_path, notice: t("reminders.saved_on", time: time)
-    else
-      current_user.update!(daily_reminder_at: nil)
-      current_user.push_subscriptions.destroy_all
-      redirect_to account_profile_path, notice: t("reminders.saved_off")
-    end
+  # The daily check-in reminder and "Still going?". With both off, every device stops receiving notifications.
+  def update_notifications
+    time = (params[:time].presence_in(User::DAILY_REMINDER_TIMES) || User::DEFAULT_DAILY_REMINDER_AT if params[:enabled] == "1")
+    zone = params[:time_zone].presence if ActiveSupport::TimeZone[params[:time_zone].to_s]
+    current_user.update!(daily_reminder_at: time, ongoing_check: params[:ongoing_check] == "1", time_zone: zone || current_user.time_zone)
+    current_user.push_subscriptions.destroy_all unless current_user.notifications?
+
+    redirect_to account_profile_path, notice: t(current_user.notifications? ? "reminders.saved_on" : "reminders.saved_off")
   end
 
   def data

@@ -70,7 +70,7 @@ class NowController < ApplicationController
   end
 
   def finish
-    minutes = ((Time.current - @episode.started_at) / 60).round.clamp(1, Episode::MAX_DURATION_MINUTES)
+    minutes = ((ended_at - @episode.started_at) / 60).round.clamp(1, Episode::MAX_DURATION_MINUTES)
     @episode.update!(ongoing: false, duration_minutes: minutes)
     notice = t("now.flash.finished", duration: helpers.duration_label(minutes))
 
@@ -139,6 +139,14 @@ class NowController < ApplicationController
     [ at, Time.current ].min if at <= 5.minutes.from_now
   rescue ArgumentError
     nil
+  end
+
+  # Now, or the time given for an attack left open ("Still going?"), kept between its start and now
+  def ended_at
+    given = Time.zone.parse(params[:ended_at].to_s) if params[:ended_at].present?
+    given ? given.clamp(@episode.started_at, Time.current) : Time.current
+  rescue ArgumentError
+    Time.current
   end
 
   def load_progress

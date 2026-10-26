@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
-// The daily check-in reminder in the account. Turning it on first asks this device for notifications and
-// gives the server where to send them; the form is saved only once that worked. It also says when this
-// device does not get the reminder that is on, and why: blocked, iPhone not installed, no support.
+// Notifications in the account (daily check-in reminder, "Still going?"). Turning one on first asks this
+// device for notifications and gives the server where to send them; the form is saved only once that
+// worked. It also says when this device does not get them, and why: blocked, iPhone not installed, no support.
 export default class extends Controller {
   static targets = ["form", "enabled", "zone", "message", "here", "texts"]
   static values = { key: String, url: String, on: Boolean }
@@ -18,7 +18,7 @@ export default class extends Controller {
     if (this.saving) return
     event.preventDefault()
 
-    if (this.enabledTarget.checked) {
+    if (this.enabledTargets.some((checkbox) => checkbox.checked)) {
       if (!(await this.subscribe())) return
     } else {
       await this.unsubscribe()
@@ -52,7 +52,7 @@ export default class extends Controller {
     }
   }
 
-  // Turned off: the server forgets every device; this one also stops listening
+  // All turned off: the server forgets every device; this one also stops listening
   async unsubscribe() {
     try {
       const registration = await navigator.serviceWorker?.getRegistration()

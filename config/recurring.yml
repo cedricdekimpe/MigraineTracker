@@ -10,8 +10,8 @@
 #     schedule: at 5am every day
 
 reminders: &reminders
-  daily_reminders:
-    class: DailyRemindersJob
+  notifications:
+    class: NotificationsJob
     schedule: every 5 minutes
 
 development:

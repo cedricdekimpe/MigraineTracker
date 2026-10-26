@@ -8,6 +8,19 @@
     · <%= duration_label([((Time.current - @episode.started_at) / 60).round, 1].max) %>
   </p>
 
+  <%# Left open for hours (often forgotten): say when it ended, so the duration stays right %>
+  <% if Time.current - @episode.started_at >= OngoingChecks::AFTER %>
+    <%= form_with url: now_finish_path, method: :patch, data: { turbo: false, still_going: true }, class: "mt-4 rounded-2xl border border-line-control p-4" do %>
+      <h2 class="text-lg font-medium"><%= t("now.still_going") %></h2>
+      <%= label_tag :ended_at, t("now.ended_at"), class: "mt-2 block text-base text-fg-secondary" %>
+      <div class="mt-2 flex flex-wrap gap-3">
+        <%= datetime_local_field_tag :ended_at, Time.current.strftime("%Y-%m-%dT%H:%M"), min: @episode.started_at.strftime("%Y-%m-%dT%H:%M"), max: Time.current.strftime("%Y-%m-%dT%H:%M"),
+              class: "min-h-12 rounded-2xl border border-line-control bg-surface px-4 text-base text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus" %>
+        <%= button_tag t("now.ended_save"), type: "submit", class: "min-h-12 cursor-pointer rounded-2xl border border-line-control px-5 text-base font-medium text-fg hover:border-accent-400" %>
+      </div>
+    <% end %>
+  <% end %>
+
   <% if @episode.long_attack? %>
     <div class="mt-4"><%= render "episodes/long_attack_note" %></div>
   <% end %>

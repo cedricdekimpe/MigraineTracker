@@ -36,6 +36,11 @@ class User < ApplicationRecord
     daily_reminder_at.present?
   end
 
+  # Any notification turned on: the daily check-in reminder or "Still going?"
+  def notifications?
+    daily_reminder? || ongoing_check?
+  end
+
   # When the reminder is due on a given day, in the person's own time zone
   def daily_reminder_due_at(date)
     hour, minute = daily_reminder_at.split(":").map(&:to_i)

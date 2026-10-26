@@ -1,11 +1,11 @@
-<%# The daily check-in reminder (web push). Off by default; the reminder controller asks this device for
-    notifications before saving, and says why when it cannot. %>
+<%# Notifications (web push): the daily check-in reminder and "Still going?". Both off by default; the
+    reminder controller asks this device for notifications before saving, and says why when it cannot. %>
 <section class="mt-10 border-t border-line pt-8" data-controller="reminder"
          data-reminder-key-value="<%= WebPushSender.public_key %>"
          data-reminder-url-value="<%= push_subscriptions_path %>"
-         data-reminder-on-value="<%= current_user.daily_reminder? %>">
-  <h2 class="text-lg font-semibold text-fg"><%= t("reminders.title") %></h2>
-  <%= form_with url: account_reminder_path, method: :patch, data: { turbo: false, reminder_target: "form", action: "reminder#save" }, class: "mt-4 space-y-4" do |form| %>
+         data-reminder-on-value="<%= current_user.notifications? %>">
+  <h2 class="text-lg font-semibold text-fg"><%= t("reminders.section") %></h2>
+  <%= form_with url: account_notifications_path, method: :patch, data: { turbo: false, reminder_target: "form", action: "reminder#save" }, class: "mt-4 space-y-4" do |form| %>
     <%= hidden_field_tag :time_zone, current_user.time_zone, data: { reminder_target: "zone" } %>
     <div class="relative flex items-center gap-3">
       <%= hidden_field_tag :enabled, "0", id: nil %>
@@ -13,9 +13,15 @@
       <%= label_tag "reminder_enabled", t("reminders.enable"), class: "text-sm font-medium text-fg-secondary" %>
       <%= render "shared/info", text: t("reminders.hint"), row: true %>
     </div>
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3 pl-9">
       <%= label_tag "reminder_time", t("reminders.time"), class: "text-sm font-medium text-fg-secondary" %>
       <%= select_tag :time, options_for_select(User::DAILY_REMINDER_TIMES, current_user.daily_reminder_at || User::DEFAULT_DAILY_REMINDER_AT), id: "reminder_time", class: "min-h-11 rounded-lg border border-line-control bg-surface px-3 py-2 text-base text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus" %>
+    </div>
+    <div class="relative flex items-center gap-3">
+      <%= hidden_field_tag :ongoing_check, "0", id: nil %>
+      <%= check_box_tag :ongoing_check, "1", current_user.ongoing_check?, id: "ongoing_check", class: "h-6 w-6 shrink-0 rounded border-line-control text-link focus:ring-focus", data: { reminder_target: "enabled" } %>
+      <%= label_tag "ongoing_check", t("reminders.ongoing"), class: "text-sm font-medium text-fg-secondary" %>
+      <%= render "shared/info", text: t("reminders.ongoing_hint"), row: true %>
     </div>
     <p class="text-sm text-fg-secondary" data-reminder-target="message" role="status" hidden></p>
     <div class="flex flex-wrap items-center justify-end gap-3">

@@ -567,6 +567,9 @@ fr:
     intensity_now: "Intensité en ce moment"
     medication: "Médicament pris"
     finish: "C'est passé"
+    still_going: "Toujours en cours ?"
+    ended_at: "Sinon, c'est passé le :"
+    ended_save: "Enregistrer la fin"
     add_details: "Ajouter des détails"
     cancel: "Annuler l'épisode"
     remove_intake: "Retirer"
@@ -738,7 +741,7 @@ fr:
           - "Un cookie de session, indispensable pour rester connecté ; si vous cochez « Se souvenir de moi » (coché par défaut), un second cookie qui dure trois mois et se prolonge à chaque retour. Aucun cookie de mesure ou de publicité."
           - "Votre choix de thème (Auto, Papier, Nuit) reste dans votre navigateur."
           - "Installée sur un téléphone ou un ordinateur, l'application garde sur l'appareil ses fichiers techniques (styles, icônes) et deux pages publiques, « Pas de connexion » et « Quand consulter en urgence ». Jamais une page de votre journal."
-          - "Si vous activez le rappel du bilan du jour : l'heure choisie, votre fuseau horaire et, pour chaque appareil qui l'accepte, l'adresse que son navigateur donne pour les notifications. Le rappel passe, chiffré, par le service de notification du navigateur (Google pour Chrome, Apple pour Safari, Mozilla pour Firefox), qui ne voit pas son contenu. Désactiver le rappel efface ces adresses."
+          - "Si vous activez les notifications (rappel du bilan du jour, « Toujours en cours ? ») : vos choix, l'heure du rappel, votre fuseau horaire et, pour chaque appareil qui les accepte, l'adresse que son navigateur donne pour les notifications. Elles passent, chiffrées, par le service de notification du navigateur (Google pour Chrome, Apple pour Safari, Mozilla pour Firefox), qui ne voit pas leur contenu. Tout désactiver efface ces adresses."
           - "Une crise notée sans réseau reste dans le navigateur de l'appareil jusqu'au retour du réseau, puis elle est envoyée et effacée de l'appareil."
           - "Pour bloquer les attaques sur les mots de passe, l'adresse IP et l'adresse e-mail des tentatives de connexion sont comptées pendant une heure au plus."
           - "Les journaux techniques du serveur notent les pages demandées et l'adresse IP ; vos données de santé en sont filtrées."
@@ -866,12 +869,15 @@ fr:
           - "Les seuils et les repères viennent de recommandations publiées (International Headache Society, classification internationale des céphalées, consensus belge). Leurs sources sont indiquées dans la page « Comprendre mes chiffres », une fois connecté."
           - "L'outil ne pose pas de diagnostic et ne remplace pas un médecin."
   reminders:
+    section: "Notifications"
     title: "Rappel du bilan du jour"
     enable: "Me rappeler de remplir le bilan du jour"
     hint: "Une notification par jour à l'heure choisie, seulement si le bilan n'est pas encore rempli. Elle dit « Bilan du jour », rien sur votre santé. Elle passe, chiffrée, par le service de notification de votre navigateur (Google, Apple ou Mozilla)."
     time: "Heure"
-    saved_on: "Rappel activé, chaque jour à %{time}."
-    saved_off: "Rappel désactivé."
+    saved_on: "Notifications enregistrées."
+    saved_off: "Notifications désactivées."
+    ongoing: "Me demander si une crise dure encore après 12 h"
+    ongoing_hint: "Une seule notification par crise ouverte avec « J'ai mal » et pas encore close au bout de 12 heures, pour que sa durée reste juste. Elle dit « Toujours en cours ? », sans autre détail."
     this_device: "Cet appareil ne reçoit pas le rappel."
     receive_here: "Le recevoir ici"
     ready: "Cet appareil recevra le rappel."
@@ -882,6 +888,9 @@ fr:
     daily:
       title: "Bilan du jour"
       body: "Quelques secondes pour noter votre journée."
+    still_going:
+      title: "Toujours en cours ?"
+      body: "Sinon, dites à quelle heure c'est passé."
 
   install:
     title: "Installer l'application"
@@ -952,7 +961,7 @@ fr:
         answer: "Oui : elle s'ouvre alors comme une application, sans barre de navigateur. Sur Android, Compte › « Installer », ou le menu de Chrome › « Installer l'application » ; un appui long sur l'icône propose ensuite « J'ai mal » directement. Sur iPhone, dans Safari : Partager › « Sur l'écran d'accueil ». Sans réseau, l'application permet quand même de noter une crise : elle rejoint le journal au retour du réseau."
       reminder:
         question: "Puis-je recevoir un rappel pour le bilan du jour ?"
-        answer: "Oui, si vous le voulez : Compte › « Rappel du bilan du jour », à l'heure de votre choix. Une notification par jour au plus, et aucune si le bilan est déjà rempli. Elle dit seulement « Bilan du jour ». Sur iPhone, installez d'abord l'application, puis activez le rappel depuis l'application."
+        answer: "Oui, si vous le voulez : Compte › « Rappel du bilan du jour », à l'heure de votre choix. Une notification par jour au plus, et aucune si le bilan est déjà rempli. Elle dit seulement « Bilan du jour ». Au même endroit, une autre option demande « Toujours en cours ? » quand une crise reste ouverte 12 heures. Sur iPhone, installez d'abord l'application, puis activez le rappel depuis l'application."
       export:
         question: "Comment exporter mes données ?"
         answer: "Compte › Gestion des données › « Exporter toutes les données » télécharge un fichier JSON avec tout votre journal : épisodes, médicaments et périodes de traitement, déclencheurs, jours de règles et bilans du jour."

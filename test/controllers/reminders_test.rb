@@ -23,6 +23,7 @@ class RemindersTest < ActionDispatch::IntegrationTest
     get account_profile_path(locale: "fr")
     assert_select "[data-controller=reminder]"
     assert_select "input#reminder_enabled:not([checked])"
+    assert_select "input#ongoing_check:not([checked])"
     assert_select "select#reminder_time option[selected]", text: "20:00"
   end
 
@@ -33,7 +34,7 @@ class RemindersTest < ActionDispatch::IntegrationTest
   end
 
   test "turning it on keeps the time and the time zone" do
-    patch account_reminder_path(locale: "fr"), params: { enabled: "1", time: "21:30", time_zone: "Europe/Paris" }
+    patch account_notifications_path(locale: "fr"), params: { enabled: "1", time: "21:30", time_zone: "Europe/Paris" }
     assert_redirected_to account_profile_path
     @user.reload
     assert_equal "21:30", @user.daily_reminder_at
@@ -41,18 +42,22 @@ class RemindersTest < ActionDispatch::IntegrationTest
   end
 
   test "an unknown time or time zone falls back" do
-    patch account_reminder_path(locale: "fr"), params: { enabled: "1", time: "25:00", time_zone: "Mars/Olympus" }
+    patch account_notifications_path(locale: "fr"), params: { enabled: "1", time: "25:00", time_zone: "Mars/Olympus" }
     @user.reload
     assert_equal "20:00", @user.daily_reminder_at
     assert_equal "Europe/Brussels", @user.time_zone
   end
 
-  test "turning it off forgets every device" do
-    @user.update!(daily_reminder_at: "20:00")
+  test "turning everything off forgets every device" do
+    @user.update!(daily_reminder_at: "20:00", ongoing_check: true)
     @user.push_subscriptions.create!(endpoint: "https://fcm.googleapis.com/fcm/send/abc", p256dh: "key", auth: "secret")
 
-    patch account_reminder_path(locale: "fr"), params: { enabled: "0" }
+    patch account_notifications_path(locale: "fr"), params: { enabled: "0", ongoing_check: "1" }
     assert_nil @user.reload.daily_reminder_at
+    assert_equal 1, @user.push_subscriptions.count
+
+    patch account_notifications_path(locale: "fr"), params: { enabled: "0", ongoing_check: "0" }
+    assert_not @user.reload.ongoing_check?
     assert_empty @user.push_subscriptions
   end
 
