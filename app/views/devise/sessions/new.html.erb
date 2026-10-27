@@ -12,7 +12,7 @@
     <%= form_with scope: resource_name, url: session_path(resource_name), data: { turbo: false }, html: { class: "mt-6 space-y-5" } do |form| %>
       <div class="space-y-2">
         <%= form.label :email, t("auth.email"), class: "block text-sm font-medium text-fg-secondary" %>
-        <%= form.email_field :email, autofocus: true, autocomplete: "email", class: "block w-full rounded-lg border border-line-control px-3 py-2 text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus" %>
+        <%= form.email_field :email, autofocus: true, autocomplete: "username", autocapitalize: "none", spellcheck: false, class: "block w-full rounded-lg border border-line-control px-3 py-2 text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus" %>
       </div>
 
       <div class="space-y-2">

@@ -19,6 +19,12 @@ class User < ApplicationRecord
 
   attr_accessor :health_data_consent
 
+  # Remembered unless the sign-in form said otherwise (its box is ticked by default). The other ways in
+  # (new password, new account) never ask, and left a session cookie that a phone drops when it closes the app.
+  def remember_me
+    super.nil? || super
+  end
+
   validates :health_data_consent_given_at, presence: true, on: :create
   validates :health_data_consent_version, presence: true, on: :create
   validate :health_data_consent_presence, on: :create
