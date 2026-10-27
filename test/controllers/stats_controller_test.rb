@@ -34,6 +34,15 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_select "table.sr-only", false
   end
 
+  test "the report form sits in a div: a form inside a p leaves empty paragraphs and a gap on the page" do
+    log(Date.new(2025, 6, 1))
+    log(Date.new(2026, 10, 20))
+    visit_stats
+
+    assert_select "select[name=year]"
+    assert_select "p:empty", count: 0
+  end
+
   test "requires authentication" do
     get stats_path
     assert_redirected_to new_user_session_path

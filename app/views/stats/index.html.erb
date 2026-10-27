@@ -6,10 +6,11 @@
   </header>
 
   <% if @has_data %>
-    <p>
+    <%# A div, not a p: the year picker is a form, which closes a p and leaves two empty ones (two gaps) %>
+    <div>
       <%= render "episodes/report_link", year: Date.current.year,
             button_class: "inline-flex items-center rounded-xl border border-line-control bg-surface px-4 py-2 text-sm font-semibold text-link hover:bg-surface-soft" %>
-    </p>
+    </div>
   <% end %>
 
   <% unless @has_data %>
