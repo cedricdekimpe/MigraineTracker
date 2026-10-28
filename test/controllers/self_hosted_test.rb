@@ -15,6 +15,7 @@ class SelfHostedTest < ActionDispatch::IntegrationTest
   test "the author's own pages and links exist on the official copy only" do
     get why_free_path(locale: :fr)
     assert_response :success
+    assert_select "footer a[rel~=me][href='https://mastodon.social/@migrainetracker']"
 
     with_env("INSTANCE" => nil) do
       get why_free_path(locale: :fr)
@@ -24,6 +25,7 @@ class SelfHostedTest < ActionDispatch::IntegrationTest
 
       get faq_path(locale: :fr)
       assert_select "footer a[href='/fr/why-free']", count: 0
+      assert_select "footer a[rel~=me]", count: 0
       assert_select "footer a[href='https://github.com/cedricdekimpe/MigraineTracker']"
 
       get sitemap_path(format: :xml)
