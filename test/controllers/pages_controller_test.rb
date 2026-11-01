@@ -115,10 +115,12 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-costs] dd", text: /10 € par an/
     assert_match(/Cédric Dekimpe/, response.body)
     assert_no_match(/\[Nom|\[privacy/, response.body)
+    assert_select "#later a[href$='docs/SELF-HOSTING.md']", text: /Guide d'auto-hébergement/
 
     get why_free_path(locale: :en)
     assert_select "h1", text: "Why this tool is free"
     assert_select "[data-costs] dd", text: /€4.49 a month/
+    assert_select "#later a[href$='docs/SELF-HOSTING.md']", text: /Self-hosting guide/
 
     get about_ai_path(locale: :fr)
     assert_response :success
