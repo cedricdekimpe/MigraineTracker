@@ -736,7 +736,7 @@ en:
   free:
     title: "Why this tool is free"
     description: "Migraine Tracker is free, with no ads and no subscription, and your data is not resold. Why, and what it costs."
-    updated: "Last updated: 26 October 2026"
+    updated: "Last updated: 1 November 2026"
     intro: "Migraine Tracker is free, and I want you to know why."
     sections:
       need:
@@ -755,6 +755,10 @@ en:
         title: "If the costs weigh on me one day"
         body:
           - "If these costs ended up weighing on me too much, I would look for solutions other than a subscription or advertising, and I would write it here before any change. You will not be put in front of a done deal."
+          - "If I ever had to stop the service, your data would not be lost: you can export it at any time, and the code is released under a free licence (AGPL). You, or someone else, could run your own copy of the tool and import your data into it."
+        link:
+          label: "Self-hosting guide"
+          url: "https://github.com/cedricdekimpe/MigraineTracker/blob/main/docs/SELF-HOSTING.md"
       who:
         title: "Who is behind it"
         body:
