@@ -1,8 +1,8 @@
 <%# Get-started card for a new account: three steps, each a link, done ones ticked. Hidden for good by "Hide". %>
 <% steps = [
      { key: "medications", path: account_medications_path, done: current_user.onboarding_medications? },
-     { key: "install", path: account_profile_path, done: false, install: true },
-     ({ key: "reminder", path: account_profile_path, done: current_user.notifications? } if WebPushSender.enabled?)
+     ({ key: "install", path: account_profile_path, done: false, install: true } unless hotwire_native_app?),
+     ({ key: "reminder", path: account_profile_path, done: current_user.notifications? } if WebPushSender.enabled? && !hotwire_native_app?)
    ].compact %>
 <section class="rounded-2xl border border-accent-300 bg-accent-50 p-4 text-accent-900" data-onboarding data-controller="onboarding">
   <div class="flex items-center justify-between gap-3">

@@ -927,6 +927,14 @@ fr:
       title: "Toujours en cours ?"
       body: "Sinon, dites à quelle heure c'est passé."
 
+  devices:
+    title: "Appareils connectés"
+    signed_in: "Connecté le %{time}"
+    last_used: "Dernière utilisation : %{time}"
+    sign_out: "Déconnecter"
+    confirm: "Déconnecter cet appareil ? L'application devra se reconnecter."
+    signed_out: "L'appareil est déconnecté."
+
   install:
     title: "Installer l'application"
     button: "Installer"

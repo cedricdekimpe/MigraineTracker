@@ -11,6 +11,9 @@ class User < ApplicationRecord
   has_many :treatment_periods, dependent: :destroy
   has_many :daily_checks, dependent: :destroy
   has_many :push_subscriptions, dependent: :destroy
+  has_many :api_tokens, dependent: :delete_all
+  # Last: the records above may leave deletions behind while they go
+  has_many :deletions, dependent: :delete_all
 
   after_create :seed_default_triggers
 

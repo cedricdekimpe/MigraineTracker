@@ -826,6 +826,14 @@ en:
       title: "Still going?"
       body: "If not, say when it ended."
 
+  devices:
+    title: "Signed-in devices"
+    signed_in: "Signed in on %{time}"
+    last_used: "Last used: %{time}"
+    sign_out: "Sign out"
+    confirm: "Sign this device out? The app will have to sign in again."
+    signed_out: "The device is signed out."
+
   install:
     title: "Install the app"
     button: "Install"

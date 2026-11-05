@@ -49,6 +49,32 @@ class Rack::Attack
     req.ip if %w[PATCH PUT DELETE].include?(req.request_method) && web_users_action(req)&.last == ""
   end
 
+  # --- Mobile app API --------------------------------------------------------
+  # Email in the JSON body of a sign-in (POST /api/v1/session), if any.
+  def self.api_login_email(req)
+    return unless req.post? && req.path == "/api/v1/session"
+
+    body = req.body.read
+    req.body.rewind
+    email = JSON.parse(body)["email"] if body.present?
+    email.to_s.strip.downcase.presence if email.is_a?(String)
+  rescue StandardError
+    nil
+  end
+
+  throttle("api/logins/ip", limit: 10, period: 1.minute) do |req|
+    req.ip if req.post? && req.path == "/api/v1/session"
+  end
+
+  throttle("api/logins/email", limit: 8, period: 10.minutes) do |req|
+    api_login_email(req)
+  end
+
+  # Everything else of the API: generous, but not unlimited
+  throttle("api/requests/ip", limit: 300, period: 5.minutes) do |req|
+    req.ip if req.path.start_with?("/api/")
+  end
+
   # Block suspicious requests
   blocklist("block bad actors") do |req|
     # Block requests that appear to be scanning for vulnerabilities
