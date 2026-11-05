@@ -75,6 +75,13 @@ back up before.
   create their account) and you must be able to export and delete a person's data (both exist in the app).
 - Do not give the data to anyone, and keep the machine and its backups secure.
 
+## The mobile app
+From version 1.3.0, the mobile app can use your copy: on its sign-in screen, choose your own server and type its
+address (https only). It reads `/.well-known/migraine-tracker.json`, then signs in with the same accounts as the web
+site. Each phone appears under Account, Profile, "Signed-in devices", where it can be signed out. The app keeps a
+copy of the journal on the phone to work offline; nothing goes anywhere else than your server. The API is
+described in [API.md](API.md).
+
 ## Good to know
 - No analytics, no tracker, no outside script: nothing in the app calls another site. Your mail provider, if you set one, sees
   the address and the message of password-reset mails. With the reminder keys set, the server sends the reminders through the

@@ -1,5 +1,7 @@
 # What the day was like: sleep, stress, meals and caffeine. Any answer may be left empty.
 class DailyCheck < ApplicationRecord
+  include Synced
+
   SLEEPS = %w[good fragmented short].freeze
   STRESSES = %w[low medium high].freeze
   CAFFEINES = %w[none usual high].freeze

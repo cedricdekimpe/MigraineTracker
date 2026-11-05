@@ -2,6 +2,18 @@ Rails.application.routes.draw do
   # Installable app: the service worker sits at the root so that it covers both languages
   get "service-worker" => "pwa#service_worker", as: :pwa_service_worker, defaults: { format: :js }
 
+  # The mobile app: what this server is (read before signing in), and its JSON API (docs/API.md)
+  get ".well-known/migraine-tracker.json", to: "well_known#instance", as: :well_known_instance
+  namespace :api do
+    namespace :v1 do
+      resource :session, only: %i[create destroy]
+      post "session/web_code", to: "sessions#web_code", as: :session_web_code
+      get "me", to: "sessions#show", as: :me
+      get "changes", to: "changes#index", as: :changes
+      post "changes", to: "changes#create"
+    end
+  end
+
   # Sitemap (no locale scope, but accessible from any locale)
   get "sitemap.xml", to: "sitemap#index", format: :xml, as: :sitemap
 
@@ -84,6 +96,10 @@ Rails.application.routes.draw do
     post "exports", to: "exports#create", as: :exports
     get "imports/new", to: "imports#new", as: :new_import
     post "imports", to: "imports#create", as: :imports
+
+    # The app's web screens: a one-time code from the API opens a web session
+    get "app/session", to: "native_sessions#show", as: :native_session
+    delete "account/devices/:id", to: "devices#destroy", as: :account_device
 
     # Defines the root path route ("/")
     root "home#index"

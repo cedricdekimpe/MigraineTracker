@@ -10,7 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_26_200000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_05_200200) do
+  create_table "api_tokens", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "name", null: false
+    t.string "token_digest", null: false
+    t.datetime "last_used_at"
+    t.string "web_code_digest"
+    t.datetime "web_code_expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token_digest"], name: "index_api_tokens_on_token_digest", unique: true
+    t.index ["user_id"], name: "index_api_tokens_on_user_id"
+    t.index ["web_code_digest"], name: "index_api_tokens_on_web_code_digest", unique: true
+  end
+
   create_table "daily_checks", force: :cascade do |t|
     t.integer "user_id", null: false
     t.date "date", null: false
@@ -20,8 +34,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_200000) do
     t.string "caffeine"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "uuid", default: -> { "lower(hex(randomblob(16)))" }, null: false
     t.index ["user_id", "date"], name: "index_daily_checks_on_user_id_and_date", unique: true
     t.index ["user_id"], name: "index_daily_checks_on_user_id"
+    t.index ["uuid"], name: "index_daily_checks_on_uuid", unique: true
+  end
+
+  create_table "deletions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "record_type", null: false
+    t.string "uuid", null: false
+    t.datetime "deleted_at", null: false
+    t.index ["user_id", "deleted_at"], name: "index_deletions_on_user_id_and_deleted_at"
   end
 
   create_table "episode_triggers", force: :cascade do |t|
@@ -48,9 +72,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_200000) do
     t.boolean "ongoing", default: false, null: false
     t.string "nausea"
     t.datetime "ongoing_checked_at"
+    t.string "uuid", default: -> { "lower(hex(randomblob(16)))" }, null: false
     t.index ["user_id", "occurred_on"], name: "index_episodes_on_user_id_and_occurred_on"
     t.index ["user_id", "ongoing"], name: "index_episodes_on_user_id_and_ongoing"
     t.index ["user_id"], name: "index_episodes_on_user_id"
+    t.index ["uuid"], name: "index_episodes_on_uuid", unique: true
     t.check_constraint "aura = 1 OR pain_kind IS NOT NULL", name: "episodes_aura_or_pain"
     t.check_constraint "intensity IS NULL OR (intensity >= 1 AND intensity <= 10)", name: "episodes_intensity_range"
     t.check_constraint "nausea IS NULL OR nausea IN ('none', 'nausea', 'vomiting')", name: "episodes_nausea_values"
@@ -64,8 +90,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_200000) do
     t.string "effect"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "uuid", default: -> { "lower(hex(randomblob(16)))" }, null: false
     t.index ["episode_id"], name: "index_medication_intakes_on_episode_id"
     t.index ["medication_id"], name: "index_medication_intakes_on_medication_id"
+    t.index ["uuid"], name: "index_medication_intakes_on_uuid", unique: true
   end
 
   create_table "medications", force: :cascade do |t|
@@ -86,8 +114,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_200000) do
     t.date "date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "uuid", default: -> { "lower(hex(randomblob(16)))" }, null: false
     t.index ["user_id", "date"], name: "index_period_days_on_user_id_and_date", unique: true
     t.index ["user_id"], name: "index_period_days_on_user_id"
+    t.index ["uuid"], name: "index_period_days_on_uuid", unique: true
   end
 
   create_table "push_subscriptions", force: :cascade do |t|
@@ -149,7 +179,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_200000) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "api_tokens", "users"
   add_foreign_key "daily_checks", "users"
+  add_foreign_key "deletions", "users"
   add_foreign_key "episode_triggers", "episodes"
   add_foreign_key "episode_triggers", "triggers"
   add_foreign_key "episodes", "users"

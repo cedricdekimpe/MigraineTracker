@@ -1,6 +1,8 @@
 # One headache-type event: pain (migraine or plain headache), an aura, or both.
 # An aura can precede a migraine or occur alone, so the two are independent fields.
 class Episode < ApplicationRecord
+  include Synced
+
   PAIN_KINDS = %w[migraine headache].freeze
   NAUSEAS = %w[none nausea vomiting].freeze
   # An attack longer than 72 h is, by definition, a status migrainosus (ICHD-3 1.4.1): worth telling a

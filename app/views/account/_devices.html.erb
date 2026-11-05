@@ -1,0 +1,19 @@
+<%# Signed-in devices of the mobile app: each one can read and change the journal until it is signed out %>
+<section id="devices" class="mt-10 scroll-mt-20 border-t border-line pt-8" data-devices>
+  <h2 class="text-lg font-semibold text-fg"><%= t("devices.title") %></h2>
+  <ul class="mt-4 divide-y divide-line rounded-xl border border-line">
+    <% current_user.api_tokens.recent_first.each do |device| %>
+      <li class="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+        <div class="min-w-0">
+          <p class="truncate text-sm font-medium text-fg"><%= device.name %></p>
+          <p class="text-xs text-fg-muted">
+            <%= device.last_used_at ? t("devices.last_used", time: l(device.last_used_at, format: :long)) : t("devices.signed_in", time: l(device.created_at, format: :long)) %>
+          </p>
+        </div>
+        <%= button_to t("devices.sign_out"), account_device_path(device), method: :delete,
+              form: { data: { turbo_confirm: t("devices.confirm") } },
+              class: "min-h-11 cursor-pointer rounded-lg border border-line-control bg-surface px-4 py-2 text-sm font-medium text-fg-secondary transition hover:border-accent-400 hover:text-link" %>
+      </li>
+    <% end %>
+  </ul>
+</section>

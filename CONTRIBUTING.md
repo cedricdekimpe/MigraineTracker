@@ -18,7 +18,7 @@ Thank you for looking. Migraine Tracker is a one-person project with a narrow ai
 - **Branches and releases:**
   - `main` is the next version, always green (CI). Work happens on `feat/…`, `fix/…` or `chore/…` branches, merged into `main` by squash and then deleted.
   - `X.Y` (for example `1.0`) is the branch of a published version, created when it is released. It only receives fixes, never new features. A fix goes into `main` first, then is brought over to the version branch.
-  - Every release is a tag `vX.Y.Z`: a fix is `v1.0.1`, a new feature `v1.1.0`, a change that breaks existing data or self-hosted setups `v2.0.0`. Pushing a tag builds the public image.
+  - Every release is a tag `vX.Y.Z`, and `MyMigraineManager::VERSION` (config/initializers/version.rb) says the same in the tagged commit: a fix is `v1.0.1`, a new feature `v1.1.0`, a change that breaks existing data or self-hosted setups `v2.0.0`. Pushing a tag builds the public image.
   - The hosted service is deployed from a tag, never from a work branch.
 - By contributing you agree that your contribution is released under the project's licence (AGPL-3.0).
 
