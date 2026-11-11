@@ -754,7 +754,7 @@ fr:
   privacy:
     title: "Politique de confidentialité"
     description: "Ce que Migraine Tracker conserve, pourquoi, combien de temps, avec qui, et vos droits."
-    updated: "Dernière mise à jour : 26 octobre 2026"
+    updated: "Dernière mise à jour : 11 novembre 2026"
     intro: "Migraine Tracker conserve uniquement ce que vous y notez. Il n'y a ni publicité, ni pistage, ni script, police ou outil de mesure chargé depuis un autre site."
     sections:
       data:
@@ -790,6 +790,7 @@ fr:
           - "Une copie de sauvegarde de la base est faite chaque nuit et gardée 30 jours, chiffrée, dans un dépôt de sauvegarde à l'extérieur du serveur (BorgBase, dans l'Union européenne). Un compte supprimé disparaît donc aussi des sauvegardes au bout de 30 jours."
           - "Les fichiers d'export vous sont envoyés directement et ne sont pas gardés sur le serveur."
           - "Les compteurs anti-abus disparaissent au bout d'une heure au plus."
+          - "Les journaux techniques du serveur (pages demandées, adresse IP) sont gardés quelques jours au plus : ils se vident dès qu'ils atteignent une taille limite, et à chaque mise à jour du site."
       sharing:
         title: "Partage et sécurité"
         points:
@@ -816,6 +817,7 @@ fr:
             - "Les copies de sauvegarde, s'il y en a, dépendent de l'exploitant : demandez-lui."
             - "Les fichiers d'export vous sont envoyés directement et ne sont pas gardés sur le serveur."
             - "Les compteurs anti-abus disparaissent au bout d'une heure au plus."
+            - "Les journaux techniques du serveur, s'il y en a, dépendent de l'exploitant : demandez-lui."
         sharing:
           title: "Partage et sécurité"
           points:
