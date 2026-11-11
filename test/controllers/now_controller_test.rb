@@ -185,6 +185,89 @@ class NowControllerTest < ActionDispatch::IntegrationTest
     assert_equal [ "400 mg", "14:32" ], [ intake.dose, intake.taken_time.strftime("%H:%M") ]
   end
 
+  # --- the real time of a dose, corrected after the tap ----------------------
+
+  # An attack that began in the evening, a dose added just after midnight that was really taken earlier
+  def forgotten_dose
+    @user.episodes.destroy_all
+    @user.episodes.create!(occurred_on: Date.new(2026, 10, 23), started_time: "22:00", pain_kind: "migraine", intensity: 6, ongoing: true)
+    travel_to(Time.zone.local(2026, 10, 24, 0, 2)) do
+      post now_medication_path, params: { medication_id: medications(:ibuprofen).id }
+      yield ongoing.medication_intakes.last
+    end
+  end
+
+  test "a dose added late can be moved back by a few minutes, across midnight" do
+    forgotten_dose do |intake|
+      assert_equal "00:02", intake.taken_time.strftime("%H:%M")
+
+      patch now_intake_time_path(id: intake), params: { minutes_ago: "30" }
+      assert_redirected_to now_path
+      assert_equal "23:32", intake.reload.taken_time.strftime("%H:%M")
+    end
+  end
+
+  test "a dose can be given an exact time, yesterday evening included" do
+    forgotten_dose do |intake|
+      patch now_intake_time_path(id: intake), params: { time: "23:30" }
+      assert_equal "23:30", intake.reload.taken_time.strftime("%H:%M")
+    end
+  end
+
+  test "a time later than now, on the day the attack began, is refused" do
+    post now_path, params: { pain_kind: "migraine", intensity: "5" }
+    travel_to @now do
+      post now_medication_path, params: { medication_id: medications(:ibuprofen).id }
+      intake = ongoing.medication_intakes.last
+
+      patch now_intake_time_path(id: intake), params: { time: "15:00" }
+      assert_redirected_to now_path
+      assert_equal I18n.t("now.flash.time_invalid"), flash[:alert]
+      assert_equal "14:32", intake.reload.taken_time.strftime("%H:%M")
+    end
+  end
+
+  test "only the offered delays and a real time of day are accepted" do
+    forgotten_dose do |intake|
+      [ { minutes_ago: "45" }, { minutes_ago: "-30" }, { time: "25:61" }, { time: "noon" }, {} ].each do |params|
+        patch now_intake_time_path(id: intake), params: params
+        assert_equal I18n.t("now.flash.time_invalid"), flash[:alert]
+        assert_equal "00:02", intake.reload.taken_time.strftime("%H:%M")
+      end
+    end
+  end
+
+  test "another person's dose cannot be moved" do
+    other = User.create!({ email: "other-time@example.com", password: "password123" }.merge(consent_attrs))
+    episode = other.episodes.create!(occurred_on: Date.current, pain_kind: "migraine", intensity: 4, ongoing: true)
+    intake = episode.medication_intakes.create!(medication: other.medications.create!(name: "Ibuprofen", kind: "acute"), taken_time: "10:00")
+    post now_path, params: { pain_kind: "migraine", intensity: "5" }
+
+    patch now_intake_time_path(id: intake), params: { time: "09:00" }
+    assert_response :not_found
+    assert_equal "10:00", intake.reload.taken_time.strftime("%H:%M")
+  end
+
+  test "changing the time of a dose needs an attack in progress" do
+    episode = @user.episodes.create!(occurred_on: Date.current - 1, pain_kind: "migraine", intensity: 4)
+    intake = episode.medication_intakes.create!(medication: medications(:ibuprofen), taken_time: "10:00")
+
+    patch now_intake_time_path(id: intake), params: { time: "09:00" }
+    assert_redirected_to now_path
+    assert_equal "10:00", intake.reload.taken_time.strftime("%H:%M")
+  end
+
+  test "each dose on the progress screen offers to change its time, closed by default" do
+    post now_path, params: { pain_kind: "migraine", intensity: "5" }
+    post now_medication_path, params: { medication_id: medications(:ibuprofen).id }
+    intake = ongoing.medication_intakes.last
+
+    get now_path
+    assert_select "details[data-intake-time]:not([open]) summary", text: I18n.t("now.change_time")
+    assert_select "form[action='#{now_intake_time_path(id: intake)}'] button[name=minutes_ago]", count: NowController::AGO_CHOICES.size
+    assert_select "form[action='#{now_intake_time_path(id: intake)}'] input[type=time][required]"
+  end
+
   test "with no medication yet, the progress screen offers common ones and a name field" do
     @user.episodes.destroy_all
     @user.medications.destroy_all

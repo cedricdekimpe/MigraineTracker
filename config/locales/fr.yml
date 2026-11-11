@@ -577,6 +577,15 @@ fr:
     cancel: "Annuler l'épisode"
     remove_intake: "Retirer"
     remove_intake_named: "Retirer %{name}"
+    change_time: "Modifier l'heure"
+    change_time_named: "Modifier l'heure de %{name}"
+    taken_ago: "Pris il y a :"
+    ago_15: "15 min"
+    ago_30: "30 min"
+    ago_60: "1 h"
+    ago_120: "2 h"
+    taken_exact: "Ou à l'heure exacte :"
+    taken_exact_save: "Enregistrer l'heure"
     confirm_cancel: "Supprimer cet épisode ?"
     nausea:
       question: "Nausées ?"
@@ -603,6 +612,7 @@ fr:
     flash:
       finished: "Épisode enregistré (%{duration})."
       cancelled: "Épisode annulé."
+      time_invalid: "Cette heure n'est pas possible : elle serait dans le futur."
 
   treatment_periods:
     title: "Périodes de traitement"

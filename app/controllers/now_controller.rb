@@ -69,6 +69,17 @@ class NowController < ApplicationController
     redirect_to now_path
   end
 
+  # The medication was not taken at the moment of the tap (forgotten, then added): "30 minutes ago", or an exact time.
+  # The tap itself stays one gesture; this is the correction, after the fact.
+  def intake_time
+    intake = @episode.medication_intakes.find(params[:id])
+    time = taken_time_param
+    return redirect_to now_path, alert: t("now.flash.time_invalid") unless time
+
+    intake.update!(taken_time: time)
+    redirect_to now_path
+  end
+
   def finish
     minutes = ((ended_at - @episode.started_at) / 60).round.clamp(1, Episode::MAX_DURATION_MINUTES)
     @episode.update!(ongoing: false, duration_minutes: minutes)
@@ -131,6 +142,7 @@ class NowController < ApplicationController
   private
 
   TYPED_KINDS = %w[acute combination triptan gepant other].freeze
+  AGO_CHOICES = [ 15, 30, 60, 120 ].freeze
   OFFLINE_BATCH = 20
 
   # The phone's clock, a few minutes ahead at most
@@ -139,6 +151,18 @@ class NowController < ApplicationController
     [ at, Time.current ].min if at <= 5.minutes.from_now
   rescue ArgumentError
     nil
+  end
+
+  # "HH:MM" for the time given: some minutes before now (computed here, so midnight takes care of itself) or an exact time.
+  # A time later than now on the day the attack began cannot have happened yet; once the attack began yesterday,
+  # it is yesterday evening. Nil when it is neither.
+  def taken_time_param
+    if params[:minutes_ago].present?
+      minutes = params[:minutes_ago].to_i
+      (Time.current - minutes.minutes).strftime("%H:%M") if AGO_CHOICES.include?(minutes)
+    elsif params[:time].to_s.match?(/\A([01]\d|2[0-3]):[0-5]\d\z/)
+      params[:time] unless @episode.occurred_on >= Date.current && params[:time] > Time.current.strftime("%H:%M")
+    end
   end
 
   # Now, or the time given for an attack left open ("Still going?"), kept between its start and now
@@ -157,6 +181,6 @@ class NowController < ApplicationController
 
   def set_ongoing_episode
     @episode = current_user.episodes.ongoing.includes(medication_intakes: :medication).order(:created_at).last
-    redirect_to now_path if @episode.nil? && %w[intensity medication remove_intake finish cancel].include?(action_name)
+    redirect_to now_path if @episode.nil? && %w[intensity medication remove_intake intake_time finish cancel].include?(action_name)
   end
 end
