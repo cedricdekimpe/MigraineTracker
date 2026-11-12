@@ -61,6 +61,26 @@ class TreatmentInsightsTest < ActiveSupport::TestCase
     assert_equal({ minutes: 40, attacks: 3 }, insights.median_delay)
   end
 
+  test "a dose after midnight in an evening attack counts as the next day" do
+    attack(@today - 5, medication: @ibuprofen, started: "23:00", taken: "00:02")
+    attack(@today - 4, medication: @ibuprofen, started: "22:30", taken: "23:10")
+    assert_equal({ minutes: 51, attacks: 2 }, insights.median_delay) # 62 and 40 minutes
+  end
+
+  test "a dose shortly before the recorded start is not a delay, even just after midnight" do
+    attack(@today - 5, medication: @ibuprofen, started: "10:00", taken: "09:55")
+    attack(@today - 4, medication: @ibuprofen, started: "00:10", taken: "23:20")
+    assert_nil insights.median_delay
+  end
+
+  test "intakes are ordered by the moment they were taken, midnight included" do
+    attack(@today - 6, medication: @ibuprofen, effect: "good", started: "23:00", taken: "00:20")
+    attack(@today - 6, medication: @ibuprofen, effect: "none", started: "23:00", taken: "23:10")
+    row = insights.acute_rows.first
+    assert_equal 2, row.intakes
+    assert_equal %w[none good], insights.send(:all_intakes).map(&:effect)
+  end
+
   test "no delay without times" do
     attack(@today - 5, medication: @ibuprofen, started: nil)
     assert_nil insights.median_delay

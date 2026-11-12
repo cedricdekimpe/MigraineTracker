@@ -45,11 +45,34 @@
       <ul class="mb-4 space-y-1 text-fg">
         <% @episode.medication_intakes.each do |intake| %>
           <% label = [intake.medication.name, intake.dose].compact_blank.join(" ") %>
-          <li class="flex items-center justify-between gap-3">
-            <span>✓ <%= label %> <span class="text-fg-muted">· <%= intake.taken_time&.strftime("%H:%M") %></span></span>
-            <%= button_to t("now.remove_intake"), now_intake_path(id: intake), method: :delete, data: { turbo: false },
-                  "aria-label": t("now.remove_intake_named", name: label), form: { class: "shrink-0" },
-                  class: "min-h-11 cursor-pointer px-2 text-sm text-fg-muted underline hover:text-fg" %>
+          <li>
+            <div class="flex items-center justify-between gap-3">
+              <span>✓ <%= label %> <span class="text-fg-muted">· <%= intake.taken_time&.strftime("%H:%M") %></span></span>
+              <%= button_to t("now.remove_intake"), now_intake_path(id: intake), method: :delete, data: { turbo: false },
+                    "aria-label": t("now.remove_intake_named", name: label), form: { class: "shrink-0" },
+                    class: "min-h-11 cursor-pointer px-2 text-sm text-fg-muted underline hover:text-fg" %>
+            </div>
+            <%# Forgotten, then added: the tap stays one gesture, the real time is corrected here afterwards %>
+            <details data-intake-time>
+              <summary aria-label="<%= t("now.change_time_named", name: label) %>"
+                       class="inline-flex min-h-11 cursor-pointer items-center text-sm text-fg-muted underline hover:text-fg"><%= t("now.change_time") %></summary>
+              <div class="mb-2 mt-1 rounded-2xl border border-line-control p-3">
+                <p class="text-sm text-fg-secondary"><%= t("now.taken_ago") %></p>
+                <%= form_with url: now_intake_time_path(id: intake), method: :patch, data: { turbo: false }, class: "mt-2 flex flex-wrap gap-2" do %>
+                  <% NowController::AGO_CHOICES.each do |minutes| %>
+                    <%= button_tag t("now.ago_#{minutes}"), type: "submit", name: "minutes_ago", value: minutes,
+                          class: "min-h-12 min-w-16 cursor-pointer rounded-2xl border border-line-control bg-surface-soft px-4 text-base text-fg hover:border-accent-400" %>
+                  <% end %>
+                <% end %>
+                <%= form_with url: now_intake_time_path(id: intake), method: :patch, data: { turbo: false }, class: "mt-3 flex flex-wrap items-center gap-2" do %>
+                  <%= label_tag "time_#{intake.id}", t("now.taken_exact"), class: "text-sm text-fg-secondary" %>
+                  <%= time_field_tag :time, intake.taken_time&.strftime("%H:%M"), id: "time_#{intake.id}", required: true,
+                        class: "min-h-12 rounded-2xl border border-line-control bg-surface px-4 text-base text-fg focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus" %>
+                  <%= button_tag t("now.taken_exact_save"), type: "submit",
+                        class: "min-h-12 cursor-pointer rounded-2xl border border-line-control px-5 text-base font-medium text-fg hover:border-accent-400" %>
+                <% end %>
+              </div>
+            </details>
           </li>
         <% end %>
       </ul>

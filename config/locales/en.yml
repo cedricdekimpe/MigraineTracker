@@ -476,6 +476,15 @@ en:
     cancel: "Cancel the episode"
     remove_intake: "Remove"
     remove_intake_named: "Remove %{name}"
+    change_time: "Change the time"
+    change_time_named: "Change the time of %{name}"
+    taken_ago: "Taken ... ago:"
+    ago_15: "15 min"
+    ago_30: "30 min"
+    ago_60: "1 h"
+    ago_120: "2 h"
+    taken_exact: "Or at the exact time:"
+    taken_exact_save: "Save the time"
     confirm_cancel: "Delete this episode?"
     nausea:
       question: "Nausea?"
@@ -502,6 +511,7 @@ en:
     flash:
       finished: "Episode saved (%{duration})."
       cancelled: "Episode cancelled."
+      time_invalid: "That time is not possible: it would be in the future."
 
   treatment_periods:
     title: "Treatment periods"

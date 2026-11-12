@@ -73,10 +73,10 @@ class TreatmentInsights
                         .group_by(&:episode).filter_map do |episode, intakes|
       next unless episode.started_time
 
-      taken = intakes.filter_map(&:taken_time).min
+      taken = intakes.filter_map(&:taken_at).min
       next unless taken
 
-      minutes = (taken.hour * 60 + taken.min) - (episode.started_time.hour * 60 + episode.started_time.min)
+      minutes = ((taken - episode.started_at) / 60).round
       minutes if minutes >= 0
     end
 
@@ -109,7 +109,7 @@ class TreatmentInsights
   def all_intakes
     @all_intakes ||= MedicationIntake.joins(:medication, :episode).includes(:medication, :episode)
                                      .where(episodes: { user_id: @user.id }, medications: { kind: Medication::COUNTED_KINDS })
-                                     .sort_by { |intake| [ intake.episode.occurred_on, intake.taken_time&.strftime("%H:%M").to_s, intake.id ] }
+                                     .sort_by { |intake| [ intake.episode.occurred_on, intake.taken_at.to_i, intake.id ] }
   end
 
   # Judged on the last 3 attacks where an effect was noted.
